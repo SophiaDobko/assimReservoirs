@@ -1,6 +1,8 @@
 #' Interpolate rain data
 #'
 #' This function interpolates rain data using idw (inverse distance weighted) interpolation
+#' @param list_output output of identBasinsGauges
+#' @param api output of requestGauges
 #' @export
 
 idwRain <- function(list_output, api){
@@ -48,9 +50,10 @@ idwRaster[[i]] <- r # Output: interpolation raster for each day
 # Output: daily mean rain for the whole catchment and the reservoir
 res <- as(list_output$res$geometry, "Spatial")
 daily <- data.frame("date" = dates[i], "catch_mean" = mean(unlist(extract(r, c))), "reservoir_mean" = mean(unlist(extract(r, res))))
+
 dailyRain <- rbind(dailyRain, daily)
 }
-
+names(idwRaster) <- c(dailyRain$date)
 return(list_idw <- list("idwRaster" = idwRaster, "dailyRain_table" = dailyRain))
 }
 

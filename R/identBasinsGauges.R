@@ -1,9 +1,11 @@
 #' Contributing basins and rain gauges
 #'
 #' This function identifies contributing basins and surrounding rain gauges
+#' @param ID id (due to JRC) of the reservoir of interest
+#' @param distGauges distance in km around the contributing basins to look for rain gauges, defaults to 30
 #' @export
 
-identBasinsGauges <- function(ID){
+identBasinsGauges <- function(ID, distGauges = 30){
 
 library(maptools)
 library(sf)
@@ -46,7 +48,7 @@ load("data/p_gauges_saved.RData")
 res <- st_transform(res, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
 gauges <- st_transform(p_gauges_saved, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
 catch <- st_transform(catch, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
-catch_buffer <- st_buffer(st_union(catch, by_feature = F), dist = 30000)
+catch_buffer <- st_buffer(st_union(catch, by_feature = F), dist = distGauges *1000)
 
 gauges_catch <- st_intersection(gauges, catch_buffer)
 

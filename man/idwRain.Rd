@@ -4,7 +4,7 @@
 \alias{idwRain}
 \title{Interpolate rain data}
 \usage{
-idwRain(date, list_output, api)
+idwRain(list_output, api)
 }
 \description{
 This function interpolates rain data using idw (inverse distance weighted) interpolation
