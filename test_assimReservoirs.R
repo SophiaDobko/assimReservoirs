@@ -1,6 +1,8 @@
 # test
 
 setwd("D:/assimReservoirs")
+library(roxygen2)
+library(devtools)
 document()
 
 setwd("D:/DownloadReservoirData")

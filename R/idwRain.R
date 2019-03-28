@@ -2,17 +2,21 @@
 #'
 #' This function interpolates rain data using idw (inverse distance weighted) interpolation
 #' @export
-date <- as.Date("2019-03-24")
 
-idwRain <- function(date, list_output, api){
+idwRain <- function(list_output, api){
 
 library(gstat)
 library(sp)
 library(sf)
 library(raster)
 
-apisub <- subset(api, returnedDate == date)
-gauges_catch <- merge.data.frame(list_output$gauges_catch, apisub, by = "codigo")
+  api <- subset(api, !is.na(value))
+  dates <- unique(api$returnedDate)
+
+  dailyRain <- data.frame()
+  for(i in 1:length(dates)){
+    apisub <- subset(api, returnedDate == dates[i])
+    gauges_catch <- merge.data.frame(list_output$gauges_catch, apisub, by = "codigo")
 
 # IDW due to https://mgimond.github.io/Spatial/interpolation-in-r.html ####
 # = inverse distance weighted interpolation
@@ -21,7 +25,7 @@ gauges_catch <- merge.data.frame(list_output$gauges_catch, apisub, by = "codigo"
 g <- st_as_sf(gauges_catch[,c(1,18,21)])
 g <- as(g, "Spatial")
 b <- as(list_output$catch_buffer, "Spatial")
-c <- as(list_output$catch, "Spatial")
+c <- as(list_output$catch$geometry, "Spatial")
 g@bbox <- b@bbox
 
 grd              <- as.data.frame(spsample(g, "regular", n=50000))
@@ -41,11 +45,11 @@ r <- raster(idw)
 r <- mask(r, c)
 
 # Output: daily mean rain for the whole catchment and the reservoir
-res <- as(list_output$res, "Spatial")
-#problem?????####
-rRes <- mask(r, res)
+res <- as(list_output$res$geometry, "Spatial")
 
-dailyRain <- data.frame("date" = date, "catch_mean" = mean(values(r), na.rm =T), "reservoir_mean" = mean(values(rRes), na.rm = T))
+daily <- data.frame("date" = dates[i], "catch_mean" = mean(values(r), na.rm =T), "reservoir_mean" = mean(unlist(extract(r, res))))
+dailyRain <- rbind(dailyRain, daily)
+}
 
 return(list_idw <- list("idw" = r, "dailyRain_table" = dailyRain))
 }
