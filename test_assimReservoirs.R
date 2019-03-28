@@ -1,11 +1,17 @@
 # test
 
-setwd("D:/assimReservoirs")
+# very important packages
 library(roxygen2)
 library(devtools)
+
+# automatic documentation
+setwd("D:/assimReservoirs")
 document()
+
+# install and load this package
 setwd("D:/")
 install("assimReservoirs")
+library(assimReservoirs)
 
 setwd("D:/DownloadReservoirData")
 
@@ -24,6 +30,6 @@ load("data/api.Rdata")
 list_idw <- idwRain(list_output, api)
 
 # plots ####
-
-
-
+plotBasins(list_output)
+plotGauges(list_output)
+plotIDW(list_output, list_idw)

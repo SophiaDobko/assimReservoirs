@@ -6,6 +6,13 @@
 \usage{
 requestGauges(requestDate, Ndays, list_output)
 }
+\arguments{
+\item{requestDate}{latest date of interest, e.g. as.Date("2018-03-15") or today()}
+
+\item{Ndays}{number of days to go back in time from requestDate}
+
+\item{list_output}{output of identBasinsGauges}
+}
 \description{
 This function requests api rain data for selected rain gauges
 }

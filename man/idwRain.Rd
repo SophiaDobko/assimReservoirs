@@ -6,6 +6,11 @@
 \usage{
 idwRain(list_output, api)
 }
+\arguments{
+\item{list_output}{output of identBasinsGauges}
+
+\item{api}{output of requestGauges}
+}
 \description{
 This function interpolates rain data using idw (inverse distance weighted) interpolation
 }

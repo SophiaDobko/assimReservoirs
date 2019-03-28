@@ -4,7 +4,12 @@
 \alias{identBasinsGauges}
 \title{Contributing basins and rain gauges}
 \usage{
-identBasinsGauges(ID)
+identBasinsGauges(ID, distGauges = 30)
+}
+\arguments{
+\item{ID}{id (due to JRC) of the reservoir of interest}
+
+\item{distGauges}{distance in km around the contributing basins to look for rain gauges, defaults to 30}
 }
 \description{
 This function identifies contributing basins and surrounding rain gauges
