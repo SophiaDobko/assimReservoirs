@@ -17,13 +17,13 @@ otto <- st_read("data/ottobacias/NIVEL6_B")
 otto <- st_transform(otto, "+proj=longlat +datum=WGS84 +no_defs")
 #otto <- as(otto, "Spatial")
 
-ce <- st_read("D:/shapefiles/Ceara_muni/Ceara.shp")
+ce <- st_read("data/Ceara_muni/Ceara.shp")
 ce <- st_transform(ce, "+proj=longlat +datum=WGS84 +no_defs")
 
 otto <- st_intersection(otto, ce)
 otto$nunivotto6 <- as.numeric(as.character(otto$nunivotto6))
 
-res <- st_read("D:/shapefiles/res_max")
+res <- st_read("data/res_max")
 res <- subset(res, id_jrc == ID)
 
 otto_res <- st_intersection(otto, res)
