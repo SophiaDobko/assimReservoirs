@@ -11,9 +11,10 @@ library(sf)
 library(raster)
 
   api <- subset(api, !is.na(value))
-  dates <- unique(api$returnedDate)
+  dates <- sort(unique(api$returnedDate))
 
   dailyRain <- data.frame()
+  idwRaster <- list()
   for(i in 1:length(dates)){
     apisub <- subset(api, returnedDate == dates[i])
     gauges_catch <- merge.data.frame(list_output$gauges_catch, apisub, by = "codigo")
@@ -28,7 +29,7 @@ b <- as(list_output$catch_buffer, "Spatial")
 c <- as(list_output$catch$geometry, "Spatial")
 g@bbox <- b@bbox
 
-grd              <- as.data.frame(spsample(g, "regular", n=50000))
+grd              <- as.data.frame(spsample(g, "regular", n=500000))
 names(grd)       <- c("X", "Y")
 coordinates(grd) <- c("X", "Y")
 gridded(grd)     <- TRUE  # Create SpatialPixel object
@@ -39,19 +40,18 @@ proj4string(grd) <- proj4string(g)
 
 # Interpolate the grid cells using a power value of 2 (idp=2.0)
 idw <- gstat::idw(value ~ 1, g, newdata=grd, idp=2.0)
-
-# Convert to raster object then clip to catchment
 r <- raster(idw)
 r <- mask(r, c)
+r <- crop(r,c)
+idwRaster[[i]] <- r # Output: interpolation raster for each day
 
 # Output: daily mean rain for the whole catchment and the reservoir
 res <- as(list_output$res$geometry, "Spatial")
-
-daily <- data.frame("date" = dates[i], "catch_mean" = mean(values(r), na.rm =T), "reservoir_mean" = mean(unlist(extract(r, res))))
+daily <- data.frame("date" = dates[i], "catch_mean" = mean(unlist(extract(r, c))), "reservoir_mean" = mean(unlist(extract(r, res))))
 dailyRain <- rbind(dailyRain, daily)
 }
 
-return(list_idw <- list("idw" = r, "dailyRain_table" = dailyRain))
+return(list_idw <- list("idwRaster" = idwRaster, "dailyRain_table" = dailyRain))
 }
 
 
