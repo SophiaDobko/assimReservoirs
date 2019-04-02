@@ -1,2 +1,4 @@
 .Rproj.user
-.data
+#data
+.data_preprocessing
+.test_assimReservoirs

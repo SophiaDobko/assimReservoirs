@@ -17,7 +17,7 @@ otto <- st_read("data/ottobacias/NIVEL6_B")
 otto <- st_transform(otto, "+proj=longlat +datum=WGS84 +no_defs")
 #otto <- as(otto, "Spatial")
 
-ce <- st_read("data/Ceara_muni/Ceara.shp")
+ce <- st_read("data/Ceara_muni")
 ce <- st_transform(ce, "+proj=longlat +datum=WGS84 +no_defs")
 
 otto <- st_intersection(otto, ce)

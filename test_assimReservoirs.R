@@ -1,6 +1,7 @@
 # test
 
 # very important packages
+# problem mit "Rtools" -> warum nicht möglich zu installieren, aber immer wieder danach gefragt?
 library(roxygen2)
 library(devtools)
 
@@ -13,20 +14,23 @@ setwd("D:/")
 install("assimReservoirs")
 library(assimReservoirs)
 
-setwd("D:/DownloadReservoirData")
+setwd("D:/assimReservoirs")
+
 
 # functions ####
 # identBasinGauges
-list_output <- identBasinsGauges(ID = 2707, distGauges = 30000)
-save(list_output, file = "data/list_output.RData")
+res_max <- st_read("data/res_max") # choose ID from res_max$id_jrc
+ID <- res_max$id_jrc[168] # e.g. 168, ID = 5348
+list_output <- identBasinsGauges(ID = ID, distGauges = 30)
+# save(list_output, file = "data/list_output.RData")
 
 # requestGauges
-api <- requestGauges(requestDate = today(), Ndays = 5, list_output = list_output)
-save(api, file = "data/api.Rdata")
+api <- requestGauges(requestDate = today(), Ndays = 5, list_output)
+# save(api, file = "data/api.Rdata")
 
 # idwRain
-load("data/list_output.RData")
-load("data/api.Rdata")
+# load("data/list_output.RData")
+# load("data/api.Rdata")
 list_idw <- idwRain(list_output, api)
 
 # plots ####
