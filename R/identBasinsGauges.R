@@ -13,7 +13,7 @@ library(gtools)
 library(raster)
 
 # Identify contributing basins ####
-otto <- st_read("data/ottobacias/NIVEL6_B")
+otto <- load("data/otto_CE.RData")
 otto <- st_transform(otto, "+proj=longlat +datum=WGS84 +no_defs")
 #otto <- as(otto, "Spatial")
 
