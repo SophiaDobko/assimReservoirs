@@ -1,7 +1,7 @@
 # assimReservoirs
 
 The aim of this package is the assimilation of reservoir extents in Ceará, northeast Brazil. 
-With a simple model, including meteorological observations and the routing scheme of the reservoirs, errors in the reservoir extent estimations based on remote sensing (https://github.com/jmigueldelgado/buhayra) shall be corrected. 
+With a simple model, including meteorological observations and the routing scheme of the reservoirs, errors in the reservoir extent estimations based on remote sensing [jmigueldelgado/buhayra](https://github.com/jmigueldelgado/buhayra) shall be corrected. 
 
 So far, the following functions are implemented:
 
