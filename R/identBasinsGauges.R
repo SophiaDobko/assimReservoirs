@@ -13,20 +13,35 @@ library(gtools)
 library(raster)
 
 # Identify contributing basins ####
-otto <- load("data/otto_CE.RData")
-otto <- st_transform(otto, "+proj=longlat +datum=WGS84 +no_defs")
-#otto <- as(otto, "Spatial")
 
-ce <- st_read("data/Ceara_muni")
-ce <- st_transform(ce, "+proj=longlat +datum=WGS84 +no_defs")
+load("D:/assimReservoirs/data/otto_CE.RData")
+load("D:/assimReservoirs/data/res_max.RData")
+load("D:/assimReservoirs/data/riv_CE.RData")
+ID <- 37380
+ID <- 44755
 
-otto <- st_intersection(otto, ce)
-otto$nunivotto6 <- as.numeric(as.character(otto$nunivotto6))
-
-res <- st_read("data/res_max")
-res <- subset(res, id_jrc == ID)
-
+res <- subset(res_max, id_jrc == ID)
 otto_res <- st_intersection(otto, res)
+
+# does res lie on the river network? ####
+#res <- st_transform(res, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
+#riv <- st_transform(riv, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
+
+riv_res <- st_join(riv, res, join = st_intersects)
+riv_res <- riv_res[!is.na(riv_res$id_jrc),]
+
+
+centr <- st_centroid(res)
+lat <- ymin(extent(centr))
+cells <- max(riv_res$UP_CELLS)
+area_cont <- cells * 30.87 * cos(lat*2*pi/360)
+cos(49*2*pi/360)
+
+# plot ####
+plot(res$geometry, col = "cadetblue4")
+plot(riv_res$geometry, add = T)
+plot(centr, col = "red", add = T)
+
 
 if(even(otto_res$nunivotto6)){
   catch <- otto[otto$nunivotto6 == otto_res$nunivotto6,]
