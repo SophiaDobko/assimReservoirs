@@ -2,14 +2,14 @@
 % Please edit documentation in R/plots.R
 \name{plotGauges}
 \alias{plotGauges}
-\title{Plot contributing rain gauges}
+\title{Plot rain gauges}
 \usage{
 plotGauges(list_output, distGauges = 30)
 }
 \arguments{
 \item{list_output}{output of identBasinsGauges}
 
-\item{distGauges}{distance in km around the contributing basins to look for rain gauges, defaults to 30}
+\item{distGauges}{distance in km around the contributing basins to look for rain gauges as it was used in identBasinsGauges, defaults to 30}
 }
 \description{
 This function plots the identified rain gauges of identBasinsGauges
