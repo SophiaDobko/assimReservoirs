@@ -73,12 +73,8 @@ up_cells_km2 <- up_cells * (30.87 * cos(lat*2*pi/360)*15)^2
 
 
 # Rain gauges ####
-# load("data/p_gauges_saved.RData")
-res <- st_transform(res, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
 gauges <- st_transform(p_gauges_saved, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
-catch <- st_transform(catch, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
 catch_buffer <- st_buffer(st_union(catch, by_feature = F), dist = distGauges *1000)
-
 gauges_catch <- st_intersection(gauges, catch_buffer)
 
 return(list_output <- list("res" = res, "catch" = catch, "catch_km2" =  catch_km2, "catch_buffer" = catch_buffer, "gauges_catch" = gauges_catch, "routing" = routing))
