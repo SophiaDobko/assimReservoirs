@@ -14,15 +14,9 @@ library(raster)
 
 # Identify contributing basins ####
 
-load("D:/assimReservoirs/data/res_max.RData")
-load("D:/assimReservoirs/data/otto_CE.RData")
-load("D:/assimReservoirs/data/riv_CE.RData")
-
-#nrow(riv_res =0)
-ID <- 7013
-#nrow(riv_res >0)
-ID <- 37380
-ID <- 44755
+# load("D:/assimReservoirs/data/res_max.RData")
+# load("D:/assimReservoirs/data/otto_CE.RData")
+# load("D:/assimReservoirs/data/riv_CE.RData")
 
 res <- subset(res_max, id_jrc == ID)
 otto_int <- st_intersection(otto, res)
@@ -48,7 +42,7 @@ if(nrow(riv_res)==0){
   all_res$geometry <- NULL
   all_res <- unique(all_res[,c(1,2)])
   catch_km2 <- (sum(catch$SUB_AREA)-sum(all_res$area_max*1e-06))/nrow(all_res)
-
+  routing <- F
 }else{
 # calculate up_cells of riv
 centr <- st_centroid(res)
@@ -60,9 +54,10 @@ up_cells_km2 <- up_cells * (30.87 * cos(lat*2*pi/360)*15)^2
 # catch_km2 =  up_cells_km2, catch = otto_res
     catch_km2 <- up_cells_km2
     catch <- otto_res
+    routing <- F
 
   }else{
-    # up_cells_km2 > sum
+    # up_cells_km2 > sum(otto_res$SUB_AREA)
     catch_km2 <- max(otto_res$UP_AREA)
 
     catch <- otto_res[otto_res$UP_AREA == max(otto_res$UP_AREA),]
@@ -71,13 +66,14 @@ up_cells_km2 <- up_cells * (30.87 * cos(lat*2*pi/360)*15)^2
     while(nrow(c) > 0){
       c <- subset(otto, NEXT_DOWN %in% c$HYBAS_ID)
       catch <- rbind(catch, c)
+      routing <- T
     }
   }
 }
 
 
 # Rain gauges ####
-load("data/p_gauges_saved.RData")
+# load("data/p_gauges_saved.RData")
 res <- st_transform(res, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
 gauges <- st_transform(p_gauges_saved, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
 catch <- st_transform(catch, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
@@ -85,7 +81,7 @@ catch_buffer <- st_buffer(st_union(catch, by_feature = F), dist = distGauges *10
 
 gauges_catch <- st_intersection(gauges, catch_buffer)
 
-return(list_output <- list("res" = res, "catch" = catch, "catch_km2" =  catch_km2, "catch_buffer" = catch_buffer, "gauges_catch" = gauges_catch))
+return(list_output <- list("res" = res, "catch" = catch, "catch_km2" =  catch_km2, "catch_buffer" = catch_buffer, "gauges_catch" = gauges_catch, "routing" = routing))
 }
 
 

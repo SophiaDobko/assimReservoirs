@@ -5,8 +5,8 @@
 #' @export
 
 plotBasins <- function(list_output){
-  plot(list_output$catch$geometry, main = "Reservoir with contributing basins")
-  plot(list_output$res$geometry, border = "darkred", add = T)
+  plot(list_output$catch$geometry, col = "white", main = "Reservoir with contributing basins")
+  plot(list_output$res$geometry, col = "cadetblue4", add = T)
 }
 
 

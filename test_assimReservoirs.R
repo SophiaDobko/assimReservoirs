@@ -21,6 +21,11 @@ setwd("D:/assimReservoirs")
 # identBasinGauges
 res_max <- st_read("data/res_max") # choose ID from res_max$id_jrc
 ID <- res_max$id_jrc[168] # e.g. 168, ID = 5348
+# #nrow(riv_res =0)
+# ID <- 7013
+# #nrow(riv_res >0)
+# ID <- 37380
+# ID <- 44755
 list_output <- identBasinsGauges(ID = ID, distGauges = 30)
 # save(list_output, file = "data/list_output.RData")
 
@@ -40,11 +45,11 @@ plotIDW(list_output, list_idw)
 
 # still in work ####
 # new plots/versions ####
-plot(res$geometry, col = "cadetblue4")
+plot(list_output$res$geometry, col = "cadetblue4")
 plot(riv_res$geometry, add = T)
 plot(centr, col = "red", add = T)
 
-plot(catch$geometry, col = "white")
+plot(list_output$catch$geometry, col = "white")
 plot(otto_res$geometry, border = "red", add = T)
 plot(res$geometry, col = "cadetblue4", add = T)
 

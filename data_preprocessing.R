@@ -14,8 +14,12 @@ ce <- st_transform(ce, "+proj=longlat +datum=WGS84 +no_defs")
 
 otto <- st_intersection(otto, ce)
 riv <- st_intersection(riv, ce)
-
 res_max <- st_read("D:/shapefiles/res_max")
+rm(ce)
+
+# otto <- st_transform(otto, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
+# riv <- st_transform(riv, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
+# res_max <- st_transform(res_max, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
 
 save(otto, file = "data/otto_CE.RData")
 save(riv, file = "data/riv_CE.RData")
