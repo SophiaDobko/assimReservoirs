@@ -14,14 +14,24 @@ library(raster)
 
 # Identify contributing basins ####
 
-load("D:/assimReservoirs/data/otto_CE.RData")
 load("D:/assimReservoirs/data/res_max.RData")
+load("D:/assimReservoirs/data/otto_CE.RData")
 load("D:/assimReservoirs/data/riv_CE.RData")
+
+#nrow(riv_res =0)
+ID <- 7013
+#nrow(riv_res >0)
 ID <- 37380
 ID <- 44755
 
 res <- subset(res_max, id_jrc == ID)
-otto_res <- st_intersection(otto, res)
+otto_int <- st_intersection(otto, res)
+
+otto_res <- NULL
+for(i in 1:nrow(otto_int)){
+  c <- subset(otto, HYBAS_ID == otto_int$HYBAS_ID[i])
+  otto_res <- rbind(otto_res, c)
+}
 
 # does res lie on the river network? ####
 #res <- st_transform(res, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
@@ -30,32 +40,41 @@ otto_res <- st_intersection(otto, res)
 riv_res <- st_join(riv, res, join = st_intersects)
 riv_res <- riv_res[!is.na(riv_res$id_jrc),]
 
+if(nrow(riv_res)==0){
+# identify all reservoirs in otto_res, calculate area-share
+  catch <- otto_res
 
+  all_res <- st_intersection(res_max[,c(1,3)], catch)
+  all_res$geometry <- NULL
+  all_res <- unique(all_res[,c(1,2)])
+  catch_km2 <- (sum(catch$SUB_AREA)-sum(all_res$area_max*1e-06))/nrow(all_res)
+
+}else{
+# calculate up_cells of riv
 centr <- st_centroid(res)
 lat <- as.numeric(ymin(extent(centr)))
-cells <- max(riv_res$UP_CELLS)
-area_cont_ha <- cells * (30.87 * cos(lat*2*pi/360)*15/100)^2
+up_cells <- max(riv_res$UP_CELLS)
+up_cells_km2 <- up_cells * (30.87 * cos(lat*2*pi/360)*15)^2
 
-# plot ####
-plot(res$geometry, col = "cadetblue4")
-plot(riv_res$geometry, add = T)
-plot(centr, col = "red", add = T)
+  if(up_cells_km2 <= sum(otto_res$SUB_AREA)){
+# catch_km2 =  up_cells_km2, catch = otto_res
+    catch_km2 <- up_cells_km2
+    catch <- otto_res
 
-
-if(even(otto_res$nunivotto6)){
-  catch <- otto[otto$nunivotto6 == otto_res$nunivotto6,]
-}else{
-  if(even(as.numeric((substr(otto_res$nunivotto6, 5,5))))){
-    context <- otto[substr(otto$nunivotto6, 1,5)==substr(otto_res$nunivotto6, 1,5),]
-    catch <- context[substr(context$nunivotto6, 1,6)>=substr(otto_res$nunivotto6, 1,6),]
   }else{
-    context <- otto[substr(otto$nunivotto6, 1,4)==substr(otto_res$nunivotto6, 1,4),]
-    c <- context[nchar(context$nunivotto6)==5,]
-    c <- c[substr(c$nunivotto6, 1,5)>=substr(otto_res$nunivotto6, 1,5),]
-    context <- context[nchar(context$nunivotto6)==6,]
-    context <- context[substr(context$nunivotto6, 1,6)>=substr(otto_res$nunivotto6, 1,6),]
-    catch <- rbind(c,context)
-  }}
+    # up_cells_km2 > sum
+    catch_km2 <- max(otto_res$UP_AREA)
+
+    catch <- otto_res[otto_res$UP_AREA == max(otto_res$UP_AREA),]
+    c <- subset(otto, NEXT_DOWN == catch$HYBAS_ID)
+    catch <- rbind(catch, c)
+    while(nrow(c) > 0){
+      c <- subset(otto, NEXT_DOWN %in% c$HYBAS_ID)
+      catch <- rbind(catch, c)
+    }
+  }
+}
+
 
 # Rain gauges ####
 load("data/p_gauges_saved.RData")
@@ -66,7 +85,7 @@ catch_buffer <- st_buffer(st_union(catch, by_feature = F), dist = distGauges *10
 
 gauges_catch <- st_intersection(gauges, catch_buffer)
 
-return(list_output <- list("res" = res, "catch" = catch, "catch_buffer" = catch_buffer, "gauges_catch" = gauges_catch))
+return(list_output <- list("res" = res, "catch" = catch, "catch_km2" =  catch_km2, "catch_buffer" = catch_buffer, "gauges_catch" = gauges_catch))
 }
 
 

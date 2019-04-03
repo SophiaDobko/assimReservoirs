@@ -37,3 +37,14 @@ list_idw <- idwRain(list_output, api)
 plotBasins(list_output)
 plotGauges(list_output)
 plotIDW(list_output, list_idw)
+
+# still in work ####
+# new plots/versions ####
+plot(res$geometry, col = "cadetblue4")
+plot(riv_res$geometry, add = T)
+plot(centr, col = "red", add = T)
+
+plot(catch$geometry, col = "white")
+plot(otto_res$geometry, border = "red", add = T)
+plot(res$geometry, col = "cadetblue4", add = T)
+
