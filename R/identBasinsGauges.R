@@ -32,10 +32,9 @@ riv_res <- riv_res[!is.na(riv_res$id_jrc),]
 
 
 centr <- st_centroid(res)
-lat <- ymin(extent(centr))
+lat <- as.numeric(ymin(extent(centr)))
 cells <- max(riv_res$UP_CELLS)
-area_cont <- cells * 30.87 * cos(lat*2*pi/360)
-cos(49*2*pi/360)
+area_cont_ha <- cells * (30.87 * cos(lat*2*pi/360)*15/100)^2
 
 # plot ####
 plot(res$geometry, col = "cadetblue4")
