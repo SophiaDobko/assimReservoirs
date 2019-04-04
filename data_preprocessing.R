@@ -5,6 +5,7 @@ otto <- st_read("D:/shapefiles/hybas_sa_lev12")
 riv <- st_read("D:/shapefiles/hybas_sa_riv")
 res_max <- st_read("D:/shapefiles/res_max")
 
+res_max <- res_max[,c(1,3)]
 ce <- st_read("D:/shapefiles/Brazil_states")
 ce <- subset(ce, NM_ESTADO == "CEARÁ")
 ce$ID <- NULL

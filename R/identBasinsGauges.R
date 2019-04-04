@@ -38,14 +38,16 @@ if(nrow(riv_res)==0){
 # identify all reservoirs in otto_res, calculate area-share
   catch <- otto_res
 
-  all_res <- st_intersection(res_max[,c(1,3)], catch)
+  all_res <- st_intersection(res_max, catch)
   all_res$geometry <- NULL
   all_res <- unique(all_res[,c(1,2)])
   catch_km2 <- (sum(catch$SUB_AREA)-sum(all_res$area_max*1e-06))/nrow(all_res)
   routing <- F
 }else{
+# reservoir is on river
 # calculate up_cells of riv
 centr <- st_centroid(res)
+centr <- st_transform(centr, "+proj=latlong  +datum=WGS84 +no_defs")
 lat <- as.numeric(ymin(extent(centr)))
 up_cells <- max(riv_res$UP_CELLS)
 up_cells_km2 <- up_cells * (30.87 * cos(lat*2*pi/360)*15)^2
