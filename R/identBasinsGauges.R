@@ -14,10 +14,6 @@ library(raster)
 
 # Identify contributing basins ####
 
-# load("D:/assimReservoirs/data/res_max.RData")
-# load("D:/assimReservoirs/data/otto_CE.RData")
-# load("D:/assimReservoirs/data/riv_CE.RData")
-
 res <- subset(res_max, id_jrc == ID)
 otto_int <- st_intersection(otto, res)
 
@@ -27,10 +23,7 @@ for(i in 1:nrow(otto_int)){
   otto_res <- rbind(otto_res, c)
 }
 
-# does res lie on the river network? ####
-#res <- st_transform(res, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
-#riv <- st_transform(riv, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
-
+# does res lie on the river network?
 riv_res <- st_join(riv, res, join = st_intersects)
 riv_res <- riv_res[!is.na(riv_res$id_jrc),]
 
