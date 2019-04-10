@@ -32,8 +32,8 @@ catch <- list_output$catch
         res_order <- rbind(res_order, o)
       }
 
-      res_main <- subset(res_order, up_cells_km2 > sub_area_km2)
-      res_not_main <- subset(res_order, up_cells_km2 <= sub_area_km2)
+      res_main <- subset(res_order, up_cells_km2 > 0.5 * sub_area_km2)
+      res_not_main <- subset(res_order, up_cells_km2 <= 0.5 * sub_area_km2)
 
 
 plot(catch$geometry, col = "white")
@@ -66,7 +66,10 @@ while(is.null(res_down)){
   plot(catch$geometry, col = "transparent")
   plot(res_down$geometry, add = T)
   plot(res$geometry, add = T, border = "blue")
-}
+    }
 
+   }
   }
 }
+
+
