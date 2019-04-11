@@ -1,4 +1,8 @@
-# routing
+#' Create reservoir routing scheme
+#'
+#' This function creates a routing scheme for the strategic reservoirs, those on the main river course. For each reservoir the next reservoir downstream is identified.
+#' @param list_output the output list of identBasinsGauges
+#' @export
 
 resRouting <- function(list_output){
 
@@ -43,7 +47,7 @@ resRouting <- function(list_output){
 
       res_main <- subset(res_order, up_cells_km2 > 0.5 * sub_area_km2)
       res_main$res_down <- NA
-      res_not_main <- subset(res_order, up_cells_km2 <= 0.5 * sub_area_km2)
+      #res_not_main <- subset(res_order, up_cells_km2 <= 0.5 * sub_area_km2)
 
 # plot strategic reservoirs ####
 # plot(catch$geometry, col = "white")
