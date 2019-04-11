@@ -5,8 +5,8 @@
 #' @export
 
 plotBasins <- function(list_output){
-  plot(list_output$catch$geometry, main = "Reservoir with contributing basins")
-  plot(list_output$res$geometry, border = "darkred", add = T)
+  plot(list_output$catch$geometry, col = "white", main = "Reservoir with contributing basins")
+  plot(list_output$res$geometry, col = "cadetblue4", add = T)
 }
 
 
@@ -30,6 +30,7 @@ plot(list_output$gauges_catch$geometry, add = T)
 #' @param list_output output of identBasinsGauges
 #' @param list_idw output of idwRain
 #' @export
+
 plotIDW <- function(list_output, list_idw){
 
   library(manipulate)

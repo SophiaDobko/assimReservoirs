@@ -12,5 +12,5 @@ plotIDW(list_output, list_idw)
 \item{list_idw}{output of idwRain}
 }
 \description{
-This function plots the identified rain gauges of identBasinsGauges
+This function plots the interpolated precipitation in the contributing basins
 }
