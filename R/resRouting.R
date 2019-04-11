@@ -7,6 +7,7 @@
 resRouting <- function(list_output){
 
   library(sf)
+  library(raster)
 
   if(list_output$routing == F){
 
