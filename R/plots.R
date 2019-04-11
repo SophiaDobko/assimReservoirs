@@ -64,6 +64,6 @@ plotStratRes <- function(list_output, list_routing){
   plot(riv_catch$geometry, col = "cadetblue", add = T)
   plot(reservoirs$geometry, col = "gray55", border = "gray55", add = T)
   plot(reservoirs$geometry[reservoirs$id_jrc %in% res_main$id_jrc], col = "cadetblue4", border = "cadetblue4", add = T)
-  legend("bottomright", inset = 0.01, fill = c("cadetblue4", "gray55"), legend = c("strategic reservoirs", "non-strategic reservoirs"), cex = 0.5)
+  legend("bottomright", inset = 0.01, fill = c("cadetblue4", "gray55"), legend = c("strategic reservoirs", "non-strategic reservoirs"), cex = 0.6)
 }
 

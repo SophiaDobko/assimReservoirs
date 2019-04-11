@@ -1,9 +1,5 @@
 # Example
 
-ID = 24140
-ID = 33443
-distGauges = 30
-
 list_output <- identBasinsGauges(ID = 25283, distGauges = 20)
 plotBasins(list_output)
 plotGauges(list_output, distGauges = 20)
