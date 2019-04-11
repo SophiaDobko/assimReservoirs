@@ -6,7 +6,7 @@
 
 plotBasins <- function(list_output){
   plot(list_output$catch$geometry, col = "white", main = "Reservoir with contributing basins")
-  plot(list_output$res$geometry, col = "cadetblue4", add = T)
+  plot(list_output$res$geometry, col = "cadetblue4", border = "cadetblue4", add = T)
 }
 
 
@@ -57,13 +57,13 @@ plotStratRes <- function(list_output, list_routing){
   catch <- list_output$catch
   res_main <- list_routing$res_main
   riv_catch <- list_routing$riv_catch
-  res_riv_catch <- list_routing$res_riv_catch
+  reservoirs <- list_routing$reservoirs
 
 
   plot(catch$geometry, col = "white")
   plot(riv_catch$geometry, col = "cadetblue", add = T)
-  plot(reservoirs$geometry, col = "gray50", border = "gray50", add = T)
+  plot(reservoirs$geometry, col = "gray55", border = "gray55", add = T)
   plot(reservoirs$geometry[reservoirs$id_jrc %in% res_main$id_jrc], col = "cadetblue4", border = "cadetblue4", add = T)
-  legend("bottomright", fill = c("cadetblue4", "gray50"), legend = c("strategic reservoirs", "non-strategic reservoirs"), cex = 0.7)
+  legend("bottomright", inset = 0.01, fill = c("cadetblue4", "gray55"), legend = c("strategic reservoirs", "non-strategic reservoirs"), cex = 0.5)
 }
 
