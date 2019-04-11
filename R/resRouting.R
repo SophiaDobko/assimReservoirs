@@ -11,13 +11,14 @@ resRouting <- function(list_output){
 
   if(list_output$routing == F){
 
-    print("no routing ")
+    print("No routing ")
 
     }else{
 
-      print(paste("routing started at", Sys.time()))
+      print(paste("Routing started at", Sys.time()))
 
       catch <- list_output$catch
+      res <- list_output$res
       riv_catch <- st_intersection(riv, st_union(catch))
 
       res_riv_catch <- st_join(res_max, riv_catch, join = st_intersects)
@@ -31,18 +32,18 @@ resRouting <- function(list_output){
 
       for(i in 1:length(IDs)){
 
-        res <- subset(reservoirs, id_jrc == IDs[i])
-        riv <- st_join(riv_catch, res, join = st_intersects)
-        riv <- subset(riv, !is.na(id_jrc))
-        riv <- data.frame(ARCID = riv$ARCID, UP_CELLS = riv$UP_CELLS)
-        otto <- st_intersection(catch, res)
+        res_i <- subset(reservoirs, id_jrc == IDs[i])
+        riv_i <- st_join(riv_catch, res_i, join = st_intersects)
+        riv_i <- subset(riv_i, !is.na(id_jrc))
+        riv_i <- data.frame(ARCID = riv_i$ARCID, UP_CELLS = riv_i$UP_CELLS)
+        otto <- st_intersection(catch, res_i)
         otto <- data.frame(HYBAS_ID = otto$HYBAS_ID, SUB_AREA = otto$SUB_AREA)
 
 # calculate up_cells area of riv
-        centr <- st_centroid(res)
+        centr <- st_centroid(res_i)
         centr <- st_transform(centr, "+proj=latlong  +datum=WGS84 +no_defs")
         lat <- as.numeric(ymin(extent(centr)))
-        up_cells <- max(riv$UP_CELLS)
+        up_cells <- max(riv_i$UP_CELLS)
         up_cells_km2 <- up_cells * (30.87 * cos(lat*2*pi/360)*15)^2/(10^6)
         sub_area_km2 <- sum(otto$SUB_AREA)
 
@@ -58,19 +59,19 @@ resRouting <- function(list_output){
 
       for(r in 1:nrow(res_main)){
 
-        print(paste("Started reservoir", r, "at", Sys.time()))
+        print(paste(r, "- started reservoir", res_main$id_jrc[r],  "at", Sys.time()))
 
         res_down <- NULL
-        res <- subset(res_riv_catch, id_jrc == res_main$id_jrc[r])
-        res <- subset(res, UP_AREA == max(UP_AREA) & UP_CELLS == max(UP_CELLS))
+        res_r <- subset(res_riv_catch, id_jrc == res_main$id_jrc[r])
+        res_r <- subset(res_r, UP_AREA == max(UP_AREA) & UP_CELLS == max(UP_CELLS))
 
-        otto_start <- subset(catch, HYBAS_ID == res$HYBAS_ID)
+        otto_start <- subset(catch, HYBAS_ID == res_r$HYBAS_ID)
         otto_down <- catch[catch$HYBAS_ID == otto_start$NEXT_DOWN,]
         res_otto_start <- subset(res_riv_catch, id_jrc %in% res_main$id_jrc & HYBAS_ID == otto_start$HYBAS_ID & id_jrc != res_main$id_jrc[r])
 
 # downstream reservoirs have at least the same up_cells and if the same, they should be more near to the next downstream subbasin
-        res_down <- subset(res_otto_start, UP_CELLS >= res$UP_CELLS)
-        res_down <- res_down[as.numeric(st_distance(res_down, otto_down)) < as.numeric(st_distance(res, otto_down))[1],]
+        res_down <- subset(res_otto_start, UP_CELLS >= res_r$UP_CELLS)
+        res_down <- res_down[as.numeric(st_distance(res_down, otto_down)) < as.numeric(st_distance(res_r, otto_down))[1],]
         res_down <- res_down[order(res_down$UP_CELLS, decreasing = T),]
         res_down <- res_down[!duplicated(res_down$id_jrc),]
 
@@ -86,6 +87,10 @@ resRouting <- function(list_output){
 
 # go to the next downstream subbasin until finding a reservoir
         if(nrow(res_down) == 0){
+          if(res_main$id_jrc[r] == res$id_jrc){
+        next
+
+          }else{
 
           while(nrow(res_down) == 0){
             otto_start <- otto_down
@@ -93,15 +98,15 @@ resRouting <- function(list_output){
             res_otto_start <- subset(res_riv_catch, id_jrc %in% res_main$id_jrc & HYBAS_ID == otto_start$HYBAS_ID & id_jrc != res_main$id_jrc[r])
 
 # downstream reservoirs have at least the same up_cells and if the same, they should be more near to the next downstream subbasin
-            res_down <- subset(res_otto_start, UP_CELLS >= res$UP_CELLS)
-            res_down <- res_down[as.numeric(st_distance(res_down, otto_down)) < as.numeric(st_distance(res, otto_down))[1],]
+            res_down <- subset(res_otto_start, UP_CELLS >= res_r$UP_CELLS)
+            res_down <- res_down[as.numeric(st_distance(res_down, otto_down)) < as.numeric(st_distance(res_r, otto_down))[1],]
             res_down <- res_down[order(res_down$UP_CELLS, decreasing = T),]
             res_down <- res_down[!duplicated(res_down$id_jrc),]
 
 
 # choose the reservoir with the smallest distance to res
             if(nrow(res_down) > 1){
-              res_down <- res_down[st_distance(res_down,res) == min(st_distance(res_down, res)),]
+              res_down <- res_down[st_distance(res_down, res_r) == min(st_distance(res_down, res_r)),]
               res_main$res_down[r] <- res_down$id_jrc[1]
             }
 
@@ -111,9 +116,11 @@ resRouting <- function(list_output){
           }
         }
       }
+      }
     }
+  list_routing <- list("res_main" = res_main, "reservoirs" = reservoirs,"riv_catch" =  riv_catch)
 
-  return(res_main)
+  return(list_routing)
   print(paste("Routing finished at", Sys.time()))
 }
 
