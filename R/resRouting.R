@@ -116,12 +116,13 @@ resRouting <- function(list_output){
           }
         }
       }
-      }
     }
-  list_routing <- list("res_main" = res_main, "reservoirs" = reservoirs,"riv_catch" =  riv_catch)
 
-  return(list_routing)
-  print(paste("Routing finished at", Sys.time()))
+    list_routing <- list("res_main" = res_main, "reservoirs" = reservoirs,"riv_catch" =  riv_catch)
+    return(list_routing)
+    print(paste("Routing finished at", Sys.time()))
+  }
+
 }
 
 

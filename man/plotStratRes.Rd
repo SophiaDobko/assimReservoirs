@@ -4,7 +4,7 @@
 \alias{plotStratRes}
 \title{Plot strategic reservoirs}
 \usage{
-plotStratRes(list_output)
+plotStratRes(list_output, list_routing)
 }
 \arguments{
 \item{list_output}{output of identBasinsGauges}
