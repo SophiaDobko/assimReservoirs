@@ -15,7 +15,7 @@ resRouting <- function(list_output){
 
     }else{
 
-      print("routing in process...")
+      print(paste("routing started at", Sys.time()))
 
       catch <- list_output$catch
       riv_catch <- st_intersection(riv, st_union(catch))
@@ -57,6 +57,8 @@ resRouting <- function(list_output){
 # find the next reservoir downstream
 
       for(r in 1:nrow(res_main)){
+
+        print(paste("Started reservoir", r, "at", Sys.time()))
 
         res_down <- NULL
         res <- subset(res_riv_catch, id_jrc == res_main$id_jrc[r])
@@ -112,6 +114,7 @@ resRouting <- function(list_output){
     }
 
   return(res_main)
+  print(paste("Routing finished at", Sys.time()))
 }
 
 
