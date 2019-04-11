@@ -3,9 +3,9 @@
 ID = 24140
 distGauges = 30
 
-list_output <- identBasinsGauges(ID = 24140, distGauges = 30)
+list_output <- identBasinsGauges(ID = 33443, distGauges = 20)
 plotBasins(list_output)
-plotGauges(list_output)
+plotGauges(list_output, distGauges = 20)
 
 api <- requestGauges(requestDate = today(), Ndays = 5, list_output)
 list_idw <- idwRain(list_output, api)

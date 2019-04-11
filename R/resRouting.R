@@ -66,12 +66,19 @@ resRouting <- function(list_output){
         res_r <- subset(res_r, UP_AREA == max(UP_AREA) & UP_CELLS == max(UP_CELLS))
 
         otto_start <- subset(catch, HYBAS_ID == res_r$HYBAS_ID)
-        otto_down <- catch[catch$HYBAS_ID == otto_start$NEXT_DOWN,]
+
+
         res_otto_start <- subset(res_riv_catch, id_jrc %in% res_main$id_jrc & HYBAS_ID == otto_start$HYBAS_ID & id_jrc != res_main$id_jrc[r])
 
 # downstream reservoirs have at least the same up_cells and if the same, they should be more near to the next downstream subbasin
         res_down <- subset(res_otto_start, UP_CELLS >= res_r$UP_CELLS)
-        res_down <- res_down[as.numeric(st_distance(res_down, otto_down)) < as.numeric(st_distance(res_r, otto_down))[1],]
+
+        if(catch$HYBAS_ID == otto_start$NEXT_DOWN){
+          otto_down <- catch[catch$HYBAS_ID == otto_start$NEXT_DOWN,]
+          res_down <- res_down[as.numeric(st_distance(res_down, otto_down)) < as.numeric(st_distance(res_r, otto_down))[1],]
+        }else{
+          otto_down <- NULL
+        }
         res_down <- res_down[order(res_down$UP_CELLS, decreasing = T),]
         res_down <- res_down[!duplicated(res_down$id_jrc),]
 
@@ -91,6 +98,9 @@ resRouting <- function(list_output){
         next
 
           }else{
+            if(is.null(otto_down)){
+              next
+            }
 
           while(nrow(res_down) == 0){
             otto_start <- otto_down
