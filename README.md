@@ -6,6 +6,7 @@ With a simple model, including meteorological observations and the routing schem
 So far, the following functions are implemented:
 
 - ```identBasinsGauges(ID, distGauges)``` identifies the contributing basins of a certain reservoir and the precipitation gauges within a certain buffer around this basin
+
 - ```requestGauges(requestDate, Ndays, list_output)``` requests api rain data for the above selected rain gauges
 - ```idwRain(list_output, api)``` interpolates rain data using idw (inverse distance weighted) interpolation
 

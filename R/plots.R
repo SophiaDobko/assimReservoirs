@@ -18,9 +18,9 @@ plotBasins <- function(list_output){
 #' @export
 
 plotGauges <- function(list_output, distGauges = 30){
-plot(list_output$catch_buffer, border = "green", main = paste("Basins with rain gauges within", distGauges, "km"))
-plot(list_output$catch$geometry, add = T, border = "red", col = "white")
-plot(list_output$gauges_catch$geometry, add = T)
+  plot(list_output$catch_buffer, border = "green", main = paste("Basins with rain gauges within", distGauges, "km"))
+  plot(list_output$catch$geometry, add = T, border = "red", col = "white")
+  plot(list_output$gauges_catch$geometry, add = T)
 }
 
 
@@ -43,5 +43,20 @@ plotIDW <- function(list_output, list_idw){
    manipulate(
     plot(idwRaster[[day]], main = names(idwRaster)[[day]]),
     day = slider(1,5))
+}
+
+
+#' Plot strategic reservoirs
+#'
+#' This function plots the strategic reservoirs identified by resRouting
+#' @param list_output output of identBasinsGauges
+#' @export
+
+plotStratRes <- function(list_output){
+
+  plot(otto_start$geometry)
+  plot(res_otto_start$geometry, col = "blue", add = T)
+  plot(res$geometry, col = "darkred", add = T)
+  plot(res_down$geometry, col = "green", add = T)
 }
 
