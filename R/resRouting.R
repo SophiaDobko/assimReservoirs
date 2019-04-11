@@ -49,19 +49,6 @@ resRouting <- function(list_output){
       res_main$res_down <- NA
       #res_not_main <- subset(res_order, up_cells_km2 <= 0.5 * sub_area_km2)
 
-# plot strategic reservoirs ####
-# plot(catch$geometry, col = "white")
-# plot(riv_catch$geometry, add = T, col = "red")
-# plot(res_riv_catch$geometry, col = "gray", border = "gray", add = T)
-# plot(res_riv_catch$geometry[res_riv_catch$id_jrc %in% res_main$id_jrc], add = T)
-
-
-    plot(otto_start$geometry)
-    plot(res$geometry, add = T, col = "red")
-    plot(res_otto_start$geometry, add = T, col = "green")
-    plot(riv_catch$geometry, add = T)
-    plot(otto_down$geometry, col = "green", add = T)
-
 # find the next reservoir downstream
 
 for(r in 1:nrow(res_main)){

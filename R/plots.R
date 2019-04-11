@@ -30,6 +30,7 @@ plot(list_output$gauges_catch$geometry, add = T)
 #' @param list_output output of identBasinsGauges
 #' @param list_idw output of idwRain
 #' @export
+
 plotIDW <- function(list_output, list_idw){
 
   library(manipulate)
