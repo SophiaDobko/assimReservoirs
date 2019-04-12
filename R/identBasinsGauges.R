@@ -43,7 +43,15 @@ centr <- st_centroid(res)
 centr <- st_transform(centr, "+proj=latlong  +datum=WGS84 +no_defs")
 lat <- as.numeric(ymin(extent(centr)))
 up_cells <- max(riv_res$UP_CELLS)
-up_cells_km2 <- up_cells * (30.87 * cos(lat*2*pi/360)*15)^2
+up_cells_km2 <- up_cells * (30.87 * cos(lat*2*pi/360)*15)^2/(10^6)
+
+# Check if the lowest subbasin is really contributing to the reservoirs ####
+# if up-cells >= up-area - lowest subbasin -> lowest subbasin contributes
+# if up-cells < up-area - lowest subbasin -> lowest subbasin is not part of otto_res
+otto1 <- otto_res[otto_res$UP_AREA == max(otto_res$UP_AREA),]
+  if(up_cells_km2 < otto1$UP_AREA - otto1$SUB_AREA){
+    otto_res <- subset(otto_res, HYBAS_ID != otto1$HYBAS_ID)
+  }
 
   if(up_cells_km2 <= sum(otto_res$SUB_AREA)){
 # catch_km2 =  up_cells_km2, catch = otto_res
