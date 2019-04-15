@@ -2,11 +2,17 @@
 #'
 #' @export
 
+YEAR = 2019
+MONTH = 04
+DAY = 12
+setwd("D:/DownloadReservoirData/trmm")
+
 get_trmm <- function(){
 
   list_files <- curl::new_handle()
   ftp_prefix='ftp://'
-  myurl = "arthurhou.pps.eosdis.nasa.gov/gpmuser/martinsd@uni-potsdam.de/pgs/"
+#  paste('ftp://arthurhou.pps.eosdis.nasa.gov/gpmdata', sprintf("%04d", YEAR), sprintf("%02d",  MONTH), sprintf("%02d", DAY), 'gprof/', hdf_filename,sep='/')
+  myurl = paste0('arthurhou.pps.eosdis.nasa.gov/gpmdata/', sprintf("%04d", YEAR), "/", sprintf("%02d",  MONTH), "/", sprintf("%02d", DAY), '/gprof/')
   up = "martinsd@uni-potsdam.de:martinsd@uni-potsdam.de"
   curl::handle_setopt(list_files, userpwd = up,ftp_use_epsv = TRUE, dirlistonly = TRUE)
 
@@ -14,8 +20,9 @@ get_trmm <- function(){
   files <- readLines(con)
   close(con)
 
+  files3A <- files[grep(pattern = "3A-DAY.", files)]
 
-  for(fname in files) {
+  for(fname in files3A[1]) {
     curl::curl_download(
       paste0(ftp_prefix,myurl,fname),
       destfile = paste0(getwd(),'/',fname),
@@ -23,40 +30,56 @@ get_trmm <- function(){
     )
 
   }
-  return(files)
+  return(files3A)
 }
+
 
 # trmm ####
 setwd("D:/DownloadReservoirData/trmm")
 get_trmm()
+save(files3A, file = "files3A.RData")
 
 
 #' get rain from trmm data
 #'
 #' obtain precipitation for the past few days
 #' @export
+
 trmmRain <- function(){
   library(ncdf4)
-  nc=ncdf4::nc_open('2B-SP-47W0S33W10S.GPM.DPRGMI.CORRA2018.20190408-S022304-E022610.029020.V06A.HDF5')
+  nc=ncdf4::nc_open(files3A[1])
 
   nc
 }
 
 library(raster)
+library(sf)
 
 trmmRain()
 
 # print(nc)
-# attributes(nc)$names
-# attributes(nc$var)$names
+attributes(nc)$names
+attributes(nc$var)$names
 # ncatt_get(nc, attributes(nc$var)$names[4])
 # nlon <- dim(lon)
 # nlat <- dim(lat)
-# nprecip <- dim(precip)
+precip <- ncvar_get(nc, "Grid/surfacePrecipitation")
+inputfilenames <- ncvar_get(nc, "InputFileNames")
+nprecip <- dim(precip)
 
-lon <- ncvar_get(nc, "NS/Longitude")
-lat <- ncvar_get(nc, "NS/Latitude")
-precip <- ncvar_get(nc, "NS/surfPrecipTotRate")
+c <- st_transform(list_BG$catch, "+proj=latlong  +datum=WGS84 +no_defs")
+# change calculation, now its doing the opposite of what it should do... ####
+latmin <- floor(as.numeric(ymin(extent(c)))*0.25-90)
+latmax <- ceiling(as.numeric(ymax(extent(c)))*0.25-90)
+longmin <- floor(as.numeric(xmin(extent(c)))*0.25-180)
+longmax <- ceiling(as.numeric(xmax(extent(c)))*0.25-180)
+
+precip <- data.frame(precip)
+precip_catch <- precip[latmin:latmax, longmin:longmax]
+# precip_catch <-
+
+ceiling(1.5)
+floor(1.5)
 
 day_month <- ncvar_get(nc,"ScanTime/DayOfMonth",start=1)
 second <- ncvar_get(nc, "ScanTime/Second")
