@@ -15,7 +15,7 @@ library(raster)
 # Identify contributing basins ####
 
 res <- subset(res_max, id_jrc == ID)
-if(nrow(res) == 0){print(paste("ID", ID, "doesn't exist!"))}
+if(nrow(res) == 0) stop(paste("ID", ID, "doesn't exist!"))
 otto_int <- st_intersection(otto, res)
 
 otto_res <- NULL
