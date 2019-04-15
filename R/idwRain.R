@@ -4,8 +4,8 @@
 #' @param list_BG output of identBasinsGauges
 #' @param api output of requestGauges
 #' @return a list with 2 elements:
-#' - ```idwRaster``` contains a raster of the interpolated precipitation for each requested day,
-#' - ```dailyRain_table``` is a dataframe with the mean precipitation on the catchment and the reservoir of each requested day.
+#' - ```idwRaster``` contains a raster with the interpolated precipitation for each requested day,
+#' - ```dailyRain_table``` is a dataframe with the mean precipitation of the catchment and the reservoir of each requested day.
 #' @export
 
 idwRain <- function(list_BG, api){
