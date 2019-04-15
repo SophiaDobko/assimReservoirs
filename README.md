@@ -38,15 +38,18 @@ With the use of meteorological observations, the reservoir extent shall be model
 #### Outputs:
 
 - ```list_BG``` (from ```identBasinsGauges```) is a list with 6 elements: "res" is the treated reservoir, "catch" is the catchment contributing to this reservoir, "catch_km2" gives the area of the catchment in square kilometers, "catch_buffer" is a shapefile of a buffer zone of the chosen size around the catchment, "gauges_catch" is a point shapefile with the rain gauges within "catch_buffer" and "routing" is logical, indicating if routing can be done (TRUE when the reservoir receives water from upstream subbasins)
-- ```api```
-- ```list_idw```
-- ```list_routing```
+
+- ```api``` (from ```requestGauges```) is a dataframe with the precipitation available for the requested dates and gauges
+
+- ```list_idw``` (from ```idwRain```) is a list with 2 elements: "idwRaster" contains a raster of the interpolated precipitation for each requested day, "dailyRain_table" is a dataframe with the mean precipitation on the catchment and the reservoir of each requested day.
+
+- ```list_routing``` (from ```resRouting```) if no routing is possible "No routing" is printed, otherwise the output is a list with 3 elements: "res_main" is a dataframe of all the reservoirs in the catchment where the area of UP_CELLS > 0.5 * the area of its subbasin, res_down shows the ID of the next downstream reservoir, "reservoirs" is a geospatial dataframe of all the reservoirs in the catchment which are on a river reach of "riv", and "riv_catch" is a geospatial dataframe of all the river reaches in the catchment.
 
 <br>
 
 #### Future functions:
 
-- include radar data and combine it with the data from the rain gauges for more reliable precipitation data
+- complement the interpolation of precipitation data from rain gauges with radar data
 
 - water balance to calculate the reservoir extent and compare it to the extent estimated from remote sensing
 

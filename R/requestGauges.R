@@ -4,6 +4,7 @@
 #' @param requestDate latest date of interest, e.g. as.Date("2018-03-15") or today()
 #' @param Ndays number of days to go back in time from requestDate
 #' @param list_BG output of identBasinsGauges
+#' @return a dataframe with the precipitation available for the requested dates and gauges
 #' @export
 
 requestGauges <- function(requestDate, Ndays, list_BG) {
