@@ -81,7 +81,7 @@ gauges <- st_transform(p_gauges_saved, "+proj=utm +zone=24 +datum=WGS84 +no_defs
 catch_buffer <- st_buffer(st_union(catch, by_feature = F), dist = distGauges *1000)
 gauges_catch <- st_intersection(gauges, catch_buffer)
 
-return(list_output <- list("res" = res, "catch" = catch, "catch_km2" =  catch_km2, "catch_buffer" = catch_buffer, "gauges_catch" = gauges_catch, "routing" = routing))
+return(list_BG <- list("res" = res, "catch" = catch, "catch_km2" =  catch_km2, "catch_buffer" = catch_buffer, "gauges_catch" = gauges_catch, "routing" = routing))
 }
 
 

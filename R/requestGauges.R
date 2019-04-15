@@ -3,17 +3,17 @@
 #' This function requests api rain data for selected rain gauges
 #' @param requestDate latest date of interest, e.g. as.Date("2018-03-15") or today()
 #' @param Ndays number of days to go back in time from requestDate
-#' @param list_output output of identBasinsGauges
+#' @param list_BG output of identBasinsGauges
 #' @export
 
-requestGauges <- function(requestDate, Ndays, list_output) {
+requestGauges <- function(requestDate, Ndays, list_BG) {
 
   library(lubridate)
   library(dplyr)
   library(sf)
   library(jsonlite)
 
-  gauges_catch <- list_output[["gauges_catch"]]
+  gauges_catch <- list_BG[["gauges_catch"]]
   api <- data.frame()
   for(c in 1:nrow(gauges_catch)){
     codigo = gauges_catch$codigo[c]

@@ -1,37 +1,37 @@
 #' Plot contributing basins
 #'
 #' This function plots the identified contributing basins of identBasinsGauges
-#' @param list_output output of identBasinsGauges
+#' @param list_BG output of identBasinsGauges
 #' @export
 
-plotBasins <- function(list_output){
-  plot(list_output$catch$geometry, col = "white", main = "Reservoir with contributing basins")
-  plot(list_output$res$geometry, col = "cadetblue4", border = "cadetblue4", add = T)
+plotBasins <- function(list_BG){
+  plot(list_BG$catch$geometry, col = "white", main = "Reservoir with contributing basins")
+  plot(list_BG$res$geometry, col = "cadetblue4", border = "cadetblue4", add = T)
 }
 
 
 #' Plot rain gauges
 #'
 #' This function plots the identified rain gauges of identBasinsGauges
-#' @param list_output output of identBasinsGauges
+#' @param list_BG output of identBasinsGauges
 #' @param distGauges distance in km around the contributing basins to look for rain gauges as it was used in identBasinsGauges, defaults to 30
 #' @export
 
-plotGauges <- function(list_output, distGauges = 30){
-  plot(list_output$catch_buffer, border = "green", main = paste("Basins with rain gauges within", distGauges, "km"))
-  plot(list_output$catch$geometry, add = T, border = "red", col = "white")
-  plot(list_output$gauges_catch$geometry, add = T)
+plotGauges <- function(list_BG, distGauges = 30){
+  plot(list_BG$catch_buffer, border = "green", main = paste("Basins with rain gauges within", distGauges, "km"))
+  plot(list_BG$catch$geometry, add = T, border = "red", col = "white")
+  plot(list_BG$gauges_catch$geometry, add = T)
 }
 
 
 #' Plot idw interpolation
 #'
 #' This function plots the interpolated precipitation in the contributing basins
-#' @param list_output output of identBasinsGauges
+#' @param list_BG output of identBasinsGauges
 #' @param list_idw output of idwRain
 #' @export
 
-plotIDW <- function(list_output, list_idw){
+plotIDW <- function(list_BG, list_idw){
 
   library(manipulate)
   function(raster)
@@ -49,12 +49,12 @@ plotIDW <- function(list_output, list_idw){
 #' Plot strategic reservoirs
 #'
 #' This function plots the strategic reservoirs identified by resRouting
-#' @param list_output output of identBasinsGauges
+#' @param list_BG output of identBasinsGauges
 #' @export
 
-plotStratRes <- function(list_output, list_routing){
+plotStratRes <- function(list_BG, list_routing){
 
-  catch <- list_output$catch
+  catch <- list_BG$catch
   res_main <- list_routing$res_main
   riv_catch <- list_routing$riv_catch
   reservoirs <- list_routing$reservoirs

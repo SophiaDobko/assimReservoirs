@@ -72,3 +72,14 @@ precip[precip == fillvalue$value] <- NA
 
 r <- raster(t(precip), xmn = min(lon), xmx = max(lon), ymn = min(lat), crs = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+ towgs84=0,0,0"))
 plot(r)
+
+# do zonal statistics similary to idwRain
+dailyRain <- data.frame()
+for(i in 1:length(dates)){
+
+res <- as(list_output$res$geometry, "Spatial")
+daily <- data.frame("date" = dates[i], "catch_mean" = mean(unlist(extract(r, c))), "reservoir_mean" = mean(unlist(extract(r, res))))
+dailyRain <- rbind(dailyRain, daily)
+}
+return(list_idw <- list("idwRaster" = idwRaster, "dailyRain_table" = dailyRain))
+

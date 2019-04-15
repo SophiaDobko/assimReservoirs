@@ -1,11 +1,11 @@
 #' Interpolate rain data
 #'
 #' This function interpolates rain data using idw (inverse distance weighted) interpolation
-#' @param list_output output of identBasinsGauges
+#' @param list_BG output of identBasinsGauges
 #' @param api output of requestGauges
 #' @export
 
-idwRain <- function(list_output, api){
+idwRain <- function(list_BG, api){
 
 library(gstat)
 library(sp)
@@ -19,7 +19,7 @@ library(raster)
   idwRaster <- list()
   for(i in 1:length(dates)){
     apisub <- subset(api, returnedDate == dates[i])
-    gauges_catch <- merge.data.frame(list_output$gauges_catch, apisub, by = "codigo")
+    gauges_catch <- merge.data.frame(list_BG$gauges_catch, apisub, by = "codigo")
 
 # IDW due to https://mgimond.github.io/Spatial/interpolation-in-r.html ####
 # = inverse distance weighted interpolation
@@ -27,8 +27,8 @@ library(raster)
 # Create an empty grid where n is the total number of cells
 g <- st_as_sf(gauges_catch[,c(1,18,21)])
 g <- as(g, "Spatial")
-b <- as(list_output$catch_buffer, "Spatial")
-c <- as(list_output$catch$geometry, "Spatial")
+b <- as(list_BG$catch_buffer, "Spatial")
+c <- as(list_BG$catch$geometry, "Spatial")
 g@bbox <- b@bbox
 
 grd              <- as.data.frame(spsample(g, "regular", n=500000))
@@ -48,7 +48,7 @@ r <- crop(r,c)
 idwRaster[[i]] <- r # Output: interpolation raster for each day
 
 # Output: daily mean rain for the whole catchment and the reservoir
-res <- as(list_output$res$geometry, "Spatial")
+res <- as(list_BG$res$geometry, "Spatial")
 daily <- data.frame("date" = dates[i], "catch_mean" = mean(unlist(extract(r, c))), "reservoir_mean" = mean(unlist(extract(r, res))))
 
 dailyRain <- rbind(dailyRain, daily)

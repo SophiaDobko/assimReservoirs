@@ -1,15 +1,15 @@
 #' Create reservoir routing scheme
 #'
 #' This function creates a routing scheme for the strategic reservoirs, those on the main river course. For each reservoir the next reservoir downstream is identified.
-#' @param list_output the output list of identBasinsGauges
+#' @param list_BG the output list of identBasinsGauges
 #' @export
 
-resRouting <- function(list_output){
+resRouting <- function(list_BG){
 
   library(sf)
   library(raster)
 
-  if(list_output$routing == F){
+  if(list_BG$routing == F){
 
     print("No routing ")
 
@@ -17,8 +17,8 @@ resRouting <- function(list_output){
 
       print(paste("Routing started at", Sys.time()))
 
-      catch <- list_output$catch
-      res <- list_output$res
+      catch <- list_BG$catch
+      res <- list_BG$res
       riv_catch <- st_intersection(riv, st_union(catch))
 
       res_riv_catch <- st_join(res_max, riv_catch, join = st_intersects)

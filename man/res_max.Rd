@@ -6,12 +6,15 @@
 \title{Maximum extent of reservoirs in Ceará}
 \format{An object of class \code{sf} (inherits from \code{data.frame}) with 22960 rows and 3 columns.}
 \source{
-database
+https://global-surface-water.appspot.com/download
 }
 \usage{
 data(res_max)
 }
 \description{
 Maximum extent of reservoirs in Ceará
+}
+\references{
+Jean-Francois Pekel, Andrew Cottam, Noel Gorelick, Alan S. Belward, High-resolution mapping of global surface water and its long-term changes. Nature 540, 418-422 (2016). (doi:10.1038/nature20584)
 }
 \keyword{datasets}
