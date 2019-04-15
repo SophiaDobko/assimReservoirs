@@ -6,10 +6,6 @@
 #' @return a list with 2 elements:
 #' - ```idwRaster``` contains a raster of the interpolated precipitation for each requested day,
 #' - ```dailyRain_table``` is a dataframe with the mean precipitation on the catchment and the reservoir of each requested day.
-#' @example
-#' list_BG <- identBasinsGauges(ID = 25283, distGauges = 20)
-#' api <- requestGauges(requestDate = today(), Ndays = 5, list_BG)
-#' list_idw <- idwRain(list_BG, api)
 #' @export
 
 idwRain <- function(list_BG, api){
