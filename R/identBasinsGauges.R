@@ -10,6 +10,9 @@
 #' - ```catch_buffer``` is a shapefile of a buffer zone of the chosen size around the catchment,
 #' - ```gauges_catch``` is a point shapefile with the rain gauges within "catch_buffer" and
 #' - ```routing``` is logical, indicating if routing can be done (TRUE when the reservoir receives water from upstream subbasins)
+#' @example ## identify contributing basins for reservoir 25283 and find rain gauges within a distance of 20 km
+#'
+#' list_BG <- identBasinsGauges(ID = 25283, distGauges = 20)
 #' @export
 
 identBasinsGauges <- function(ID, distGauges = 30){
