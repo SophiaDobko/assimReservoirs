@@ -12,7 +12,11 @@ idwRain(list_BG, api)
 \item{api}{output of requestGauges}
 }
 \value{
-a list with 2 elements: "idwRaster" contains a raster of the interpolated precipitation for each requested day, "dailyRain_table" is a dataframe with the mean precipitation on the catchment and the reservoir of each requested day.
+a list with 2 elements:
+\itemize{
+\item \code{idwRaster} contains a raster of the interpolated precipitation for each requested day,
+\item \code{dailyRain_table} is a dataframe with the mean precipitation on the catchment and the reservoir of each requested day.
+}
 }
 \description{
 This function interpolates rain data using idw (inverse distance weighted) interpolation

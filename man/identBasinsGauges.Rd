@@ -25,7 +25,3 @@ a list with 6 elements:
 \description{
 This function identifies contributing basins and surrounding rain gauges
 }
-\examples{
-```# identify contributing basins for reservoir 25283 and find rain gauges within a distance of 20 km```
-```list_BG <- identBasinsGauges(ID = 25283, distGauges = 20)```
-}
