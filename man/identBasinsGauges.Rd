@@ -12,7 +12,13 @@ identBasinsGauges(ID, distGauges = 30)
 \item{distGauges}{distance in km around the contributing basins to look for rain gauges, defaults to 30}
 }
 \value{
-a list with 6 elements: "res" is the treated reservoir, "catch" is the catchment contributing to this reservoir, "catch_km2" gives the area of the catchment in square kilometers, "catch_buffer" is a shapefile of a buffer zone of the chosen size around the catchment, "gauges_catch" is a point shapefile with the rain gauges within "catch_buffer" and "routing" is logical, indicating if routing can be done (TRUE when the reservoir receives water from upstream subbasins)
+a list with 6 elements:
+1. "res" is the treated reservoir,
+2. "catch" is the catchment contributing to this reservoir,
+3. "catch_km2" gives the area of the catchment in square kilometers,
+4. "catch_buffer" is a shapefile of a buffer zone of the chosen size around the catchment,
+5. "gauges_catch" is a point shapefile with the rain gauges within "catch_buffer" and
+6. "routing" is logical, indicating if routing can be done (TRUE when the reservoir receives water from upstream subbasins)
 }
 \description{
 This function identifies contributing basins and surrounding rain gauges
