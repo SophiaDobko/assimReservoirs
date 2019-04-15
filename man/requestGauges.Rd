@@ -13,6 +13,9 @@ requestGauges(requestDate, Ndays, list_BG)
 
 \item{list_BG}{output of identBasinsGauges}
 }
+\value{
+a dataframe with the precipitation available for the requested dates and gauges
+}
 \description{
 This function requests api rain data for selected rain gauges
 }
