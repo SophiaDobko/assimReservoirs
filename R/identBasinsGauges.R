@@ -1,7 +1,7 @@
 #' Contributing basins and rain gauges
 #'
 #' This function identifies contributing basins and surrounding rain gauges
-#' @param ID id (due to JRC) of the reservoir of interest
+#' @param ID id of the chosen reservoir (see ```data(res_max)```)
 #' @param distGauges distance in km around the contributing basins to look for rain gauges, defaults to 30
 #' @return a list with 6 elements:
 #' - ```res``` is the treated reservoir,
@@ -10,8 +10,7 @@
 #' - ```catch_buffer``` is a shapefile of a buffer zone of the chosen size around the catchment,
 #' - ```gauges_catch``` is a point shapefile with the rain gauges within "catch_buffer" and
 #' - ```routing``` is logical, indicating if routing can be done (TRUE when the reservoir receives water from upstream subbasins)
-#' @example ## identify contributing basins for reservoir 25283 and find rain gauges within a distance of 20 km
-#'
+#' @example
 #' list_BG <- identBasinsGauges(ID = 25283, distGauges = 20)
 #' @export
 
