@@ -11,6 +11,9 @@ identBasinsGauges(ID, distGauges = 30)
 
 \item{distGauges}{distance in km around the contributing basins to look for rain gauges, defaults to 30}
 }
+\value{
+list_BG is a list of
+}
 \description{
 This function identifies contributing basins and surrounding rain gauges
 }

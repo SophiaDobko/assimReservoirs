@@ -4,14 +4,14 @@
 \alias{requestGauges}
 \title{Request rain data from FUNCEME api}
 \usage{
-requestGauges(requestDate, Ndays, list_output)
+requestGauges(requestDate, Ndays, list_BG)
 }
 \arguments{
 \item{requestDate}{latest date of interest, e.g. as.Date("2018-03-15") or today()}
 
 \item{Ndays}{number of days to go back in time from requestDate}
 
-\item{list_output}{output of identBasinsGauges}
+\item{list_BG}{output of identBasinsGauges}
 }
 \description{
 This function requests api rain data for selected rain gauges

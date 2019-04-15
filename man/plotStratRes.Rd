@@ -4,10 +4,10 @@
 \alias{plotStratRes}
 \title{Plot strategic reservoirs}
 \usage{
-plotStratRes(list_output, list_routing)
+plotStratRes(list_BG, list_routing)
 }
 \arguments{
-\item{list_output}{output of identBasinsGauges}
+\item{list_BG}{output of identBasinsGauges}
 }
 \description{
 This function plots the strategic reservoirs identified by resRouting

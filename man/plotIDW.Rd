@@ -4,10 +4,10 @@
 \alias{plotIDW}
 \title{Plot idw interpolation}
 \usage{
-plotIDW(list_output, list_idw)
+plotIDW(list_BG, list_idw)
 }
 \arguments{
-\item{list_output}{output of identBasinsGauges}
+\item{list_BG}{output of identBasinsGauges}
 
 \item{list_idw}{output of idwRain}
 }

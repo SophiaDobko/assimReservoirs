@@ -4,10 +4,10 @@
 \alias{plotBasins}
 \title{Plot contributing basins}
 \usage{
-plotBasins(list_output)
+plotBasins(list_BG)
 }
 \arguments{
-\item{list_output}{output of identBasinsGauges}
+\item{list_BG}{output of identBasinsGauges}
 }
 \description{
 This function plots the identified contributing basins of identBasinsGauges

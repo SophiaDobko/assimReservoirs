@@ -4,10 +4,10 @@
 \alias{resRouting}
 \title{Create reservoir routing scheme}
 \usage{
-resRouting(list_output)
+resRouting(list_BG)
 }
 \arguments{
-\item{list_output}{the output list of identBasinsGauges}
+\item{list_BG}{the output list of identBasinsGauges}
 }
 \description{
 This function creates a routing scheme for the strategic reservoirs, those on the main river course. For each reservoir the next reservoir downstream is identified.

@@ -37,7 +37,7 @@ With the use of meteorological observations, the reservoir extent shall be model
 
 #### Outputs:
 
-- ```list_BG``` (from ```identBasinsGauges```): 
+- ```list_BG``` (from ```identBasinsGauges```) is a list with 6 elements: "res" is the treated reservoir, "catch" is the catchment contributing to this reservoir, "catch_km2" gives the area of the catchment in square kilometers, "catch_buffer" is a shapefile of a buffer zone of the chosen size around the catchment, "gauges_catch" is a point shapefile with the rain gauges within "catch_buffer" and "routing" is logical, indicating if routing can be done (TRUE when the reservoir receives water from upstream subbasins)
 - ```api```
 - ```list_idw```
 - ```list_routing```

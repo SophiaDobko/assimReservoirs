@@ -4,10 +4,10 @@
 \alias{idwRain}
 \title{Interpolate rain data}
 \usage{
-idwRain(list_output, api)
+idwRain(list_BG, api)
 }
 \arguments{
-\item{list_output}{output of identBasinsGauges}
+\item{list_BG}{output of identBasinsGauges}
 
 \item{api}{output of requestGauges}
 }
