@@ -7,7 +7,10 @@ With the use of meteorological observations, the reservoir extent shall be model
 
 #### Available funcions:
 
-- ```identBasinsGauges(ID, distGauges)``` identifies the contributing basins of a certain reservoir and the precipitation gauges within a certain buffer around this basin
+- ```identBasinsGauges(ID, distGauges)``` identifies the contributing basins of a certain reservoir and the rain gauges within a certain buffer around this basin
+
+- ```identBasinsGauges_shape(shape, distGauges)``` allows to identify contributing basins and rain gauges for any shapefile
+
 
 - ```plotBasins(list_BG)``` plots the identified contributing basins
 
@@ -40,8 +43,8 @@ With the use of meteorological observations, the reservoir extent shall be model
 ```list_BG``` <br>
 output of ```identBasinsGauges```, a list with 6 elements:
 
-- ```res``` is the treated reservoir, 
-- ```catch``` is the catchment contributing to this reservoir, 
+- ```res``` is the treated reservoir (or shapefile), 
+- ```catch``` is the catchment contributing to this reservoir (or shapefile), 
 - ```catch_km2``` gives the area of the catchment in square kilometers,
 - ```catch_buffer``` is a shapefile of a buffer zone of the chosen size around the catchment, 
 - ```gauges_catch``` is a point shapefile with the rain gauges within ```catch_buffer``` and 
@@ -79,6 +82,7 @@ output of ```resRouting```, if no routing is possible "No routing" is printed, o
 library(assimReservoirs)
 
 list_BG <- identBasinsGauges(ID = 25283, distGauges = 20)
+list_BG <- identBasinsGauges_shape(shape = subset(res_max, id_jrc==49301), distGauges = 20)
 plotBasins(list_BG)
 plotGauges(list_BG, distGauges = 20)
 

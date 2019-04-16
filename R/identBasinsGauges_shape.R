@@ -1,7 +1,7 @@
 #' Contributing basins and rain gauges
 #'
 #' This function identifies contributing basins and surrounding rain gauges
-#' @param shape shapefile (WGS84, UTM zone=24) of the geometry for which the catchment shall be identified, e.g. a reservoir from ```data(res_max)```
+#' @param shape shapefile (WGS84, UTM zone=24) to identify its contributing basins and surrounding rain gauges, e.g. a reservoir from ```data(res_max)```
 #' @param distGauges distance in km around the contributing basins to look for rain gauges, defaults to 30
 #' @return a list with 6 elements:
 #' - ```res``` is the treated shape/reservoir,
@@ -12,7 +12,7 @@
 #' - ```routing``` is logical, indicating if routing can be done (TRUE when the shape/reservoir receives water from upstream subbasins)
 #' @export
 
-identBasinsGauges_gen <- function(shape, distGauges = 30){
+identBasinsGauges_shape <- function(shape, distGauges = 30){
 
 library(maptools)
 library(sf)
