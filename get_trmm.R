@@ -62,12 +62,13 @@ nprecip <- dim(precip)
 
 
 c <- st_transform(list_BG$catch, "+proj=latlong  +datum=WGS84 +no_defs")
-# change calculation, now its doing the opposite of what it should do... ####
-latmin <- floor(as.numeric(ymin(extent(c)))*0.25-90)
-latmax <- ceiling(as.numeric(ymax(extent(c)))*0.25-90)
-longmin <- floor(as.numeric(xmin(extent(c)))*0.25-180)
-longmax <- ceiling(as.numeric(xmax(extent(c)))*0.25-180)
+latmin <- floor(as.numeric(ymin(extent(c)))*0.1-90)
+latmax <- ceiling(as.numeric(ymax(extent(c)))*0.1-90)
+longmin <- floor(as.numeric(xmin(extent(c)))*0.1-180)
+longmax <- ceiling(as.numeric(xmax(extent(c)))*0.1-180)
 
+
+# where does this precipitation file start? longlat, SE...?
 precip <- data.frame(precip)
 precip_catch <- precip[latmin:latmax, longmin:longmax]
 # precip_catch <-

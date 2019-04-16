@@ -11,7 +11,6 @@ With the use of meteorological observations, the reservoir extent shall be model
 
 - ```identBasinsGauges_shape(shape, distGauges)``` allows to identify contributing basins and rain gauges for any shapefile
 
-
 - ```plotBasins(list_BG)``` plots the identified contributing basins
 
 - ```plotGauges(list_BG, distGauges)``` plots the identified rain gauges within the given distance, which allows to check if an adequate number of rain gauges is included for the interpolation 
@@ -19,6 +18,12 @@ With the use of meteorological observations, the reservoir extent shall be model
 - ```requestGauges(requestDate, Ndays, list_BG)``` requests api rain data for the above selected rain gauges
 
 - ```idwRain(list_BG, api)``` interpolates rain data using idw (inverse distance weighted) interpolation
+
+- ```get_trmm_world``` lists and downloads TRMM data in ftp from the Tropical Rainfall Measuring Mission (https://trmm.gsfc.nasa.gov/)
+
+- ```trmmRain``` extracts rain from TRMM data
+
+- ```plotTRMM``` plots the mean TRMM precipitation of the contributing subbasins
 
 - ```plotIDW(list_BG, list_idw)``` plots the result of ```idwRain```: the interpolated precipitation in the contributing basins
 
@@ -34,7 +39,6 @@ With the use of meteorological observations, the reservoir extent shall be model
 - ```data(otto)``` a geospatial dataframe of the level 12 subbasins in  Ceará, classified following the method of Otto Pfafstetter as published by Lehner, B., Verdin, K., Jarvis, A. (2008): New global hydrography derived from spaceborne elevation data. Eos, Transactions, AGU, 89(10): 93-94. Among other variables, HYBAS_ID gives the ID of a subbasin, NEXT_DOWN the ID of the next downstream subbasin, SUB_AREA the area of the specific subbasin and UP_AREA the contributing area in km².
 
 - ```data(riv)``` a geospatial dataframe of the river reaches in Ceará from Lehner, B., Verdin, K., Jarvis, A. (2008): New global hydrography derived from spaceborne elevation data. Eos, Transactions, AGU, 89(10): 93-94. ARCID gives for each river reach an ID and UP_CELLS the number of upstrem catchment cells, with a cell size of 15 arcseconds x 15 arcseconds. 
-
 
 <br>
 
@@ -58,6 +62,12 @@ output of ```idwRain```, a list with 2 elements:
 
 - ```idwRaster``` contains a raster of the interpolated precipitation for each requested day, 
 - ```dailyRain_table``` is a dataframe with the mean precipitation on the catchment and the reservoir of each requested day.
+
+```files_world```<br>
+
+
+```list_trmm```<br>
+
 
 ```list_routing``` <br>
 output of ```resRouting```, if no routing is possible "No routing" is printed, otherwise the output is a list with 3 elements: 
@@ -89,6 +99,10 @@ plotGauges(list_BG, distGauges = 20)
 api <- requestGauges(requestDate = today(), Ndays = 5, list_BG)
 list_idw <- idwRain(list_BG, api)
 plotIDW(list_BG, list_idw)
+
+files_world <- get_trmm(YEAR = 2019, MONTH = 04, DAY = 12)
+list_trmm <- trmmRain(list_BG, files_world)
+plotTRMM(list_BG, list_trmm)
 
 list_routing <- resRouting(list_BG)
 plotStratRes(list_BG, list_routing)

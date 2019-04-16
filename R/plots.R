@@ -45,6 +45,20 @@ plotIDW <- function(list_BG, list_idw){
     day = slider(1,5))
 }
 
+#' Plot trmm of subbasins
+#'
+#' This function plots the averaged precipitation in all subbasins of the contributing basins
+#' @param list_trmm output of trmmRain
+#' @export
+
+plotTRMM <- function(list_trmm){
+
+  library(sf)
+
+  c <- list_trmm$sub_means
+  par(oma = c(0,0,1,1))
+  plot(c["trmm_mean"], border = "black", main = "TRMM precipitation of the subbasins")
+}
 
 #' Plot strategic reservoirs
 #'
