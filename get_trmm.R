@@ -2,17 +2,11 @@
 #'
 #' @export
 
-YEAR = 2019
-MONTH = 04
-DAY = 12
-setwd("D:/DownloadReservoirData/trmm")
-
 get_trmm <- function(){
 
   list_files <- curl::new_handle()
   ftp_prefix='ftp://'
-#  paste('ftp://arthurhou.pps.eosdis.nasa.gov/gpmdata', sprintf("%04d", YEAR), sprintf("%02d",  MONTH), sprintf("%02d", DAY), 'gprof/', hdf_filename,sep='/')
-  myurl = paste0('arthurhou.pps.eosdis.nasa.gov/gpmdata/', sprintf("%04d", YEAR), "/", sprintf("%02d",  MONTH), "/", sprintf("%02d", DAY), '/gprof/')
+  myurl = "arthurhou.pps.eosdis.nasa.gov/gpmuser/martinsd@uni-potsdam.de/pgs/"
   up = "martinsd@uni-potsdam.de:martinsd@uni-potsdam.de"
   curl::handle_setopt(list_files, userpwd = up,ftp_use_epsv = TRUE, dirlistonly = TRUE)
 
@@ -20,9 +14,9 @@ get_trmm <- function(){
   files <- readLines(con)
   close(con)
 
-  files3A <- files[grep(pattern = "3A-DAY.", files)]
+  files <- files[grep(pattern = "3A-DAY.", files)]
 
-  for(fname in files3A[1]) {
+  for(fname in files) {
     curl::curl_download(
       paste0(ftp_prefix,myurl,fname),
       destfile = paste0(getwd(),'/',fname),
@@ -30,14 +24,13 @@ get_trmm <- function(){
     )
 
   }
-  return(files3A)
+  return(files)
 }
 
-
-# trmm ####
 setwd("D:/DownloadReservoirData/trmm")
 get_trmm()
-save(files3A, file = "files3A.RData")
+save(files, file = "files.RData")
+
 
 
 #' get rain from trmm data
@@ -47,7 +40,7 @@ save(files3A, file = "files3A.RData")
 
 trmmRain <- function(){
   library(ncdf4)
-  nc=ncdf4::nc_open(files3A[1])
+  nc=ncdf4::nc_open(files[1])
 
   nc
 }
@@ -64,8 +57,9 @@ attributes(nc$var)$names
 # nlon <- dim(lon)
 # nlat <- dim(lat)
 precip <- ncvar_get(nc, "Grid/surfacePrecipitation")
-inputfilenames <- ncvar_get(nc, "InputFileNames")
+datetimes <- ncvar_get(nc, "InputGenerationDateTimes")
 nprecip <- dim(precip)
+
 
 c <- st_transform(list_BG$catch, "+proj=latlong  +datum=WGS84 +no_defs")
 # change calculation, now its doing the opposite of what it should do... ####
