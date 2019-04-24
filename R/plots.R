@@ -48,16 +48,15 @@ plotIDW <- function(list_BG, list_idw){
 #' Plot trmm of subbasins
 #'
 #' This function plots the averaged precipitation in all subbasins of the contributing basins
-#' @param list_trmm output of trmmRain
+#' @param trmm_means output of trmmRain, geospatial dataframe with mean TRMM precipitation of each field of a given sf geometric object
 #' @export
 
-plotTRMM <- function(list_trmm){
+plotTRMM <- function(trmm_means){
 
   library(sf)
 
-  c <- list_trmm$sub_means
   par(oma = c(0,0,1,1))
-  plot(c["trmm_mean"], border = "black", main = "TRMM precipitation of the subbasins")
+  plot(trmm_means["trmm_mean"], border = "black", main = "Mean TRMM precipitation")
 }
 
 #' Plot strategic reservoirs

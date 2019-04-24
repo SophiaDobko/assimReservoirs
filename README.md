@@ -66,12 +66,8 @@ output of ```idwRain```, a list with 2 elements:
 ```files_world```<br>
 output of ```get_trmm_world```, contains the names of the available trmm files
 
-```list_trmm```<br>
-output of ```trmmRain```, a list with 3 elements:
-
-- ```sub_means``` is a geospatial dataframe with the mean TRMM precipitation for each subbasin
-- ```catch_mean``` is the mean precipitation for the whole catchment
-- ```reservoir_mean``` is the precipitation on the reservoir
+```trmm_means``` <br>
+output of ```trmmRain```, a geospatial dataframe with the mean TRMM precipitation for each subbasin
 
 ```list_routing``` <br>
 output of ```resRouting```, if no routing is possible "No routing" is printed, otherwise the output is a list with 3 elements: 
@@ -102,9 +98,9 @@ api <- requestGauges(requestDate = today(), Ndays = 5, list_BG)
 list_idw <- idwRain(list_BG, api)
 plotIDW(list_BG, list_idw)
 
-files_world <- get_trmm(YEAR = 2019, MONTH = 04, DAY = 12)
+files_world <- get_trmm_world(YEAR = 2019, MONTH = 04, DAY = 12)
 list_trmm <- trmmRain(list_BG, files_world)
-plotTRMM(list_BG, list_trmm)
+plotTRMM(list_trmm)
 
 list_routing <- resRouting(list_BG)
 plotStratRes(list_BG, list_routing)
