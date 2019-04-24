@@ -1,7 +1,9 @@
 #' List and download trmm data in ftp
 #'
-#' @param
-#' @return
+#' @param YEAR year, month and day to be downloaded
+#' @param MONTH
+#' @param DAY
+#' @return files_world, a list of the available trmm files
 #' @export
 
 get_trmm_world <- function(YEAR, MONTH, DAY){
