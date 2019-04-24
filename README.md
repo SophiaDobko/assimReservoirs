@@ -64,11 +64,14 @@ output of ```idwRain```, a list with 2 elements:
 - ```dailyRain_table``` is a dataframe with the mean precipitation on the catchment and the reservoir of each requested day.
 
 ```files_world```<br>
-
-
+output of ```get_trmm_world```, contains the names of the available trmm files
 
 ```list_trmm```<br>
+output of ```trmmRain```, a list with 3 elements:
 
+- ```sub_means``` is a geospatial dataframe with the mean TRMM precipitation for each subbasin
+- ```catch_mean``` is the mean precipitation for the whole catchment
+- ```reservoir_mean``` is the precipitation on the reservoir
 
 ```list_routing``` <br>
 output of ```resRouting```, if no routing is possible "No routing" is printed, otherwise the output is a list with 3 elements: 
@@ -80,8 +83,6 @@ output of ```resRouting```, if no routing is possible "No routing" is printed, o
 <br>
 
 #### Future functions:
-
-- complement the interpolation of precipitation data from rain gauges with radar data
 
 - water balance to calculate the reservoir extent and compare it to the extent estimated from remote sensing
 
