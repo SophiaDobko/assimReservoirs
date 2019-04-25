@@ -99,8 +99,8 @@ list_idw <- idwRain(list_BG, api)
 plotIDW(list_BG, list_idw)
 
 files_world <- get_trmm_world(YEAR = 2019, MONTH = 04, DAY = 12)
-list_trmm <- trmmRain(list_BG, files_world)
-plotTRMM(list_trmm)
+trmm_means <- trmmRain(shape = st_transform(list_BG$catch, "+proj=latlong  +datum=WGS84 +no_defs"), files_world)
+plotTRMM(trmm_means)
 
 list_routing <- resRouting(list_BG)
 plotStratRes(list_BG, list_routing)
