@@ -1,6 +1,6 @@
 # reservoir model
-library(assimReservoirs)
-list_BG <- identBasinsGauges(ID = 49301)
+# library(assimReservoirs)
+# list_BG <- identBasinsGauges(ID = 49301)
 
 #' Create reservoir routing scheme
 #'
@@ -112,4 +112,3 @@ res_sub0 <- res_sub
   }
 return(collect_timesteps)
 }
-
