@@ -7,7 +7,11 @@
 get_trmm_world(YEAR, MONTH, DAY)
 }
 \arguments{
-\item{YEAR}{year, month and day to be downloaded}
+\item{YEAR}{year}
+
+\item{MONTH}{month}
+
+\item{DAY}{and day to be downloaded}
 }
 \value{
 files_world, contains the names of the available trmm files
