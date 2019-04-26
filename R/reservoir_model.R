@@ -1,46 +1,39 @@
 # reservoir model
-setwd("D:/reservoir_model")
-
 library(assimReservoirs)
 list_BG <- identBasinsGauges(ID = 49301)
 
+#' Create reservoir routing scheme
+#'
+#' This function creates a routing scheme for the strategic reservoirs, those on the main river course. For each reservoir the next reservoir downstream is identified.
+#' @param list_BG the output list of identBasinsGauges
+#' @param start date at which model run shall start, default: as.Date("2000-01-10")
+#' @param end date at which model run shall end, default: as.Date("2000-01-15")
+#' @return table with vol_0 (volume at the beginning of the timestep t), q_in_m3 (inflow in m3), q_out_m3 (outflow in m3) and vol_1 (volume at the end of the timestep) for each reservoir
+#' @export
+
+res_model <- function(list_BG, start = as.Date("2000-01-14"), end = as.Date("2000-01-18")){
+
+  library(gstat)
+  library(sf)
+  library(raster)
+  library(lubridate)
+
 catch <- list_BG$catch
-plotGauges(list_BG)
 buffer <- list_BG$catch_buffer
+postos_utm <- postos
 
-library(gstat)
-library(sp)
-library(sf)
-library(raster)
-library(lubridate)
-
-postos <- read.csv("postos.csv", dec = ".", sep = "\t", header = T)
-postos$lat <- - as.numeric(char2dms(from = as.character(postos$Latitude..S.), chd = "°", chm = "'", chs = "\""))
-postos$lon <- - as.numeric(char2dms(from = as.character(postos$Longitude..W.), chd = "°", chm = "'", chs = "\""))
-
-coordinates(postos) <- ~lon+lat
-proj4string(postos) <- "+proj=longlat +datum=WGS84 +no_defs"
-postos <- st_as_sf(postos)
-postos_utm <- st_transform(postos, crs = "+proj=utm +zone=24 +datum=WGS84 +units=m +no_defs")
-
-plot(buffer)
-plot(catch$geometry, add = T)
-plot(postos_utm$geometry, add = T)
-
-# start loop over days ####
-start <- as.Date("2000-01-01")
-end <- as.Date("2000-01-15")
+# start loop over days
 dates <- seq.Date(from = start, to = end, by = "day")
 
 collect_timesteps <- NULL
 # get runoff for stations in the buffer, certain day
 for(d in 1:length(dates)){
   postos <- st_intersection(postos_utm, buffer)
-  files <- dir("Time_series")
+  files <- dir("D:/reservoir_model/Time_series")
   postos$runoff <- NA
   for(i in 1:nrow(postos)){
     if(length(grep(postos$Codigo[i], files))>0){
-      data <- read.table(paste0("Time_series/", grep(postos$Codigo[i], files, value = T)), header = T)
+      data <- read.table(paste0("D:/reservoir_model/Time_series/", grep(postos$Codigo[i], files, value = T)), header = T)
       postos$runoff[i] <- subset(data, Ano == year(dates[d]) & Mes == month(dates[d]) & Dia == day(dates[d]))$Esc..mm.
     }
   }
@@ -48,7 +41,7 @@ for(d in 1:length(dates)){
 # interpolate runoff, get mean for each subbasin
 # IDW = inverse distance weighted interpolation
 
-# Create an empty grid where n is the total number of cells
+# Create an empty grid, n is the total number of cells
 g <- as(postos, "Spatial")
 b <- as(list_BG$catch_buffer, "Spatial")
 c <- as(list_BG$catch$geometry, "Spatial")
@@ -80,19 +73,22 @@ if(list_BG$routing){
   print("strategic reservoirs -> routing necessary")
 
   }else{
+# start with first upstream subbasin
     sub <- subset(catch, UP_AREA == min(catch$UP_AREA))
     res_sub <- st_intersection(res_max, sub[,c(15)])
 # length(unique(res_sub$id_jrc))
 
-plot(sub$geometry)
-plot(res_sub$geometry, add = T, col = "cadetblue2")
-plot(riv$geometry, add = T, col = "cadetblue")
+# plot ####
+# plot(sub$geometry)
+# plot(res_sub$geometry, add = T, col = "cadetblue2")
+# plot(riv$geometry, add = T, col = "cadetblue")
 
-# res_sub_riv <- st_intersection(res_sub, riv)
-# plot(res_sub_riv$geometry, col = "red", add = T)
+# identify lowest reservoir on river
+res_sub_riv <- st_intersection(res_sub, riv)
+res_low <- subset(res_sub_riv, UP_CELLS == max(res_sub_riv$UP_CELLS))
 
 res_sub$cont_area <- (as.numeric(st_area(sub)))/nrow(res_sub)
-# first timestep
+
 res_sub$t <- d
 if(d == 1){ res_sub$vol_0 <- 0 }else{
   res_sub$vol_0 <- res_sub0$vol_1 }
@@ -101,10 +97,19 @@ res_sub$Qout_m3[res_sub$Qin_m3 > res_sub$vol_max] <- res_sub$vol_0[res_sub$Qin_m
 res_sub$Qout_m3[res_sub$Qin_m3 <= res_sub$vol_max] <- 0
 res_sub$vol_1 <- res_sub$vol_0 + res_sub$Qin_m3 - res_sub$Qout_m3
 
+# extra calculation for res_low
+res_sub$Qin_m3[res_sub$id_jrc == res_low$id_jrc] <- res_sub$Qin_m3[res_sub$id_jrc == res_low$id_jrc] + sum(res_sub$Qout_m3[res_sub$id_jrc != res_low$id_jrc])
+if(res_sub$Qin_m3[res_sub$id_jrc == res_low$id_jrc]> res_low$vol_max){
+  res_sub$Qout_m3[res_sub$id_jrc == res_low$id_jrc] <- res_sub$vol_0[res_sub$id_jrc == res_low$id_jrc] + res_sub$Qin_m3[res_sub$id_jrc == res_low$id_jrc] - res_sub$vol_max[res_sub$id_jrc == res_low$id_jrc]
+}else{
+  res_sub$Qout_m3[res_sub$id_jrc == res_low$id_jrc] <- 0 }
+res_sub$vol_1[res_sub$id_jrc == res_low$id_jrc] <- res_sub$vol_0[res_sub$id_jrc == res_low$id_jrc] + res_sub$Qin_m3[res_sub$id_jrc == res_low$id_jrc] - res_sub$Qout_m3[res_sub$id_jrc == res_low$id_jrc]
+
 collect_timesteps <- rbind(collect_timesteps, res_sub)
 res_sub0 <- res_sub
 
+    }
   }
+return(collect_timesteps)
 }
-
 
