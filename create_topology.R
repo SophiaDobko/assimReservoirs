@@ -15,6 +15,20 @@ g = riv2graph(nodes_i,riv_i)
 
 is.directed(g)
 
+
+## get leaves
+leaves=which(degree(g, v = V(g), mode = "in")==0)
+i=leaves[1]
+for(i in leaves){
+  dwn=neighbors(g,i,mode='out')
+}
+
+g=delete_vertices(g, leaves)
+leaves=which(degree(g, v = V(g), mode = "in")==0)
+leaves
+plot(g)
+
+
 neighbors(g,5,mode='out')
 
 incident(g,5,mode='out')
@@ -27,14 +41,7 @@ V(g)
 # get edges
 E(g)
 
-## get leaves
-leaves=which(degree(g, v = V(g), mode = "in")==0)
 
-for(i in leaves){
-  neighbors(g,5,mode='out')
-
-
-}
 all_simple_paths(g,from=8)
 
 
