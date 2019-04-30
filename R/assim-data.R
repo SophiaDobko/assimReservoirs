@@ -17,6 +17,14 @@
 #' @source https://hydrosheds.org/downloads
 "riv"
 
+#' Nodes of the river network with upstream cell number for Ceará. Can be computed with `riv2nodes`
+#'
+#' @docType data
+#' @usage data(nodes)
+#'
+#' @references Lehner, B., Verdin, K., Jarvis, A. (2008): New global hydrography derived from spaceborne elevation data. Eos, Transactions, AGU, 89(10): 93-94.
+#' @source https://hydrosheds.org/downloads
+"nodes"
 
 #' Meta data of precipitation gauges in Ceará
 #'

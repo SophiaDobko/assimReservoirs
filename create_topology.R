@@ -1,71 +1,45 @@
-# Example
+library(sf)
 library(assimReservoirs)
-list_output <- identBasinsGauges(ID = 25283, distGauges = 20)
-plotBasins(list_output)
-plotGauges(list_output, distGauges = 20)
+library(dplyr)
 
-api <- requestGauges(requestDate = today(), Ndays = 5, list_output)
-list_idw <- idwRain(list_output, api)
-plotIDW(list_output, list_idw)
+riv_all=split_river_network(riv)
 
-list_routing <- resRouting(list_output)
-plotStratRes(list_output, list_routing)
+## chose a reach ID to select the relevant river network
+reach_id=130960 # eg outlet of Jaguaribe
 
-head(riv)
-outlet=130960
+riverid=filter(riv_all,ARCID==reach_id) %>% pull(membership)
+riv_i = filter(riv_all,membership==riverid)
+nodes_i = riv2nodes(riv_i)
 
-nodes=riv
-for(i in seq(1,nrow(nodes)))
-{
-  if(st_geometry_type(riv[i,])=='LINESTRING')
-  {
-    nodes$geometry[i]=st_line_sample(riv[i,],sample=0)
-  }
-  else
-  {
-    nodes$geometry[i]=st_linestring()
-  }
+g = riv2graph(nodes_i,riv_i)
+
+is.directed(g)
+
+neighbors(g,5,mode='out')
+
+incident(g,5,mode='out')
+
+degree_distribution(g,cumulative=TRUE)
+
+# get vertices
+V(g)
+
+# get edges
+E(g)
+
+## get leaves
+leaves=which(degree(g, v = V(g), mode = "in")==0)
+
+for(i in leaves){
+  neighbors(g,5,mode='out')
+
+
 }
-
-valid=st_geometry_type(nodes)=='MULTIPOINT'
-
-nodes %<>%
-  filter(valid) %>%
-  st_cast(., "POINT", group_or_split = FALSE)
-
-riv = filter(riv,valid)
+all_simple_paths(g,from=8)
 
 
+A = g[,] %>% as.matrix # adjacency matrix
+A[1:10,1:10]
 
-
-
-###### Spectral clustering for
-A=matrix(0,nrow(nodes),nrow(nodes))
-D=matrix(0,nrow(nodes),nrow(nodes))
-
-touching_list=st_touches(riv)
-library(igraph)
-
-g = graph.adjlist(touching_list)
-c = components(g)
-
-riv=mutate(riv,membership=as.factor(c$membership))
-
-# ggplot(riv) + geom_sf(aes(color=membership))
-#
-# for(i in seq(min(as.numeric(riv$membership)),max(as.numeric(riv$membership))))
-# {
-#   plt=ggplot(filter(riv,membership==i)) + geom_sf()
-#   ggsave(paste0("member",i,".png"),plt,width=5,height=5)
-# }
-
-
-
-
-while
-touch=st_touches(filter(nodes,ARCID==outlet_tmp),riv)
-riv_upstr = riv[touch[[1]],] %>% filter(ARCID!=outlet)
-
-nodes_upstr = filter(nodes,ARCID %in% pull(riv_upstr,ARCID))
-
-nodes_upstr
+L = laplacian_matrix(g) %>% as.matrix
+L[1:10,1:10]
