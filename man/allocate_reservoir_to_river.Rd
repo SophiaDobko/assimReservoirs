@@ -4,17 +4,13 @@
 \alias{allocate_reservoir_to_river}
 \title{Allocate each reservoir to nearest river reach within a given subbasin}
 \usage{
-allocate_reservoir_to_river(hybas_id, riv_i, res_i)
+allocate_reservoir_to_river(riv_i)
 }
 \arguments{
-\item{hybas_id}{from \code{data(otto)}}
-
 \item{riv_i}{a subset of river reaches from \code{data(riv)}}
-
-\item{res_i}{a subset of reservoirs from \code{data(res_max)}}
 }
 \value{
-reservoir_near_river the reservoir with the snapped reservoirs
+res_max_subset subset of the reservoir data frame with the respective attributed river reach and distance to river reach
 }
 \description{
 Allocate each reservoir to nearest river reach within a given subbasin
