@@ -89,7 +89,7 @@ riv2graph <- function(nodes_i,riv_i){
 #' @param riv_i a subset of river reaches from `data(riv)`
 #' @param res_i a subset of reservoirs from `data(res_max)`
 #' @return reservoir_near_river the reservoir with the snapped reservoirs
-#' @importFrom sf st_nearest_river
+#' @importFrom sf st_nearest_feature
 #' @export
 allocate_reservoir_to_river <- function(hybas_id,riv_i,res_i)
 {

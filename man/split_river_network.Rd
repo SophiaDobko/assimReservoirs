@@ -10,7 +10,7 @@ split_river_network(riv)
 \item{riv}{a sf dataframe with a topologicaly valid river network. Use for example the HydroSheds dataset.}
 }
 \value{
-riv_i a sf dataframe with a topologicaly valid river network with a membership label for each disjoint graph.
+riv_n a sf dataframe with a topologicaly valid river network with a membership label for each disjoint graph.
 }
 \description{
 Split river network into disjoint graphs
