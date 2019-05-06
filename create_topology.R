@@ -48,7 +48,10 @@ for(i in seq(1,nrow(res_max)))
   }
 }
 
+res_int=mutate(res_max,`distance to river`=as.integer(`distance to river`))
+st_write(res_max,"data/res_max_dist_riv.geojson")
 
+save(res_max,file="data/res_max.RData")
 
 is.directed(g)
 
