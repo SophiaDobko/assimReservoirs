@@ -1,7 +1,7 @@
-library(sf)
-library(assimReservoirs)
-library(dplyr)
-library(igraph)
+library(sf,warn.conflicts=FALSE)
+library(assimReservoirs,warn.conflicts=FALSE)
+library(dplyr,warn.conflicts=FALSE)
+library(igraph,warn.conflicts=FALSE)
 
 riv_all=split_river_network(riv)
 
@@ -9,29 +9,48 @@ riv_all=split_river_network(riv)
 reach_id=140877 # eg somewhere in the jaguaribe river catchment will select the whole jaguaribe catchment.
 
 riv_i=select_disjoint_river(reach_id,riv_all)
+
 nodes_i = riv2nodes(riv_i)
 g = riv2graph(nodes_i,riv_i)
 riv_upstr=river_upstream(reach_id,riv_i,g)
 
-##
-hybas_id=6121099550
-allocate_reservoir_to_river(hybas_id,riv_i,res_max)
+## attribute a river reach to each reservoir. compute distance of reservoir to river reach.
 
-otto_k = filter(otto,HYBAS_ID==hybas_id)
-res_i=res_max
-res_k = st_within(res_i,otto_k,sparse=FALSE) %>%
-  filter(res_i,.)
+# res_id=31440
+# res_id=31441
+# i=which(res_max$id_jrc==res_id)
 
-riv_k = st_buffer(otto_k,-1000) %>%
-  st_intersects(riv_i,.,sparse=FALSE) %>%
-  filter(riv_i,.)
+res_max = mutate(res_max,`nearest river`=NA,`distance to river`=NA)
+for(i in seq(1,nrow(res_max)))
+{
+  cat(i,'\n')
+  riv_inters <- st_intersects(res_max[i,],riv_i,sparse=FALSE) %>%
+    filter(riv_i,.) %>%
+    filter(UP_CELLS==max(UP_CELLS))
 
-reservoirs_near_river=mutate(res_k,nearest_river=st_nearest_feature(res_k,riv_k)  %>% riv_k$ARCID[.])
+  if(nrow(riv_inters)==0)
+  {
+    otto_k=st_intersects(otto,res_max[i,],sparse=FALSE) %>% filter(otto,.)
+    riv_k = st_buffer(otto_k,-1000) %>%
+    st_union %>%
+    st_intersects(riv_i,.,sparse=FALSE) %>%
+    filter(riv_i,.)
 
-plot(reservoirs_near_river)
+    if(nrow(riv_k)>0){
+      res_max$`nearest river`[i] = st_nearest_feature(res_max[i,],riv_k) %>%
+      riv_k$ARCID[.]
+
+      res_max$`distance to river`[i] = st_distance(res_max[i,],filter(riv_k,ARCID==res_max$`nearest river`[i]))
+    }
+  } else {
+    res_max$`nearest river`[i] = riv_inters$ARCID
+    res_max$`distance to river`[i] = 0
+  }
+}
+
+
 
 is.directed(g)
-
 
 ## get leaves
 leaves=which(degree(g, v = V(g), mode = "in")==0)

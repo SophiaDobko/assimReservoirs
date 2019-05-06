@@ -4,7 +4,7 @@
 \name{riv}
 \alias{riv}
 \title{River network with upstream cell number for Ceará}
-\format{An object of class \code{sf} (inherits from \code{data.frame}) with 3792 rows and 3 columns.}
+\format{An object of class \code{sf} (inherits from \code{data.frame}) with 3828 rows and 3 columns.}
 \source{
 https://hydrosheds.org/downloads
 }

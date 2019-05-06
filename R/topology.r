@@ -49,7 +49,7 @@ split_river_network <- function(riv){
   g = graph.adjlist(touching_list)
   c = components(g)
 
-  riv_i=mutate(riv,membership=as.factor(c$membership)) %>%
+  riv_n=mutate(riv,membership=as.factor(c$membership)) %>%
     arrange()
   return(riv_n)
 }
@@ -91,7 +91,7 @@ riv2graph <- function(nodes_i,riv_i){
 #' @return reservoir_near_river the reservoir with the snapped reservoirs
 #' @importFrom sf st_nearest_feature
 #' @export
-allocate_reservoir_to_river <- function(hybas_id,riv_i,res_i)
+allocate_reservoir_to_river <- function(riv_i,res_i)
 {
   otto_k = filter(otto,HYBAS_ID==hybas_id)
 
