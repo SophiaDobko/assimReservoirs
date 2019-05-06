@@ -1,17 +1,34 @@
 library(sf)
 library(assimReservoirs)
 library(dplyr)
+library(igraph)
 
 riv_all=split_river_network(riv)
 
-## chose a reach ID to select the relevant river network
-reach_id=130960 # eg outlet of Jaguaribe
+## choose a reach ID to select the relevant river network
+reach_id=140877 # eg somewhere in the jaguaribe river catchment will select the whole jaguaribe catchment.
 
-riverid=filter(riv_all,ARCID==reach_id) %>% pull(membership)
-riv_i = filter(riv_all,membership==riverid)
+riv_i=select_disjoint_river(reach_id,riv_all)
 nodes_i = riv2nodes(riv_i)
-
 g = riv2graph(nodes_i,riv_i)
+riv_upstr=river_upstream(reach_id,riv_i,g)
+
+##
+hybas_id=6121099550
+allocate_reservoir_to_river(hybas_id,riv_i,res_max)
+
+otto_k = filter(otto,HYBAS_ID==hybas_id)
+res_i=res_max
+res_k = st_within(res_i,otto_k,sparse=FALSE) %>%
+  filter(res_i,.)
+
+riv_k = st_buffer(otto_k,-1000) %>%
+  st_intersects(riv_i,.,sparse=FALSE) %>%
+  filter(riv_i,.)
+
+reservoirs_near_river=mutate(res_k,nearest_river=st_nearest_feature(res_k,riv_k)  %>% riv_k$ARCID[.])
+
+plot(reservoirs_near_river)
 
 is.directed(g)
 
@@ -29,20 +46,9 @@ leaves
 plot(g)
 
 
-neighbors(g,5,mode='out')
 
-incident(g,5,mode='out')
-
-degree_distribution(g,cumulative=TRUE)
-
-# get vertices
-V(g)
-
-# get edges
-E(g)
-
-
-all_simple_paths(g,from=8)
+nodes_i$ARCID[p[[i]]]
+nodes_i[c(8,6,5,2),]
 
 
 A = g[,] %>% as.matrix # adjacency matrix

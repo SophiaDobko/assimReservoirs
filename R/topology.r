@@ -1,4 +1,6 @@
 
+
+
 #' Obtain graph nodes from HydroSheds river network
 #'
 #' Extract the nodes of the HydroSheds river network.
@@ -35,10 +37,10 @@ riv2nodes <- function(riv){
 
 #' Split river network into disjoint graphs
 #' @param riv a sf dataframe with a topologicaly valid river network. Use for example the HydroSheds dataset.
-#' @return riv_i a sf dataframe with a topologicaly valid river network with a membership label for each disjoint graph.
+#' @return riv_n a sf dataframe with a topologicaly valid river network with a membership label for each disjoint graph.
 #' @importFrom sf st_touches
 #' @importFrom igraph graph.adjlist components
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate arrange
 #' @importFrom magrittr %>%
 #' @export
 split_river_network <- function(riv){
@@ -49,8 +51,22 @@ split_river_network <- function(riv){
 
   riv_i=mutate(riv,membership=as.factor(c$membership)) %>%
     arrange()
+  return(riv_n)
+}
+
+#' Select disjoint river network from set of river networks based on reach id
+#' @param reach_id an integer obtained from columne `ARCID` of `data(riv)`
+#' @param riv_all a list of disjoint river networks obtained from `split_river_network()`.
+#' @return riv_i a disjoint river network
+#' @importFrom dplyr filter pull
+#' @export
+select_disjoint_river <- function(reach_id,riv_all)
+{
+  riverid=filter(riv_all,ARCID==reach_id) %>% pull(membership)
+  riv_i = filter(riv_all,membership==riverid)
   return(riv_i)
 }
+
 
 #' Calculate graph object based on river network
 #' @param nodes_i a sf dataframe of points marking the nodes of the river network defined as the inlet of each river reach. This must be only one tree. It won't work with a forest.
@@ -66,4 +82,45 @@ riv2graph <- function(nodes_i,riv_i){
   }
   g=graph.adjlist(touch, mode='in')
   return(g)
+}
+
+#' Allocate each reservoir to nearest river reach within a given subbasin
+#' @param hybas_id from `data(otto)`
+#' @param riv_i a subset of river reaches from `data(riv)`
+#' @param res_i a subset of reservoirs from `data(res_max)`
+#' @return reservoir_near_river the reservoir with the snapped reservoirs
+#' @importFrom sf st_nearest_river
+#' @export
+allocate_reservoir_to_river <- function(hybas_id,riv_i,res_i)
+{
+  otto_k = filter(otto,HYBAS_ID==hybas_id)
+
+  res_k = st_within(res_i,otto_k,sparse=FALSE) %>%
+    filter(res_i,.)
+
+  riv_k = st_buffer(otto_k,-1000) %>%
+    st_intersects(riv_i,.,sparse=FALSE) %>%
+    filter(riv_i,.)
+
+  reservoirs_near_river=mutate(res_k,nearest_river=st_nearest_feature(res_k,riv_k)  %>% riv_k$ARCID[.])
+  return(reservoirs_near_river)
+}
+
+#' calculate contributing river network to a given river reach
+#' @param reach_id from `data(riv)`
+#' @param riv_i a subset of river reaches from `data(riv)`
+#' @param graph a graph of class igraph produced with `riv2graph()`
+#' @return riv_upstr the contributing river network
+#' @importFrom dplyr slice
+#' @importFrom igraph all_simple_paths
+#' @export
+river_upstream <- function(reach_id,riv_i,graph)
+{
+  riv_upstr = which(riv_i$ARCID==reach_id) %>%
+    all_simple_paths(graph,from=.,mode='in') %>%
+    unlist %>%
+    unique %>%
+    slice(riv_i,.)
+
+  return(riv_upstr)
 }
