@@ -5,14 +5,13 @@
 #' @param Ndays number of days to go back in time from requestDate
 #' @param list_BG output of identBasinsGauges
 #' @return a dataframe with the precipitation available for the requested dates and gauges
+#' @import lubridate
+#' @import dplyr
+#' @import sf
+#' @import jsonlite
 #' @export
 
 requestGauges <- function(requestDate, Ndays, list_BG) {
-
-  library(lubridate)
-  library(dplyr)
-  library(sf)
-  library(jsonlite)
 
   gauges_catch <- list_BG[["gauges_catch"]]
   api <- data.frame()

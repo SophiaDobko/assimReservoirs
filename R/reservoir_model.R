@@ -9,34 +9,34 @@ list_BG <- identBasinsGauges(ID = 49301)
 #' @param start date at which model run shall start, default: as.Date("2000-01-10")
 #' @param end date at which model run shall end, default: as.Date("2000-01-15")
 #' @return table with vol_0 (volume at the beginning of the timestep t), q_in_m3 (inflow in m3), q_out_m3 (outflow in m3) and vol_1 (volume at the end of the timestep) for each reservoir
+#' @import gstat
+#' @import lubridate
+#' @import sf
+#' @import raster
 #' @export
 
 res_model <- function(list_BG, start = as.Date("2000-01-14"), end = as.Date("2000-01-18")){
 
-  library(gstat)
-  library(sf)
-  library(raster)
-  library(lubridate)
-
-catch <- list_BG$catch
-buffer <- list_BG$catch_buffer
-postos_utm <- postos
+  catch <- list_BG$catch
+  buffer <- list_BG$catch_buffer
+  postos_utm <- postos
 
 # start loop over days
-dates <- seq.Date(from = start, to = end, by = "day")
+  dates <- seq.Date(from = start, to = end, by = "day")
 
-collect_timesteps <- NULL
+  collect_timesteps <- NULL
 # get runoff for stations in the buffer, certain day
-for(d in 1:length(dates)){
-  postos <- st_intersection(postos_utm, buffer)
-  files <- dir("D:/reservoir_model/Time_series")
-  postos$runoff <- NA
-  for(i in 1:nrow(postos)){
-    if(length(grep(postos$Codigo[i], files))>0){
-      data <- read.table(paste0("D:/reservoir_model/Time_series/", grep(postos$Codigo[i], files, value = T)), header = T)
-      postos$runoff[i] <- subset(data, Ano == year(dates[d]) & Mes == month(dates[d]) & Dia == day(dates[d]))$Esc..mm.
+  for(d in 1:length(dates)){
+    postos <- st_intersection(postos_utm, buffer)
+    files <- dir("D:/reservoir_model/Time_series")
+    postos$runoff <- NA
+
+    for(i in 1:nrow(postos)){
+      if(length(grep(postos$Codigo[i], files))>0){
+        data <- read.table(paste0("D:/reservoir_model/Time_series/", grep(postos$Codigo[i], files, value = T)), header = T)
+        postos$runoff[i] <- subset(data, Ano == year(dates[d]) & Mes == month(dates[d]) & Dia == day(dates[d]))$Esc..mm.
+      }
     }
-  }
 
 # interpolate runoff, get mean for each subbasin
 # IDW = inverse distance weighted interpolation

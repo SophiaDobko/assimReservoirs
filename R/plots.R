@@ -29,18 +29,17 @@ plotGauges <- function(list_BG, distGauges = 30){
 #' This function plots the interpolated precipitation in the contributing basins
 #' @param list_BG output of identBasinsGauges
 #' @param list_idw output of idwRain
+#' @import manipulate
+#' @import raster
 #' @export
 
 plotIDW <- function(list_BG, list_idw){
-
-  library(manipulate)
-  function(raster)
 
   dailyRain <- list_idw$dailyRain_table
   idwRaster <- list_idw$idwRaster
 
   par(mar = c(2,2,2,2), oma = c(1,1,1,1))
-   manipulate(
+  manipulate(
     plot(idwRaster[[day]], main = names(idwRaster)[[day]]),
     day = slider(1,5))
 }
@@ -49,11 +48,10 @@ plotIDW <- function(list_BG, list_idw){
 #'
 #' This function plots the averaged precipitation in all subbasins of the contributing basins
 #' @param trmm_means output of trmmRain, geospatial dataframe with mean TRMM precipitation of each field of a given sf geometric object
+#' @import sf
 #' @export
 
 plotTRMM <- function(trmm_means){
-
-  library(sf)
 
   par(oma = c(0,0,1,1))
   plot(trmm_means["trmm_mean"], border = "black", main = "Mean TRMM precipitation")

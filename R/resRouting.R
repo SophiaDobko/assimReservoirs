@@ -3,12 +3,11 @@
 #' This function creates a routing scheme for the strategic reservoirs, those on the main river course. For each reservoir the next reservoir downstream is identified.
 #' @param list_BG the output list of identBasinsGauges
 #' @return if no routing is possible "No routing" is printed, otherwise the output is a list with 3 elements: "res_main" is a dataframe of all the reservoirs in the catchment where the area of UP_CELLS > 0.5 * the area of its subbasin, res_down shows the ID of the next downstream reservoir, "reservoirs" is a geospatial dataframe of all the reservoirs in the catchment which are on a river reach of "riv", and "riv_catch" is a geospatial dataframe of all the river reaches in the catchment.
+#' @import sf
+#' @import raster
 #' @export
 
 resRouting <- function(list_BG){
-
-  library(sf)
-  library(raster)
 
   if(list_BG$routing == F){
 

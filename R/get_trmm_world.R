@@ -38,13 +38,12 @@ get_trmm_world <- function(YEAR, MONTH, DAY){
 #' @param shape sf geometric object in WGS 84, longlat
 #' @param files_world output of get_trmm_world
 #' @return ```trmm_means``` is a geospatial dataframe with the mean TRMM precipitation for each field of the input shape
+#' @import ncdf4
+#' @import raster
+#' @import sf
 #' @export
 
 trmmRain <- function(shape, files_world){
-
-  library(ncdf4)
-  library(raster)
-  library(sf)
 
   nc_rasters <- list()
   for(f in 1:length(files_world)){

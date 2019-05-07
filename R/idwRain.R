@@ -6,14 +6,13 @@
 #' @return a list with 2 elements:
 #' - ```idwRaster``` contains a raster with the interpolated precipitation for each requested day,
 #' - ```dailyRain_table``` is a dataframe with the mean precipitation of the catchment and the reservoir of each requested day.
+#' @import gstat
+#' @import sp
+#' @import sf
+#' @import raster
 #' @export
 
 idwRain <- function(list_BG, api){
-
-library(gstat)
-library(sp)
-library(sf)
-library(raster)
 
   api <- subset(api, !is.na(value))
   dates <- sort(unique(api$returnedDate))
