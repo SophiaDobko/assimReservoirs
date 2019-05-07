@@ -79,7 +79,7 @@ otto1 <- otto_shape[otto_shape$UP_AREA == max(otto_shape$UP_AREA),]
 
 
 # Rain gauges ####
-gauges <- st_transform(p_gauges_saved, "+proj=utm +zone=24 +datum=WGS84 +no_defs")
+gauges <- st_transform(p_gauges_saved, "+proj=utm +zone=24 +south +datum=WGS84 +no_defs")
 catch_buffer <- st_buffer(st_union(catch, by_feature = F), dist = distGauges *1000)
 gauges_catch <- st_intersection(gauges, catch_buffer)
 
