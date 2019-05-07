@@ -5,10 +5,9 @@
 #' @param Ndays number of days to go back in time from requestDate
 #' @param list_BG output of identBasinsGauges
 #' @return a dataframe with the precipitation available for the requested dates and gauges
-#' @import lubridate
-#' @import dplyr
-#' @import sf
-#' @import jsonlite
+#' @importFrom lubridate today
+#' @importFrom dplyr bind_rows
+#' @importFrom jsonlite fromJSON
 #' @export
 
 requestGauges <- function(requestDate, Ndays, list_BG) {
@@ -24,7 +23,7 @@ requestGauges <- function(requestDate, Ndays, list_BG) {
                      codigo,
                      '&data.date=',
                      format(requestDate-i, tz="America/Fortaleza", format="%Y-%m-%d"))
-      resp=fromJSON(request)
+      resp=jsonlite::fromJSON(request)
       value=resp$list$valor
 
       if(is.null(value)) {
@@ -39,7 +38,7 @@ requestGauges <- function(requestDate, Ndays, list_BG) {
 
       rain_list[[i+1]] <- rainOut
     }
-    rain <- bind_rows(rain_list)
+    rain <- dplyr::bind_rows(rain_list)
     api <- rbind(api, rain)
   }
 return(api)

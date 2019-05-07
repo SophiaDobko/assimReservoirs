@@ -1,6 +1,7 @@
 # reservoir model
 # library(assimReservoirs)
 # list_BG <- identBasinsGauges(ID = 49301)
+# list_BG_shape <- identBasinsGauges(shape = subset(res_max, id_jrc==49301))
 
 #' Create reservoir routing scheme
 #'
@@ -9,8 +10,7 @@
 #' @param start date at which model run shall start, default: as.Date("2000-01-10")
 #' @param end date at which model run shall end, default: as.Date("2000-01-15")
 #' @return table with vol_0 (volume at the beginning of the timestep t), q_in_m3 (inflow in m3), q_out_m3 (outflow in m3) and vol_1 (volume at the end of the timestep) for each reservoir
-#' @import gstat
-#' @import lubridate
+#' @importFrom lubridate year month day
 #' @import sf
 #' @import raster
 #' @export
