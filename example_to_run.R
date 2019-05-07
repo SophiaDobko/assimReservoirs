@@ -1,5 +1,5 @@
 # Example
-
+library(assimReservoirs)
 list_output <- identBasinsGauges(ID = 25283, distGauges = 20)
 plotBasins(list_output)
 plotGauges(list_output, distGauges = 20)
