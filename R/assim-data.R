@@ -26,6 +26,15 @@
 #' @source https://hydrosheds.org/downloads
 "nodes"
 
+#' A graph of the class `igraph` containing flow direction for the HydroSHEDS river network dataset in Ceará.
+#'
+#' @docType data
+#' @usage data(river_graph)
+#'
+#' @references Lehner, B., Verdin, K., Jarvis, A. (2008): New global hydrography derived from spaceborne elevation data. Eos, Transactions, AGU, 89(10): 93-94.
+#' @source https://hydrosheds.org/downloads
+"river_graph"
+
 #' Meta data of precipitation gauges in Ceará
 #'
 #' @docType data

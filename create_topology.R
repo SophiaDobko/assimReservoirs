@@ -3,6 +3,13 @@ library(assimReservoirs,warn.conflicts=FALSE)
 library(dplyr,warn.conflicts=FALSE)
 library(igraph,warn.conflicts=FALSE)
 
+
+head(riv)
+nodes = riv2nodes(riv)
+river_graph = riv2graph(nodes,riv)
+
+save(river_graph,'data/river_graph.RData')
+
 ## create new reservoir dataset with attribution of river reach
 res_max_riv=allocate_reservoir_to_river(riv)
 
@@ -13,6 +20,8 @@ riv_all=split_river_network(riv)
 reach_id=140877 # eg somewhere in the jaguaribe river catchment will select the whole jaguaribe catchment.
 
 riv_i=select_disjoint_river(reach_id,riv_all)
+
+
 
 nodes_i = riv2nodes(riv_i)
 g = riv2graph(nodes_i,riv_i)
