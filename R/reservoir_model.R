@@ -1,6 +1,7 @@
 # reservoir model
 # library(assimReservoirs)
 # list_BG <- identBasinsGauges(ID = 49301)
+# list_BG_shape <- identBasinsGauges(shape = subset(res_max, id_jrc==49301))
 
 #' Create reservoir routing scheme
 #'
