@@ -4,20 +4,15 @@
 \alias{trmmRain}
 \title{Get rain from trmm data}
 \usage{
-trmmRain(list_BG, files_world)
+trmmRain(shape, files_world)
 }
 \arguments{
-\item{list_BG}{output of identBasinsGauges}
+\item{shape}{sf geometric object in WGS 84, longlat}
 
 \item{files_world}{output of get_trmm_world}
 }
 \value{
-a list with 3 elements:
-\itemize{
-\item \code{sub_means} is a geospatial dataframe with the mean TRMM precipitation for each subbasin
-\item \code{catch_mean} is the mean precipitation for the whole catchment
-\item \code{reservoir_mean} is the precipitation on the reservoir
-}
+\code{trmm_means} is a geospatial dataframe with the mean TRMM precipitation for each field of the input shape
 }
 \description{
 obtain precipitation on the reservoir and the mean of its catchment and each subbasin

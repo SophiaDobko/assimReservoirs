@@ -4,10 +4,10 @@
 \alias{plotTRMM}
 \title{Plot trmm of subbasins}
 \usage{
-plotTRMM(list_trmm)
+plotTRMM(trmm_means)
 }
 \arguments{
-\item{list_trmm}{output of trmmRain}
+\item{trmm_means}{output of trmmRain, geospatial dataframe with mean TRMM precipitation of each field of a given sf geometric object}
 }
 \description{
 This function plots the averaged precipitation in all subbasins of the contributing basins
