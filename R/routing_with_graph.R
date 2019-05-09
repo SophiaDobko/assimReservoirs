@@ -2,15 +2,11 @@
 # library(dplyr)
 # riv %>% group_by(ARCID) %>% summarize(N=n()) %>% filter(N>1)
 library(sf)
+library(igraph)
 
+Routing <- function(){
 # get leaves ####
 g <- river_graph
-
-# leaves=which(degree(g, v = V(g), mode = "in")==0)
-# i=leaves[50]
-# for(i in leaves){
-# riv_down <- riv[neighbors(g,i,mode='out'),]
-# }
 
 leaves = which(degree(g, v = V(g), mode = "in")==0)
 riv_down <- data.frame(leaves = leaves, riv_down = NA)
@@ -23,39 +19,106 @@ for(i in 1:length(leaves)){
   }
 }
 
-
-# for-loop through leaves
-res_max$next_res <- NA
-# strategic <- res_max[res_max$`distance to river`==0,]
+# for-loop through leaves ####
+res_max$res_down <- NA
+strategic <- res_max[res_max$`distance to river`==0,]
 # river_reaches <- unique(strategic$`nearest river`)
 
 for(l in 1:nrow(riv_down)){
-  points <- st_line_sample(riv[riv_down$leaves[l],], n = 50)
-  points <- st_cast(points, "POINT")
-  points <- st_sf(points)
-  points$sample <- 1:50
+# for(l in 1:1000){
+  # l = 1250
+  # identify reservoirs on leave river reach and their order
 
-  res_l <- subset(res_max, `nearest river` == riv$ARCID[l])
-  if(nrow(res_l) > 0){
-    strat_l <- subset(res_l, `distance to river`==0)
+  # res_l <- subset(res_max, `nearest river` == riv$ARCID[l])
+  strat_l <- subset(strategic, `nearest river` %in% riv$ARCID[rownames(riv)==riv_down$leaves[l]])
+
+  if(nrow(strat_l)>0){
+
+    if(nrow(strat_l)==1){
+      r <- data.frame(id_jrc = strat_l$id_jrc, sample_max = NA)
+    }
 
     if(nrow(strat_l) > 1){
+
+      points <- st_line_sample(riv[rownames(riv)== riv_down$leaves[l],], n = 100)
+      points <- st_cast(points, "POINT")
+      points <- st_sf(points)
+      points$sample <- 1:100
+      points <- st_buffer(points, dist = 100)
+
+      inter <- st_intersection(strat_l, points)
+      # inter <- st_snap(strat_l, points, tolerance = 5)
+      r <- data.frame(id_jrc = unique(inter$id_jrc))
+      for(i in 1:nrow(r)){
+        r$sample_max[i] <- max(inter$sample[inter$id_jrc== r$id_jrc[i]])
+      }
+      for(i in 1:(nrow(r)-1)){
+        res_max$res_down[res_max$id_jrc==r$id_jrc[i]] <- r$id_jrc[i+1]
+      }
+
+    }
+  r_old <- r
+
+# go to next river reach to find one next reservoir
+
+  strat_l <- subset(strategic, `nearest river` %in% riv$ARCID[rownames(riv)==riv_down$riv_down[l]])
+
+  if(nrow(strat_l) == 0){
+    if(is.na(riv_down$riv[l])){
+      res_max$res_down[res_max$id_jrc == r_old$id_jrc[nrow(r_old)]] <- (-1)
+    }else{
+    next_riv <- riv_down$riv_down[l]
+
+    while(nrow(strat_l) == 0 && length(next_riv)>0){
+      # next_riv <- as.numeric(neighbors(g,next_riv,mode='out'))
+      # strat_l <- subset(strategic, `nearest river` == riv$ARCID[rownames(riv) == next_riv])
+      next_riv <- neighbors(g,next_riv,mode='out')
+      strat_l <- subset(strategic, `nearest river` == riv$ARCID[rownames(riv) == next_riv])
+  }
+
+  if(nrow(strat_l) == 0){
+    res_max$res_down[res_max$id_jrc == r_old$id_jrc[nrow(r_old)]] <- (-1)
+  }
+
+  if(nrow(strat_l)==1){
+    res_max$res_down[res_max$id_jrc == r_old$id_jrc[nrow(r_old)]] <- strat_l$id_jrc
+  }
+
+  if(nrow(strat_l) > 1){
+      points <- st_line_sample(riv[rownames(riv) == next_riv,], n = 100)
+      points <- st_cast(points, "POINT")
+      points <- st_sf(points)
+      points$sample <- 1:100
+      points <- st_buffer(points, dist = 100)
+
       inter <- st_intersection(strat_l, points)
       r <- data.frame(id_jrc = unique(inter$id_jrc))
       for(i in 1:nrow(r)){
         r$sample_max[i] <- max(inter$sample[inter$id_jrc== r$id_jrc[i]])
       }
 
-    }
-
+  res_max$res_down[res_max$id_jrc == r_old$id_jrc[nrow(r_old)]] <- r$id_jrc[1]
   }
-
+    }
+  }
+  }
+}
+return(res_max)
 }
 
+res_max <- Routing()
+strat <- subset(res_max,`distance to river`==0)
 # plot(points)
 #
 plot(points$points)
 # plot(strategic$geometry[strategic$`nearest river`==river_reaches[1]], add = T, col = "cadetblue")
+# plot(res_l$geometry, add = T)
+plot(strat_l$geometry[1], add = T, col = "red")
+plot(strat_l$geometry[2], add = T, col = "green")
+plot(strat_l$geometry[3], add = T, col = "blue")
 
-plot(strat_l$geometry, add = T)
+
+plot(strat_l$geometry, col = "red")
+# plot(strat_l$geometry, add = T, col = "red")
+plot(points$points, add = T)
 
