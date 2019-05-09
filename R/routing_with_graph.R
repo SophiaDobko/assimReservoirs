@@ -5,10 +5,16 @@ library(sf)
 library(igraph)
 
 Routing <- function(){
+  res_max$res_down <- NA
+  strategic <- res_max[res_max$`distance to river`==0,]
+  g <- river_graph
+
+  while(length(which(is.na(strategic$res_down)))>0){
+
 # get leaves ####
-g <- river_graph
 
 leaves = which(degree(g, v = V(g), mode = "in")==0)
+
 riv_down <- data.frame(leaves = leaves, riv_down = NA)
 for(i in 1:length(leaves)){
   rd <- as.numeric(neighbors(g,leaves[i],mode='out'))
@@ -20,8 +26,8 @@ for(i in 1:length(leaves)){
 }
 
 # for-loop through leaves ####
-res_max$res_down <- NA
-strategic <- res_max[res_max$`distance to river`==0,]
+
+
 # river_reaches <- unique(strategic$`nearest river`)
 
 for(l in 1:nrow(riv_down)){
@@ -103,13 +109,23 @@ for(l in 1:nrow(riv_down)){
   }
   }
 }
+
+  strategic <- res_max[res_max$`distance to river`==0,]
+
+  g=delete_vertices(g, leaves)
+  # leaves=which(degree(g, v = V(g), mode = "in")==0)
+
+}
+
 return(res_max)
 }
 
 res_max <- Routing()
-strat <- subset(res_max,`distance to river`==0)
-# plot(points)
-#
+strategic <- subset(res_max,`distance to river`==0)
+
+leaves
+plot(g)
+
 plot(points$points)
 # plot(strategic$geometry[strategic$`nearest river`==river_reaches[1]], add = T, col = "cadetblue")
 # plot(res_l$geometry, add = T)
