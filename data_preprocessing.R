@@ -24,6 +24,8 @@ res_max <- st_transform(res_max, "+proj=utm +zone=24 +south +datum=WGS84 +no_def
 otto <- st_intersection(otto, ce)
 riv <- st_intersection(riv, ce)
 rm(ce)
+dup <- riv[which(duplicated(riv$ARCID)),]
+riv <- subset(riv, !(ARCID %in% dup$ARCID))
 
 save(otto, file = "D:/assimReservoirs/data/otto.RData")
 save(riv, file = "D:/assimReservoirs/data/riv.RData")
