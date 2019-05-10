@@ -5,10 +5,17 @@ library(igraph,warn.conflicts=FALSE)
 
 
 head(riv)
+
+
+count=riv %>% group_by(ARCID) %>% summarise(N=n())
+
+count %>% filter(N>1)
+
 nodes = riv2nodes(riv)
 river_graph = riv2graph(nodes,riv)
 
-save(river_graph,'data/river_graph.RData')
+save(river_graph,file='data/river_graph.RData')
+save(nodes,file='data/nodes.RData')
 
 ## create new reservoir dataset with attribution of river reach
 res_max_riv=allocate_reservoir_to_river(riv)
