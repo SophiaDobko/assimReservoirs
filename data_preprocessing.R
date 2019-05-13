@@ -26,6 +26,7 @@ riv <- st_intersection(riv, ce)
 rm(ce)
 dup <- riv[which(duplicated(riv$ARCID)),]
 riv <- subset(riv, !(ARCID %in% dup$ARCID))
+rownames(riv) <- 1:nrow(riv)
 
 save(otto, file = "D:/assimReservoirs/data/otto.RData")
 save(riv, file = "D:/assimReservoirs/data/riv.RData")
