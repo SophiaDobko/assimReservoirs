@@ -1,9 +1,13 @@
-# reservoir routing with river graph ####
+#' Reservoir routing of strategic reservoirs ####
+#'
+#' This function identifies which strategic reservoir drains into which stategic downstream reservoir
+#' @return the column ```res_down``` in the geospatial dataframe ```res_max```
+#' @import sf
+#' @import igraph
+#' @import dplyr
+#' @export
 
-# library(dplyr)
 # library(assimReservoirs)
-library(sf)
-library(igraph)
 
 Routing <- function(){
   res_max$res_down <- NA
@@ -16,6 +20,8 @@ Routing <- function(){
 # for-loop through leaves ####
   for(l in 1:length(leaves)){
 
+    if(l %in% c(500,1000,1500)){print(paste(Sys.time(),l, "leaves done"))}
+
     riv_downstr <- all_simple_paths(g,from=leaves[l],mode='out') %>%
     unlist %>% unique
 
@@ -24,13 +30,12 @@ Routing <- function(){
 
     if(nrow(strat_downstr) > 1){
 
-      strat_downstr <- st_join(strat_downstr, riv_l, join = st_intersects)
-      first <- strat_downstr[1,]
-      last <- strat_downstr[nrow(strat_downstr),]
 
-    if(max(first$UP_CELLS)==max(last$UP_CELLS)){
+    # if(max(first$UP_CELLS)==max(last$UP_CELLS)){
 
-      riv_s <- riv_l[riv_l$ARCID==strat_downstr$ARCID[1],]
+      if(length(unique(strat_downstr$`nearest river`))==1){
+
+      riv_s <- riv_l[riv_l$ARCID==strat_downstr$`nearest river`[1],]
       points <- st_line_sample(riv_s, n = 200)
       points <- st_cast(points, "POINT")
       points <- st_sf(points)
@@ -47,6 +52,13 @@ Routing <- function(){
         }
 
     }else{
+      strat_downstr$UP_CELLS <- NA
+      for(u in 1:nrow(strat_downstr)){
+        strat_downstr$UP_CELLS[u] <- riv_l$UP_CELLS[riv_l$ARCID==strat_downstr$`nearest river`[u]]
+
+      }
+      first <- strat_downstr[1,]
+      last <- strat_downstr[nrow(strat_downstr),]
 
     if(max(first$UP_CELLS) > max(last$UP_CELLS)){
       strat_downstr <- strat_downstr[nrow(strat_downstr):1,]
@@ -66,6 +78,8 @@ Routing <- function(){
 }
 
 res_max <- Routing()
+save(res_max, file = "D:/assimReservoirs/data/res_max.RData")
+
 
 
 
