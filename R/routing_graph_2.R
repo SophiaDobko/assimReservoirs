@@ -77,8 +77,3 @@ Routing <- function(){
 # save(res_max, file = "D:/assimReservoirs/data/res_max.RData")
 
 
-
-
-
-=======
->>>>>>> d235062e19ae67f8b51bb888d73abe4e195f202f
