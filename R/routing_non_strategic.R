@@ -35,9 +35,3 @@ Routing_non_strat <- function(){
   }
   return(res_max)
 }
-
-
-res_max <- Routing_non_strat()
-save(res_max, file = "D:/assimReservoirs/data/res_max.RData")
-
-

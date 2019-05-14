@@ -76,11 +76,3 @@ Routing <- function(){
 
   return(res_max)
 }
-
-res_max <- Routing()
-save(res_max, file = "D:/assimReservoirs/data/res_max.RData")
-
-
-
-
-
