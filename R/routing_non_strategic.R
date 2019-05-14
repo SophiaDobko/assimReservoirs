@@ -54,3 +54,4 @@ Routing_non_strat <- function(){
 # non_strat <- res_max_non_strat[res_max$`distance to river`>0,]
 
 
+>>>>>>> d235062e19ae67f8b51bb888d73abe4e195f202f
