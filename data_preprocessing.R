@@ -8,6 +8,10 @@ res_max <- st_read("D:/shapefiles/res_max")
 res_max <- res_max[,c(1,3,8)]
 res_max$vol_max <- res_max$volume
 res_max$volume <- NULL
+upcells <- riv
+upcells$geometry <- NULL
+res_max <- merge(res_max, upcells, by.x = "nearest river", by.y = "ARCID")
+
 
 ce <- st_read("D:/shapefiles/Brazil_states")
 ce <- subset(ce, NM_ESTADO == "CEARÁ")
