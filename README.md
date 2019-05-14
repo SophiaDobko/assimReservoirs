@@ -5,6 +5,35 @@ With the use of meteorological observations, the reservoir extent shall be model
 
 <br>
 
+#### Example:
+
+```
+library(assimReservoirs)
+
+# Data preprocessing
+res_max <- Routing()
+res_max <- Routing_non_strat()
+
+# Download and interpolate rain data for specific catchment
+
+list_BG <- identBasinsGauges(ID = 25283, distGauges = 20)
+list_BG <- identBasinsGauges_shape(shape = subset(res_max, id_jrc==49301), distGauges = 20)
+plotBasins(list_BG)
+plotGauges(list_BG, distGauges = 20)
+
+api <- requestGauges(requestDate = today(), Ndays = 5, list_BG)
+list_idw <- idwRain(list_BG, api)
+plotIDW(list_BG, list_idw)
+
+files_world <- get_trmm_world(YEAR = 2019, MONTH = 04, DAY = 12)
+trmm_means <- trmmRain(shape = st_transform(list_BG$catch, "+proj=latlong  +datum=WGS84 +no_defs"), files_world)
+plotTRMM(trmm_means)
+
+list_routing <- resRouting(list_BG)
+plotStratRes(list_BG, list_routing)
+```
+<br>
+
 #### Available funcions:
 
 - ```identBasinsGauges(ID, distGauges)``` identifies the contributing basins of a certain reservoir and the rain gauges within a certain buffer around this basin
@@ -84,25 +113,4 @@ output of ```resRouting```, if no routing is possible "No routing" is printed, o
 
 <br>
 
-#### Example:
 
-```
-library(assimReservoirs)
-
-list_BG <- identBasinsGauges(ID = 25283, distGauges = 20)
-list_BG <- identBasinsGauges_shape(shape = subset(res_max, id_jrc==49301), distGauges = 20)
-plotBasins(list_BG)
-plotGauges(list_BG, distGauges = 20)
-
-api <- requestGauges(requestDate = today(), Ndays = 5, list_BG)
-list_idw <- idwRain(list_BG, api)
-plotIDW(list_BG, list_idw)
-
-files_world <- get_trmm_world(YEAR = 2019, MONTH = 04, DAY = 12)
-trmm_means <- trmmRain(shape = st_transform(list_BG$catch, "+proj=latlong  +datum=WGS84 +no_defs"), files_world)
-plotTRMM(trmm_means)
-
-list_routing <- resRouting(list_BG)
-plotStratRes(list_BG, list_routing)
-```
-<br>
