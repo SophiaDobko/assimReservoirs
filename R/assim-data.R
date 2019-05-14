@@ -35,6 +35,16 @@
 #' @source https://hydrosheds.org/downloads
 "river_graph"
 
+#' A graph of the class `igraph`: routing of strategic and non-strategic reservoirs in Ceará.
+#'
+#' @docType data
+#' @usage data(reservoir_graph)
+#'
+#' @references
+#' @source https://hydrosheds.org/downloads
+#' @source https://global-surface-water.appspot.com/download
+"reservoir_graph"
+
 #' Meta data of precipitation gauges in Ceará
 #'
 #' @docType data

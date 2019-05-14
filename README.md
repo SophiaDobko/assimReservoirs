@@ -10,11 +10,19 @@ With the use of meteorological observations, the reservoir extent shall be model
 ```
 library(assimReservoirs)
 
-# Data preprocessing
+# Data preprocessing ####
+
+# Create river graph
+
+
+# Routing of strategic and non-strategic reservoir,  create reservoir-graph
 res_max <- Routing()
 res_max <- Routing_non_strat()
 
-# Download and interpolate rain data for specific catchment
+# Estimate runoff contributin areas for all reservoirs
+
+
+# Download and interpolate rain data for specific catchment ####
 
 list_BG <- identBasinsGauges(ID = 25283, distGauges = 20)
 list_BG <- identBasinsGauges_shape(shape = subset(res_max, id_jrc==49301), distGauges = 20)

@@ -14,7 +14,7 @@ Routing_non_strat <- function(){
   non_strat <- res_max[res_max$`distance to river`>0,]
   g <- river_graph
 
-  for(n in 1:nrow(non_strat)){
+  for(n in 15088:nrow(non_strat)){
 
     if(n %in% c(2500,5000,7500,10000,12500,15000,16000,17500,20000)){
       print(paste(Sys.time(),n, "reservoirs done"))}
@@ -28,10 +28,7 @@ Routing_non_strat <- function(){
       riv_l <- riv[riv_downstr,]
       strat_downstr <- subset(strategic, `nearest river` %in% riv_l$ARCID)
     }
-    # take only strategic reservoirs from the nearest river reach!?!
-    # if(nrow(strat_downstr)>1){
-    #   strat_downstr <- strat_downstr[strat_downstr$UP_CELLS==min(strat_downstr$UP_CELLS),]
-    # }
+
     if(nrow(strat_downstr)>1){
       strat_downstr <- strat_downstr[st_distance(strat_downstr, non_strat[n,]) == min(st_distance(strat_downstr, non_strat[n,])),]
     }
@@ -42,16 +39,25 @@ Routing_non_strat <- function(){
       res_max$res_down[res_max$id_jrc==non_strat$id_jrc[n]] <- NA
     }
 
-
   }
+
+  # create graph of reservoir routing ####
+  create_graph <- res_max
+  create_graph$res_down[(res_max$res_down)==-1] <- NA
+  create_graph <- create_graph[!is.na(create_graph$res_down),]
+  create_graph <- data.frame(from = create_graph$id_jrc, to = create_graph$res_down)
+  reservoir_graph <- graph_from_data_frame(create_graph, directed = T)
+  save(reservoir_graph, file = "D:/assimReservoirs/data/reservoir_graph.RData")
+
   return(res_max)
 }
 
-
-
+# res_max$res_down[is.na(res_max$res_down)] <- -1
 # res_max <- Routing_non_strat()
-# res_max_non_strat <- res_max
-# save(res_max_non_strat, file = "D:/assimReservoirs/data/res_max_non_strat.RData")
+# res_max_routing <- res_max
+# save(res_max_routing, file = "D:/assimReservoirs/data/res_max_routing.RData")
 # non_strat <- res_max_non_strat[res_max$`distance to river`>0,]
+
+
 
 
