@@ -4,8 +4,23 @@ library(dplyr,warn.conflicts=FALSE)
 library(igraph,warn.conflicts=FALSE)
 
 
-head(riv)
 
+inter=st_intersects(riv,filter(res_max,id_jrc==24870),sparse=FALSE)
+
+which(inter)
+
+neighbor=neighbors(river_graph, which(inter), mode = c("out")) %>% as.numeric
+
+river_graph[[which(inter)]]
+
+neighbor
+
+
+
+riv[572,]
+riv[which(inter),]
+nodes[588,]
+nodes[which(inter),]
 
 count=riv %>% group_by(ARCID) %>% summarise(N=n())
 
@@ -16,6 +31,10 @@ river_graph = riv2graph(nodes,riv)
 
 save(river_graph,file='data/river_graph.RData')
 save(nodes,file='data/nodes.RData')
+# st_write(riv,dsn='riv.geojson')
+# st_write(res_max,dsn='res_max.geojson')
+
+
 
 ## create new reservoir dataset with attribution of river reach
 res_max_riv=allocate_reservoir_to_river(riv)
@@ -46,7 +65,7 @@ riv_upstr=river_upstream(reach_id,riv_i,g)
 # save(res_max,file="data/res_max.RData")
 
 
-is.directed(g)
+is.directed(river_graph)
 
 ## get leaves
 leaves=which(degree(g, v = V(g), mode = "in")==0)
