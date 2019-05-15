@@ -5,7 +5,7 @@ With the use of meteorological observations, the reservoir extent shall be model
 
 <br>
 
-### Example:
+## Examples
 
 ```
 library(assimReservoirs)
@@ -40,13 +40,17 @@ plotTRMM(trmm_means)
 list_routing <- resRouting(list_BG)
 plotStratRes(list_BG, list_routing)
 ```
-<br>
 
-### Available funcions:
+## Available funcions
 
-#### Data preprocessing
+### Data preprocessing
 
-#### Download and interpolate rain data for a specific catchment
+- ```res_max <- Routing()```
+- ```res_max <- Routing_non_strat()```
+
+- ```res_max <- runoff_contributing()```
+
+### Download and interpolate rain data for a specific catchment
 
 - ```identBasinsGauges(ID, distGauges)``` identifies the contributing basins of a certain reservoir and the rain gauges within a certain buffer around this basin
 
@@ -72,18 +76,16 @@ plotStratRes(list_BG, list_routing)
 
 - ```plotStratRes(list_BG, list_routing)``` plots the strategic reservoirs identified by resRouting
 
-<br>
 
-#### Included data:
+## Included data
 - ```data(res_max)``` a geospatial dataframe of all 22960 reservoirs identified in Ceará with their ID, maximum extent and geometry, adapted from  Jean-Francois Pekel, Andrew Cottam, Noel Gorelick, Alan S. Belward, High-resolution mapping of global surface water and its long-term changes. Nature 540, 418-422 (2016). (doi:10.1038/nature20584).
 
 - ```data(otto)``` a geospatial dataframe of the level 12 subbasins in  Ceará, classified following the method of Otto Pfafstetter as published by Lehner, B., Verdin, K., Jarvis, A. (2008): New global hydrography derived from spaceborne elevation data. Eos, Transactions, AGU, 89(10): 93-94. Among other variables, HYBAS_ID gives the ID of a subbasin, NEXT_DOWN the ID of the next downstream subbasin, SUB_AREA the area of the specific subbasin and UP_AREA the contributing area in km².
 
 - ```data(riv)``` a geospatial dataframe of the river reaches in Ceará from Lehner, B., Verdin, K., Jarvis, A. (2008): New global hydrography derived from spaceborne elevation data. Eos, Transactions, AGU, 89(10): 93-94. ARCID gives for each river reach an ID and UP_CELLS the number of upstrem catchment cells, with a cell size of 15 arcseconds x 15 arcseconds. 
 
-<br>
 
-#### Outputs:
+## Outputs
 
 ```list_BG``` <br>
 output of ```identBasinsGauges```, a list with 6 elements:
@@ -117,12 +119,10 @@ output of ```resRouting```, if no routing is possible "No routing" is printed, o
 - ```reservoirs``` is a geospatial dataframe of all the reservoirs in the catchment which are on a river reach of ```riv```, and 
 - ```riv_catch``` is a geospatial dataframe of all the river reaches in the catchment.
 
-<br>
 
-#### Future functions:
+## Future functions:
 
 - water balance to calculate the reservoir extent and compare it to the extent estimated from remote sensing
 
-<br>
 
 
