@@ -52,7 +52,8 @@ save(res_max, file = "D:/assimReservoirs/data/res_max.RData")
 
 # create otto_graph ####
 create_graph <- otto
-create_graph <- create_graph[create_graph$NEXT_DOWN>0,]
+# create_graph <- create_graph[create_graph$NEXT_DOWN>0,]
+create_graph$NEXT_DOWN[create_graph == 0] <- NA
 create_graph <- data.frame(from = create_graph$HYBAS_ID, to = create_graph$NEXT_DOWN)
 otto_graph <- graph_from_data_frame(create_graph, directed = T)
 save(otto_graph, file = "D:/assimReservoirs/data/otto_graph.RData")
@@ -60,7 +61,7 @@ save(otto_graph, file = "D:/assimReservoirs/data/otto_graph.RData")
 # create reservoir-graph after routing ####
 create_graph <- res_max
 create_graph$res_down[(res_max$res_down)==-1] <- NA
-create_graph <- create_graph[!is.na(create_graph$res_down),]
+# create_graph <- create_graph[!is.na(create_graph$res_down),]
 create_graph <- data.frame(from = create_graph$id_jrc, to = create_graph$res_down)
 reservoir_graph <- graph_from_data_frame(create_graph, directed = T)
 save(reservoir_graph, file = "D:/assimReservoirs/data/reservoir_graph.RData")

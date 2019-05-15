@@ -3,9 +3,9 @@
 # list_BG <- identBasinsGauges(ID = 49301)
 # list_BG_shape <- identBasinsGauges(shape = subset(res_max, id_jrc==49301))
 
-#' Create reservoir routing scheme
+#' Model reservoirs
 #'
-#' This function creates a routing scheme for the strategic reservoirs, those on the main river course. For each reservoir the next reservoir downstream is identified.
+#' This function models runoff concentration for a head-subbasin
 #' @param list_BG the output list of identBasinsGauges
 #' @param start date at which model run shall start, default: as.Date("2000-01-10")
 #' @param end date at which model run shall end, default: as.Date("2000-01-15")
