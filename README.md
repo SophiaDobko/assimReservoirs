@@ -5,7 +5,7 @@ With the use of meteorological observations, the reservoir extent shall be model
 
 <br>
 
-#### Example:
+### Example:
 
 ```
 library(assimReservoirs)
@@ -19,10 +19,10 @@ library(assimReservoirs)
 res_max <- Routing()
 res_max <- Routing_non_strat()
 
-# Estimate runoff contributin areas for all reservoirs
+# Estimate runoff contributing areas for all reservoirs
+res_max <- runoff_contributing()
 
-
-# Download and interpolate rain data for specific catchment ####
+# Download and interpolate rain data for a specific catchment ####
 
 list_BG <- identBasinsGauges(ID = 25283, distGauges = 20)
 list_BG <- identBasinsGauges_shape(shape = subset(res_max, id_jrc==49301), distGauges = 20)
@@ -42,7 +42,11 @@ plotStratRes(list_BG, list_routing)
 ```
 <br>
 
-#### Available funcions:
+### Available funcions:
+
+#### Data preprocessing
+
+#### Download and interpolate rain data for a specific catchment
 
 - ```identBasinsGauges(ID, distGauges)``` identifies the contributing basins of a certain reservoir and the rain gauges within a certain buffer around this basin
 

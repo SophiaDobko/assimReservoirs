@@ -2,8 +2,8 @@
 #'
 #' This function estimates the area of directly contributing runoff for all reservoirs, based on the mean yearly runoff of 1960-1990
 #' @param start default: as.Date("1960-01-01")
-#' @param end default: as.Date("1990-01-01")
-#' @return columns runoff_est and runoff_adapt in dataframe res_max
+#' @param end default: as.Date("1989-12-31")
+#' @return columns runoff_contr_est and runoff_contr_adapt in dataframe res_max, runoff_contr_adapt adapts the estimated (theoretic) runoff contributing area to the actual subbasin area
 #' @importFrom lubridate year month day
 #' @import sf
 #' @import raster
@@ -11,6 +11,7 @@
 
 runoff_contributing <- function(start = as.Date("1960-01-01"), end = as.Date("1989-12-31")){
 
+# Interpolate runoff with IDW
   dates <- seq.Date(from = start, to = end, by = "day")
   files <- dir("D:/reservoir_model/Time_series")
   postos$runoff_mean <- NA
@@ -25,9 +26,6 @@ runoff_contributing <- function(start = as.Date("1960-01-01"), end = as.Date("19
     }
   }
 
-  # interpolate runoff, get mean for each subbasin
-  # IDW = inverse distance weighted interpolation
-
   # Create an empty grid, n is the total number of cells
   postos <- postos[!is.na(postos$runoff_mean),]
   g <- as(postos, "Spatial")
@@ -41,7 +39,7 @@ runoff_contributing <- function(start = as.Date("1960-01-01"), end = as.Date("19
   gridded(grd)     <- TRUE  # Create SpatialPixel object
   fullgrid(grd)    <- TRUE  # Create SpatialGrid object
 
-  # Add P's projection information to the empty grid
+  # Add projection information to the empty grid
   proj4string(grd) <- proj4string(g)
 
   # Interpolate the grid cells using a power value of 2 (idp=2.0)
@@ -50,7 +48,7 @@ runoff_contributing <- function(start = as.Date("1960-01-01"), end = as.Date("19
   r <- mask(r, c)
   r <- crop(r,c)
 
-  # Output: mean runoff for each subcatchment
+  # calculate mean runoff for each subcatchment
   for(s in 1:nrow(otto)){
     otto$runoff_mean[s] <- mean(unlist(extract(r,otto[s,])), na.rm = T)
   }
@@ -65,6 +63,7 @@ runoff_contributing <- function(start = as.Date("1960-01-01"), end = as.Date("19
   res_max_routing <- res_max_routing[order(res_max_routing$id_jrc),]
   res_max$res_down <- res_max_routing$res_down
 
+  # Limit runoff_contr_adapt to actual subbasin size
   res_max$runoff_contr_adapt <- res_max$runoff_contr_est
   for(i in 1:length(unique(res_max$HYBAS_ID))){
     basin <- res_max[res_max$HYBAS_ID==unique(res_max$HYBAS_ID)[i],]
@@ -83,7 +82,4 @@ runoff_contributing <- function(start = as.Date("1960-01-01"), end = as.Date("19
     }
   }
 }
-
-
-
 
