@@ -3,7 +3,6 @@
 The aim of this package is the assimilation of reservoir extents in Ceará, northeast Brazil. 
 With the use of meteorological observations, the reservoir extent shall be modeled in order to complement the reservoir extent estimations based on remote sensing [jmigueldelgado/buhayra](https://github.com/jmigueldelgado/buhayra). 
 
-<br>
 
 ## Examples
 
@@ -123,6 +122,4 @@ output of ```resRouting```, if no routing is possible "No routing" is printed, o
 ## Future functions:
 
 - water balance to calculate the reservoir extent and compare it to the extent estimated from remote sensing
-
-
 

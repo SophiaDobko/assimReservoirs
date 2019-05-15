@@ -38,16 +38,7 @@ Routing_non_strat <- function(){
     }else{
       res_max$res_down[res_max$id_jrc==non_strat$id_jrc[n]] <- NA
     }
-
   }
-
-  # create graph of reservoir routing ####
-  create_graph <- res_max
-  create_graph$res_down[(res_max$res_down)==-1] <- NA
-  create_graph <- create_graph[!is.na(create_graph$res_down),]
-  create_graph <- data.frame(from = create_graph$id_jrc, to = create_graph$res_down)
-  reservoir_graph <- graph_from_data_frame(create_graph, directed = T)
-  save(reservoir_graph, file = "D:/assimReservoirs/data/reservoir_graph.RData")
 
   return(res_max)
 }
