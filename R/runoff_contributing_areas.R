@@ -11,11 +11,6 @@
 
 runoff_contributing <- function(start = as.Date("1960-01-01"), end = as.Date("1989-12-31")){
 
-  # catch <- list_BG$catch
-  # buffer <- list_BG$catch_buffer
-  # postos_utm <- postos
-
-  # start loop over days
   dates <- seq.Date(from = start, to = end, by = "day")
   files <- dir("D:/reservoir_model/Time_series")
   postos$runoff_mean <- NA
@@ -60,10 +55,33 @@ runoff_contributing <- function(start = as.Date("1960-01-01"), end = as.Date("19
     otto$runoff_mean[s] <- mean(unlist(extract(r,otto[s,])), na.rm = T)
   }
 
-#  res_max <- merge(res_max, otto$runoff_mean, by = )
+  runoff <- otto[,c(1,7,15)]
+  runoff$geometry <- NULL
+  res_max <- merge(res_max, runoff, by ="HYBAS_ID")
+  res_max <- res_max[c(2:7,1,8,9)]
+  res_max$runoff_contr_est <- res_max$vol_max/res_max$runoff_mean/1000
 
+  res_max <- res_max[order(res_max$id_jrc),]
+  res_max_routing <- res_max_routing[order(res_max_routing$id_jrc),]
+  res_max$res_down <- res_max_routing$res_down
 
-
+  res_max$runoff_contr_adapt <- res_max$runoff_contr_est
+  for(i in 1:length(unique(res_max$HYBAS_ID))){
+    basin <- res_max[res_max$HYBAS_ID==unique(res_max$HYBAS_ID)[i],]
+    if(sum(basin$runoff_contr_est)>basin$SUB_AREA[1]){
+      # big <- basin[!(basin$res_down %in% basin$id_jrc),]
+      big <- basin[basin$runoff_contr_est == max(basin$runoff_contr_est),]
+      res_max$runoff_contr_adapt[res_max$id_jrc==big$id_jrc] <- big$SUB_AREA-sum(basin$runoff_contr_est[basin$id_jrc != big$id_jrc])
+    }
+  }
+  negative <- res_max[res_max$runoff_contr_adapt<0,]
+  if(nrow(negative)>0){
+    for(i in 1:length(negative$HYBAS_ID)){
+      basin <- res_max[res_max$HYBAS_ID == negative$HYBAS_ID[i],]
+      big <- basin[basin$runoff_contr_est == max(basin$runoff_contr_est) | basin$runoff_contr_adapt == max(basin$runoff_contr_adapt),]
+      res_max$runoff_contr_adapt[res_max$id_jrc %in% big$id_jrc] <- (big$SUB_AREA[1]-sum(basin$runoff_contr_est[!(basin$id_jrc %in% big$id_jrc)]))/2
+    }
+  }
 }
 
 

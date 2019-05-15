@@ -32,6 +32,17 @@ dup <- riv[which(duplicated(riv$ARCID)),]
 riv <- subset(riv, !(ARCID %in% dup$ARCID))
 rownames(riv) <- 1:nrow(riv)
 
+res_catch <- st_intersection(res_max, otto)
+res_max$HYBAS_ID <- NA
+for(r in 1:nrow(res_max)){
+  res <- res_catch[res_catch$id_jrc == res_max$id_jrc[r],]
+  if(nrow(res)>1){
+    res <- res[res$UP_CELLS== max(res$UP_CELLS),]
+  }
+  res_max$HYBAS_ID[r] <- res$HYBAS_ID
+}
+res_max <- res_max[c(2:5,1,6,8,7)]
+
 save(otto, file = "D:/assimReservoirs/data/otto.RData")
 save(riv, file = "D:/assimReservoirs/data/riv.RData")
 save(res_max, file = "D:/assimReservoirs/data/res_max.RData")
