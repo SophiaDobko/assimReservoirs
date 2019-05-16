@@ -14,7 +14,7 @@ library(assimReservoirs)
 # Create river graph
 
 
-# Routing of strategic and non-strategic reservoir,  create reservoir-graph
+# Routing of strategic and non-strategic reservoirs
 res_max <- Routing()
 res_max <- Routing_non_strat()
 
@@ -36,8 +36,8 @@ files_world <- get_trmm_world(YEAR = 2019, MONTH = 04, DAY = 12)
 trmm_means <- trmmRain(shape = st_transform(list_BG$catch, "+proj=latlong  +datum=WGS84 +no_defs"), files_world)
 plotTRMM(trmm_means)
 
-list_routing <- resRouting(list_BG)
-plotStratRes(list_BG, list_routing)
+# Simple model
+res_model <- res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date("2004-01-30"))
 ```
 
 ## Available funcions
@@ -71,9 +71,9 @@ plotStratRes(list_BG, list_routing)
 
 - ```plotIDW(list_BG, list_idw)``` plots the result of ```idwRain```: the interpolated precipitation in the contributing basins
 
-- ```resRouting(list_BG)``` creates a routing scheme for the strategic reservoirs (= reservoirs on the main river course) - for each reservoir the next reservoir downstream is identified
+## Run a simple model of water volume of the reservoirs and flow through the reservoir network
+- ```res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date("2004-01-30"))```
 
-- ```plotStratRes(list_BG, list_routing)``` plots the strategic reservoirs identified by resRouting
 
 
 ## Included data
@@ -111,12 +111,7 @@ output of ```get_trmm_world```, contains the names of the available trmm files
 ```trmm_means``` <br>
 output of ```trmmRain```, a geospatial dataframe with the mean TRMM precipitation for each subbasin
 
-```list_routing``` <br>
-output of ```resRouting```, if no routing is possible "No routing" is printed, otherwise the output is a list with 3 elements: 
-
-- ```res_main``` is a dataframe of all the reservoirs in the catchment where the area of UP_CELLS > 0.5 * the area of its subbasin, res_down shows the ID of the next downstream reservoir, 
-- ```reservoirs``` is a geospatial dataframe of all the reservoirs in the catchment which are on a river reach of ```riv```, and 
-- ```riv_catch``` is a geospatial dataframe of all the river reaches in the catchment.
+```res_model```<br>
 
 
 ## Future functions:
