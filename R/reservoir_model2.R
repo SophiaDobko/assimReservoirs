@@ -8,9 +8,10 @@
 #' @importFrom lubridate year month day
 #' @import sf
 #' @import raster
+#' @import igraph
 #' @export
 
-res_model2 <- function(ID = 33443, start = as.Date("2000-01-14"), end = as.Date("2000-01-18")){
+res_model2 <- function(ID = 33443, start = as.Date("2000-01-16"), end = as.Date("2000-01-28")){
 
 # identify contributing catchment
   res <- res_max[res_max$id_jrc == ID,]
@@ -52,7 +53,7 @@ res_model2 <- function(ID = 33443, start = as.Date("2000-01-14"), end = as.Date(
 # interpolate runoff  with IDW, get mean for each subbasin
 # Create an empty grid, n is the total number of cells
     g <- as(postos, "Spatial")
-    b <- as(catch_buffer, "Spatial")
+    b <- as(buffer, "Spatial")
     c <- as(catch$geometry, "Spatial")
     g@bbox <- b@bbox
 
@@ -91,32 +92,32 @@ res_model2 <- function(ID = 33443, start = as.Date("2000-01-14"), end = as.Date(
     res_mod$Qout_m3[res_mod$Qin_m3 <= res_mod$vol_max] <- 0
     res_mod$vol_1 <- res_mod$vol_0 + res_mod$Qin_m3 - res_mod$Qout_m3
 
-# loop through all reservoirs/subbasins to contribute qout? ####
+# loop through all reservoirs (/subbasins) to distribute qout? ####
+    for(l in 1:length(res_leaves)){
+      res_downstr <- all_simple_paths(reservoir_graph, from=which(res_max$id_jrc==as.numeric(names(res_leaves)[l])), to = which(res_max$id_jrc==ID), mode='out') %>%
+        unlist %>% unique
+      res_l <- res_max[res_downstr,]
+      # res_l <- res_l[!is.na(res_l$id_jrc),]
+      # res_l <- res_l[res_l$id_jrc %in% reservoirs$id_jrc,]
 
+      if(nrow(res_l)>1){
+        for(r in 2:nrow(res_l)){
+          res_mod$Qin_m3[r] <- res_mod$Qin_m3[r] + res_mod$Qout_m3[r-1]
+          if(res_mod$Qin_m3[r]+res_mod$vol_0[r] > res_mod$vol_max[r]){
+            res_mod$Qout_m3[r] <- res_mod$vol_0[r] + res_mod$Qin_m3[r] - res_mod$vol_max[r]
+          }else{
+            res_mod$Qout_m3[r] <- 0 }
+          res_mod$vol_1[r] <- res_mod$vol_0[r] + res_mod$Qin_m3[r] - res_mod$Qout_m3[r]
+        }
+      }
+    }
+
+# Collect all timesteps
     collect_res_timesteps <- rbind(collect_res_timesteps, res_mod)
     res_mod0 <- res_mod
   }
   return(collect_res_timesteps)
 }
 
-collect <- res_model2()
+# collect <- res_model2()
 
-#       res_sub$Qout_m3[res_sub$Qin_m3 > res_sub$vol_max] <- res_sub$vol_0[res_sub$Qin_m3 > res_sub$vol_max] + res_sub$Qin_m3[res_sub$Qin_m3 > res_sub$vol_max] - res_sub$vol_max[res_sub$Qin_m3 > res_sub$vol_max]
-#       res_sub$Qout_m3[res_sub$Qin_m3 <= res_sub$vol_max] <- 0
-#       res_sub$vol_1 <- res_sub$vol_0 + res_sub$Qin_m3 - res_sub$Qout_m3
-#
-#       # extra calculation for res_low
-#       res_sub$Qin_m3[res_sub$id_jrc == res_low$id_jrc] <- res_sub$Qin_m3[res_sub$id_jrc == res_low$id_jrc] + sum(res_sub$Qout_m3[res_sub$id_jrc != res_low$id_jrc])
-#       if(res_sub$Qin_m3[res_sub$id_jrc == res_low$id_jrc]> res_low$vol_max){
-#         res_sub$Qout_m3[res_sub$id_jrc == res_low$id_jrc] <- res_sub$vol_0[res_sub$id_jrc == res_low$id_jrc] + res_sub$Qin_m3[res_sub$id_jrc == res_low$id_jrc] - res_sub$vol_max[res_sub$id_jrc == res_low$id_jrc]
-#       }else{
-#         res_sub$Qout_m3[res_sub$id_jrc == res_low$id_jrc] <- 0 }
-#       res_sub$vol_1[res_sub$id_jrc == res_low$id_jrc] <- res_sub$vol_0[res_sub$id_jrc == res_low$id_jrc] + res_sub$Qin_m3[res_sub$id_jrc == res_low$id_jrc] - res_sub$Qout_m3[res_sub$id_jrc == res_low$id_jrc]
-#
-#       collect_timesteps <- rbind(collect_timesteps, res_sub)
-#       res_sub0 <- res_sub
-#
-#     }
-#   }
-#   return(collect_timesteps)
-# }

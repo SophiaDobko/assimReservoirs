@@ -2,7 +2,7 @@
 % Please edit documentation in R/reservoir_model.R
 \name{res_model}
 \alias{res_model}
-\title{Create reservoir routing scheme}
+\title{Model reservoirs}
 \usage{
 res_model(list_BG, start = as.Date("2000-01-14"),
   end = as.Date("2000-01-18"))
@@ -18,5 +18,5 @@ res_model(list_BG, start = as.Date("2000-01-14"),
 table with vol_0 (volume at the beginning of the timestep t), q_in_m3 (inflow in m3), q_out_m3 (outflow in m3) and vol_1 (volume at the end of the timestep) for each reservoir
 }
 \description{
-This function creates a routing scheme for the strategic reservoirs, those on the main river course. For each reservoir the next reservoir downstream is identified.
+This function models runoff concentration for a head-subbasin
 }
