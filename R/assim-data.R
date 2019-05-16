@@ -35,6 +35,16 @@
 #' @source https://hydrosheds.org/downloads
 "river_graph"
 
+#' A graph of the class `igraph` containing flow direction for the HydroSHEDS subbasin dataset in Ceará.
+#'
+#' @docType data
+#' @usage data(otto_graph)
+#'
+#' @references Lehner, B., Verdin, K., Jarvis, A. (2008): New global hydrography derived from spaceborne elevation data. Eos, Transactions, AGU, 89(10): 93-94.
+#' @source https://hydrosheds.org/downloads
+"otto_graph"
+
+
 #' A graph of the class `igraph`: routing of strategic and non-strategic reservoirs in Ceará.
 #'
 #' @docType data
