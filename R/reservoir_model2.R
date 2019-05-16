@@ -11,7 +11,7 @@
 #' @import igraph
 #' @export
 
-res_model2 <- function(ID = 33443, start = as.Date("2000-01-16"), end = as.Date("2000-01-28")){
+res_model2 <- function(ID = 33443, start = as.Date("2002-04-01"), end = as.Date("2002-04-15")){
 
 # identify contributing catchment
   res <- res_max[res_max$id_jrc == ID,]
@@ -57,7 +57,7 @@ res_model2 <- function(ID = 33443, start = as.Date("2000-01-16"), end = as.Date(
     c <- as(catch$geometry, "Spatial")
     g@bbox <- b@bbox
 
-    grd              <- as.data.frame(spsample(g, "regular", n=50000))
+    grd              <- as.data.frame(spsample(g, "regular", n=5000))
     names(grd)       <- c("X", "Y")
     coordinates(grd) <- c("X", "Y")
     gridded(grd)     <- TRUE  # Create SpatialPixel object
@@ -87,9 +87,9 @@ res_model2 <- function(ID = 33443, start = as.Date("2000-01-16"), end = as.Date(
     if(d == 1){
       res_mod$vol_0 <- 0 }else{
       res_mod$vol_0 <- res_mod0$vol_1 }
-    res_mod$Qin_m3 = res_mod$runoff_contr_adapt*res_mod$runoff*0.001
-    res_mod$Qout_m3[res_mod$Qin_m3 > res_mod$vol_max] <- res_mod$vol_0[res_mod$Qin_m3 > res_mod$vol_max] + res_mod$Qin_m3[res_mod$Qin_m3 > res_mod$vol_max] - res_mod$vol_max[res_mod$Qin_m3 > res_mod$vol_max]
-    res_mod$Qout_m3[res_mod$Qin_m3 <= res_mod$vol_max] <- 0
+    res_mod$Qin_m3 = res_mod$runoff_contr_adapt*res_mod$runoff*1000
+    res_mod$Qout_m3[res_mod$Qin_m3  + res_mod$vol_0 > res_mod$vol_max] <- res_mod$vol_0[res_mod$Qin_m3 + res_mod$vol_0 > res_mod$vol_max] + res_mod$Qin_m3[res_mod$Qin_m3 + res_mod$vol_0 > res_mod$vol_max] - res_mod$vol_max[res_mod$Qin_m3 + res_mod$vol_0 > res_mod$vol_max]
+    res_mod$Qout_m3[res_mod$Qin_m3 + res_mod$vol_0 <= res_mod$vol_max] <- 0
     res_mod$vol_1 <- res_mod$vol_0 + res_mod$Qin_m3 - res_mod$Qout_m3
 
 # loop through all reservoirs (/subbasins) to distribute qout? ####
