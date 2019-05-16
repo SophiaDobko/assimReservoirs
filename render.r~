@@ -1,0 +1,8 @@
+require(rmarkdown)
+require(bookdown)
+
+setwd('/home/delgado/proj/reservoirdats')
+
+render("project_handout.Rmd",output_format="word_document")
+render("project_handout.Rmd",output_format="html_document")
+render("project_handout.Rmd")

@@ -44,9 +44,9 @@ riv2nodes <- function(riv){
 #' @importFrom magrittr %>%
 #' @export
 split_river_network <- function(riv){
-  touching_list=st_touches(riv)
+  adjacency_list=st_touches(riv)
 
-  g = graph.adjlist(touching_list)
+  g = graph.adjlist(adjacency_list)
   c = components(g)
 
   riv_n=mutate(riv,membership=as.factor(c$membership)) %>%
@@ -94,11 +94,19 @@ riv2graph <- function(nodes_i,riv_i){
 #' @export
 river_upstream <- function(reach_id,riv_i,graph)
 {
-  riv_upstr = which(riv_i$ARCID==reach_id) %>%
-    all_simple_paths(graph,from=.,mode='in') %>%
-    unlist %>%
-    unique %>%
-    slice(riv_i,.)
+  list_upstr = which(riv_i$ARCID==reach_id) %>%
+    all_simple_paths(graph,from=.,mode='in')
+
+  if(length(list_upstr)>0)
+  {
+    riv_upstr = list_upstr %>%
+      unlist %>%
+      unique %>%
+      slice(riv_i,.)
+  } else
+  {
+    riv_upstr = filter(riv_i,ARCID==reach_id)
+  }
 
   return(riv_upstr)
 }
