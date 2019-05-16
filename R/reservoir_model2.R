@@ -11,7 +11,7 @@
 #' @import igraph
 #' @export
 
-res_model2 <- function(ID = 33443, start = as.Date("2002-04-01"), end = as.Date("2002-04-15")){
+res_model2 <- function(ID = 33443, start = as.Date("2004-01-24"), end = as.Date("2004-01-30")){
 
 # identify contributing catchment
   res <- res_max[res_max$id_jrc == ID,]
@@ -36,9 +36,12 @@ res_model2 <- function(ID = 33443, start = as.Date("2002-04-01"), end = as.Date(
 # start loop over days
   dates <- seq.Date(from = start, to = end, by = "day")
 
-  collect_res_timesteps <- NULL
+  collect_timesteps <- NULL
 # get runoff for stations in the buffer, certain day
   for(d in 1:length(dates)){
+
+    print(paste(Sys.time(), "starting to interpolate rainfall for", dates[d]))
+
     postos <- st_intersection(postos, buffer)
     files <- dir("D:/reservoir_model/Time_series")
     postos$runoff <- NA
@@ -78,6 +81,8 @@ res_model2 <- function(ID = 33443, start = as.Date("2002-04-01"), end = as.Date(
     }
 
 # loop through all reservoirs to distribute runoff
+    print(paste(Sys.time(), "starting to calculate runoff for each reservoir"))
+
     res_mod <- data.frame(t = d, date = dates[d], id_jrc = reservoirs$id_jrc, vol_max = reservoirs$vol_max, runoff_contr_adapt = reservoirs$runoff_contr_adapt)
     for(s in 1:nrow(res_mod)){
       if(length(catch$runoff[catch$HYBAS_ID == reservoirs$HYBAS_ID[s]])>0){
@@ -88,11 +93,14 @@ res_model2 <- function(ID = 33443, start = as.Date("2002-04-01"), end = as.Date(
       res_mod$vol_0 <- 0 }else{
       res_mod$vol_0 <- res_mod0$vol_1 }
     res_mod$Qin_m3 = res_mod$runoff_contr_adapt*res_mod$runoff*1000
-    res_mod$Qout_m3[res_mod$Qin_m3  + res_mod$vol_0 > res_mod$vol_max] <- res_mod$vol_0[res_mod$Qin_m3 + res_mod$vol_0 > res_mod$vol_max] + res_mod$Qin_m3[res_mod$Qin_m3 + res_mod$vol_0 > res_mod$vol_max] - res_mod$vol_max[res_mod$Qin_m3 + res_mod$vol_0 > res_mod$vol_max]
-    res_mod$Qout_m3[res_mod$Qin_m3 + res_mod$vol_0 <= res_mod$vol_max] <- 0
+    res_mod$Qout_m3[(res_mod$Qin_m3  + res_mod$vol_0) > res_mod$vol_max] <- res_mod$vol_0[(res_mod$Qin_m3 + res_mod$vol_0) > res_mod$vol_max] + res_mod$Qin_m3[(res_mod$Qin_m3 + res_mod$vol_0) > res_mod$vol_max] - res_mod$vol_max[(res_mod$Qin_m3 + res_mod$vol_0) > res_mod$vol_max]
+    res_mod$Qout_m3[(res_mod$Qin_m3 + res_mod$vol_0) <= res_mod$vol_max] <- 0
     res_mod$vol_1 <- res_mod$vol_0 + res_mod$Qin_m3 - res_mod$Qout_m3
 
 # loop through all reservoirs (/subbasins) to distribute qout? ####
+
+    print(paste(Sys.time(), "start routing of qout through reservoir network"))
+
     for(l in 1:length(res_leaves)){
       res_downstr <- all_simple_paths(reservoir_graph, from=which(res_max$id_jrc==as.numeric(names(res_leaves)[l])), to = which(res_max$id_jrc==ID), mode='out') %>%
         unlist %>% unique
@@ -102,22 +110,23 @@ res_model2 <- function(ID = 33443, start = as.Date("2002-04-01"), end = as.Date(
 
       if(nrow(res_l)>1){
         for(r in 2:nrow(res_l)){
-          res_mod$Qin_m3[r] <- res_mod$Qin_m3[r] + res_mod$Qout_m3[r-1]
-          if(res_mod$Qin_m3[r]+res_mod$vol_0[r] > res_mod$vol_max[r]){
-            res_mod$Qout_m3[r] <- res_mod$vol_0[r] + res_mod$Qin_m3[r] - res_mod$vol_max[r]
+          f <- res_mod$id_jrc == res_l$id_jrc[r]
+          res_mod$Qin_m3[res_mod$id_jrc == res_l$id_jrc[r]] <- res_mod$Qin_m3[res_mod$id_jrc == res_l$id_jrc[r]] + res_mod$Qout_m3[res_mod$id_jrc == res_l$id_jrc[r-1]]
+          if(res_mod$Qin_m3[res_mod$id_jrc == res_l$id_jrc[r]]+res_mod$vol_0[res_mod$id_jrc == res_l$id_jrc[r]] > res_mod$vol_max[res_mod$id_jrc == res_l$id_jrc[r]]){
+            res_mod$Qout_m3[res_mod$id_jrc == res_l$id_jrc[r]] <- res_mod$vol_0[res_mod$id_jrc == res_l$id_jrc[r]] + res_mod$Qin_m3[res_mod$id_jrc == res_l$id_jrc[r]] - res_mod$vol_max[res_mod$id_jrc == res_l$id_jrc[r]]
           }else{
-            res_mod$Qout_m3[r] <- 0 }
-          res_mod$vol_1[r] <- res_mod$vol_0[r] + res_mod$Qin_m3[r] - res_mod$Qout_m3[r]
+            res_mod$Qout_m3[res_mod$id_jrc == res_l$id_jrc[r]] <- 0 }
+          res_mod$vol_1[res_mod$id_jrc == res_l$id_jrc[r]] <- res_mod$vol_0[res_mod$id_jrc == res_l$id_jrc[r]] + res_mod$Qin_m3[res_mod$id_jrc == res_l$id_jrc[r]] - res_mod$Qout_m3[res_mod$id_jrc == res_l$id_jrc[r]]
         }
       }
     }
 
 # Collect all timesteps
-    collect_res_timesteps <- rbind(collect_res_timesteps, res_mod)
+    collect_timesteps <- rbind(collect_timesteps, res_mod)
     res_mod0 <- res_mod
   }
-  return(collect_res_timesteps)
+  return(collect_timesteps)
 }
 
-# collect <- res_model2()
+# collect <- res_model2(ID = 31440)
 
