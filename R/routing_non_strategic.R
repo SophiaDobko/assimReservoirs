@@ -2,9 +2,9 @@
 #'
 #' This function identifies which non-strategic reservoir drains into which stategic downstream reservoir
 #' @return completes the column ```res_down``` in the geospatial dataframe ```res_max```
-#' @import sf
-#' @import igraph
-#' @import dplyr
+#' @importFrom sf st_distance
+#' @importFrom igraph all_simple_paths
+#' @importFrom dplyr %>%
 #' @export
 
 # library(assimReservoirs)

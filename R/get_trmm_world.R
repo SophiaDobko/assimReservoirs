@@ -40,7 +40,6 @@ get_trmm_world <- function(YEAR, MONTH, DAY){
 #' @return ```trmm_means``` is a geospatial dataframe with the mean TRMM precipitation for each field of the input shape
 #' @importFrom ncdf4 nc_open ncvar_get
 #' @import raster
-#' @import sf
 #' @export
 
 trmmRain <- function(shape, files_world){

@@ -5,9 +5,9 @@
 #' @param gauges_catch output of ```rain_gauges_catch```
 #' @param api output of ```request_api_gauges```
 #' @return a dataframe with the mean precipitation of the catchment and the reservoir of each requested day.
-#' @import gstat
+#' @importFrom gstat idw
 #' @import sp
-#' @import sf
+#' @importFrom sf st_buffer st_union st_as_sf
 #' @import raster
 #' @export
 

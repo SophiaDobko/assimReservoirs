@@ -5,7 +5,6 @@
 #' @param end default: as.Date("1989-12-31")
 #' @return columns runoff_contr_est and runoff_contr_adapt in dataframe res_max, runoff_contr_adapt adapts the estimated (theoretic) runoff contributing area to the actual subbasin area
 #' @importFrom lubridate year month day
-#' @import sf
 #' @import raster
 #' @export
 
