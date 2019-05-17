@@ -8,7 +8,7 @@ With the use of meteorological observations, the reservoir extent shall be model
 
 ```
 library(assimReservoirs)
-
+#####################################################################################+
 # Data preprocessing ####
 
 # Routing of strategic and non-strategic reservoirs
@@ -18,6 +18,7 @@ res_max <- Routing_non_strat()
 # Estimate runoff contributing areas for all reservoirs
 res_max <- runoff_contributing_area()
 
+#####################################################################################+
 # Download and interpolate rain data for a specific catchment ####
 
 catch <- contributing_basins_res()
@@ -35,7 +36,8 @@ files_world <- get_trmm_world(YEAR = 2019, MONTH = 04, DAY = 12)
 trmm_means <- trmmRain(shape = st_transform(list_BG$catch, "+proj=latlong  +datum=WGS84 +no_defs"), files_world)
 plotTRMM(trmm_means)
 
-# Simple model
+#####################################################################################+
+# Simple model ####
 res_model <- res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date("2004-01-30"))
 ```
 
