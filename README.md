@@ -21,12 +21,12 @@ res_max <- runoff_contributing_area()
 #####################################################################################+
 # Download and interpolate rain data for a specific catchment ####
 
-catch <- contributing_basins_res(shape = res_max[res_max$id_jrc == 25283,])
-catch <- contributing_basins_shape(ID = 25283)
+catch <- contributing_basins_shape(shape = res_max[res_max$id_jrc == 25283,])
+catch <- contributing_basins_res(ID = 25283)
 plot_contributing_basins(catch, shape = res_max[res_max$id_jrc == 25283,])
 
 gauges_catch <- ident_rain_gauges(catch)
-plot_gauges_catch(catch, gauges_catch)
+plot_gauges_catch(catch, gauges_catch, distGauges = 30)
 
 api <- request_api_gauges(requestDate = as.Date("2018-03-15") , Ndays = 5, gauges_catch)
 list_idw <- idwRain(catch, gauges_catch, api, distGauges = 30, ID)
@@ -37,7 +37,7 @@ trmm_means <- trmmRain(shape = st_transform(list_BG$catch, "+proj=latlong  +datu
 plotTRMM(trmm_means)
 
 #####################################################################################+
-# Simple model ####
+# Run the model ####
 res_model <- res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date("2004-01-30"))
 ```
 
@@ -53,18 +53,18 @@ res_model <- res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date
 
 ### Download and interpolate rain data for a specific catchment
 
-- ```contributing_basins_res```
-- ```identBasinsGauges(ID, distGauges)``` identifies the contributing basins of a certain reservoir and the rain gauges within a certain buffer around this basin
+- ```contributing_basins_shape(shape)``` identifies the contributing subbasins of an sf geospatial dataframe
+- ```contributing_basins_res(ID)``` identifies contributing basins of a reservoir from ```res_max```
 
-- ```identBasinsGauges_shape(shape, distGauges)``` allows to identify contributing basins and rain gauges for any shapefile
+- ```plot_contributing_basins(catch, shape)``` plots the identified contributing basins
 
-- ```plotBasins(list_BG)``` plots the identified contributing basins
+- ```gauges_catch``` identifies rain gauges within a certain distance around the catchment
 
-- ```plotGauges(list_BG, distGauges)``` plots the identified rain gauges within the given distance, which allows to check if an adequate number of rain gauges is included for the interpolation 
+- ```plot_gauges_catch(catch, gauges_catch, distGauges)``` plots the identified rain gauges within the given distance, which allows to check if an adequate number of rain gauges is included for the interpolation 
 
-- ```requestGauges(requestDate, Ndays, list_BG)``` requests api rain data for the above selected rain gauges
+- ```request_api_gauges(requestDate, Ndays, gauges_catch)``` requests api rain data for the above selected rain gauges
 
-- ```idwRain(list_BG, api)``` interpolates rain data using idw (inverse distance weighted) interpolation
+- ```idwRain(catch, gauges_catch, api, distGauges, ID)``` interpolates rain data using idw (inverse distance weighted) interpolation
 
 - ```get_trmm_world``` lists and downloads TRMM data in ftp from the Tropical Rainfall Measuring Mission (https://trmm.gsfc.nasa.gov/)
 
@@ -72,9 +72,9 @@ res_model <- res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date
 
 - ```plotTRMM``` plots the mean TRMM precipitation of the contributing subbasins
 
-- ```plotIDW(list_BG, list_idw)``` plots the result of ```idwRain```: the interpolated precipitation in the contributing basins
+- ```plotIDW(list_idw)``` plots the result of ```idwRain```: the interpolated precipitation in the contributing basins
 
-### Run a simple model of water volume of the reservoirs and flow through the reservoir network
+### Model water volume of the reservoirs and flow through the reservoir network
 - ```reservoir_model(ID = 31440, start = as.Date("2004-01-24"), end = as.Date("2004-01-30"))```
 
 
