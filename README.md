@@ -20,14 +20,16 @@ res_max <- runoff_contributing_area()
 
 # Download and interpolate rain data for a specific catchment ####
 
-list_BG <- identBasinsGauges(ID = 25283, distGauges = 20)
-list_BG <- identBasinsGauges_shape(shape = subset(res_max, id_jrc==49301), distGauges = 20)
-plotBasins(list_BG)
-plotGauges(list_BG, distGauges = 20)
+catch <- contributing_basins_res()
+catch <- contributing_basins_shape()
+plot_contributing_basins(catch, shape = res_max[res_max$id_jrc == 25283,])
 
-api <- requestGauges(requestDate = today(), Ndays = 5, list_BG)
-list_idw <- idwRain(list_BG, api)
-plotIDW(list_BG, list_idw)
+gauges_catch <- ident_rain_gauges(catch)
+plot_gauges_catch(catch, gauges_catch)
+
+api <- request_api_gauges(requestDate = as.Date("2018-03-15") , Ndays = 5, gauges_catch)
+list_idw <- idwRain(catch, gauges_catch, api, distGauges = 30, ID)
+plotIDW(list_idw)
 
 files_world <- get_trmm_world(YEAR = 2019, MONTH = 04, DAY = 12)
 trmm_means <- trmmRain(shape = st_transform(list_BG$catch, "+proj=latlong  +datum=WGS84 +no_defs"), files_world)
@@ -41,10 +43,11 @@ res_model <- res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date
 
 ### Data preprocessing
 
-- ```res_max <- Routing()```
-- ```res_max <- Routing_non_strat()```
+- ```res_max <- Routing()``` identifies which strategic reservoir drains into which stategic downstream reservoir
 
-- ```res_max <- runoff_contributing()```
+- ```res_max <- Routing_non_strat()``` identifies which non-strategic reservoir drains into which stategic downstream reservoir
+
+- ```res_max <- runoff_contributing_area()``` estimates the area of directly contributing runoff for all reservoirs, based on the mean yearly runoff of 1960-1990. The columns ```runoff_contr_est``` and ```runoff_contr_adapt``` are added to the geospatial dataframe ```res_max```, ```runoff_contr_adapt``` adapts the estimated (theoretic) runoff contributing area to the actual subbasin area.
 
 ### Download and interpolate rain data for a specific catchment
 
@@ -68,7 +71,7 @@ res_model <- res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date
 
 - ```plotIDW(list_BG, list_idw)``` plots the result of ```idwRain```: the interpolated precipitation in the contributing basins
 
-## Run a simple model of water volume of the reservoirs and flow through the reservoir network
+### Run a simple model of water volume of the reservoirs and flow through the reservoir network
 - ```reservoir_model(ID = 31440, start = as.Date("2004-01-24"), end = as.Date("2004-01-30"))```
 
 
@@ -83,18 +86,11 @@ res_model <- res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date
 
 ## Outputs
 
-```list_BG``` <br>
-output of ```identBasinsGauges```, a list with 6 elements:
+- ```catch``` output of contributing_basins_shape or contributing_basins_res, the catchment contributing to a reservoir or sf object 
 
-- ```res``` is the treated reservoir (or shapefile), 
-- ```catch``` is the catchment contributing to this reservoir (or shapefile), 
-- ```catch_km2``` gives the area of the catchment in square kilometers,
-- ```catch_buffer``` is a shapefile of a buffer zone of the chosen size around the catchment, 
-- ```gauges_catch``` is a point shapefile with the rain gauges within ```catch_buffer``` and 
-- ```routing``` is logical, indicating if routing can be done (TRUE when the reservoir receives water from upstream subbasins)
+- ```gauges_catch``` output of ```rain_gauges_catch```, a geospatial dataframe with the rain gauges within ```catch_buffer``` 
 
-```api``` <br>
-output of ```requestGauges```, a dataframe with the precipitation available for the requested dates and gauges
+```api``` output of ```request_api_gauges```, a dataframe with the precipitation available for the requested dates and gauges
 
 ```list_idw``` <br>
 output of ```idwRain```, a list with 2 elements:
@@ -102,13 +98,11 @@ output of ```idwRain```, a list with 2 elements:
 - ```idwRaster``` contains a raster of the interpolated precipitation for each requested day, 
 - ```dailyRain_table``` is a dataframe with the mean precipitation on the catchment and the reservoir of each requested day.
 
-```files_world```<br>
-output of ```get_trmm_world```, contains the names of the available trmm files
+- ```files_world``` output of ```get_trmm_world```, contains the names of the available trmm files
 
-```trmm_means``` <br>
-output of ```trmmRain```, a geospatial dataframe with the mean TRMM precipitation for each subbasin
+```trmm_means``` output of ```trmmRain```, a geospatial dataframe with the mean TRMM precipitation for each subbasin
 
-```reservoir_model```<br>, a dataframe showing for each timestep reservoir volumes at the beginning (vol_0) and end (vol_1),  inflow (Qin_m3) and outflow (Qout_m3)
+```reservoir_model``` a dataframe showing for each timestep reservoir volumes at the beginning (vol_0) and end (vol_1),  inflow (Qin_m3) and outflow (Qout_m3)
 
 
 ## Future functions:

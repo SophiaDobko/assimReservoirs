@@ -11,7 +11,7 @@
 #' @import gstat
 #' @export
 
-reservoir_model <- function(ID = 33443, start = as.Date("2004-01-24"), end = as.Date("2004-01-30")){
+reservoir_model <- function(ID = 33443, start = as.Date("2004-02-24"), end = as.Date("2004-02-28")){
 
 # identify contributing catchment
   res <- res_max[res_max$id_jrc == ID,]
@@ -85,6 +85,7 @@ reservoir_model <- function(ID = 33443, start = as.Date("2004-01-24"), end = as.
 
 # loop through all reservoirs (/subbasins) to distribute qout? ####
 
+    if(sum(res_mod$Qout_m3)>0){
     print(paste(Sys.time(), "start routing of qout through reservoir network"))
 
     for(l in 1:length(res_leaves)){
@@ -96,7 +97,6 @@ reservoir_model <- function(ID = 33443, start = as.Date("2004-01-24"), end = as.
 
       if(nrow(res_l)>1){
         for(r in 2:nrow(res_l)){
-          f <- res_mod$id_jrc == res_l$id_jrc[r]
           res_mod$Qin_m3[res_mod$id_jrc == res_l$id_jrc[r]] <- res_mod$Qin_m3[res_mod$id_jrc == res_l$id_jrc[r]] + res_mod$Qout_m3[res_mod$id_jrc == res_l$id_jrc[r-1]]
           if(res_mod$Qin_m3[res_mod$id_jrc == res_l$id_jrc[r]]+res_mod$vol_0[res_mod$id_jrc == res_l$id_jrc[r]] > res_mod$vol_max[res_mod$id_jrc == res_l$id_jrc[r]]){
             res_mod$Qout_m3[res_mod$id_jrc == res_l$id_jrc[r]] <- res_mod$vol_0[res_mod$id_jrc == res_l$id_jrc[r]] + res_mod$Qin_m3[res_mod$id_jrc == res_l$id_jrc[r]] - res_mod$vol_max[res_mod$id_jrc == res_l$id_jrc[r]]
@@ -106,6 +106,9 @@ reservoir_model <- function(ID = 33443, start = as.Date("2004-01-24"), end = as.
         }
       }
     }
+    }else{
+      print(paste(Sys.time(), "no outflow for", dates[d]))
+    }
 
 # Collect all timesteps
     collect_timesteps <- rbind(collect_timesteps, res_mod)
@@ -114,6 +117,7 @@ reservoir_model <- function(ID = 33443, start = as.Date("2004-01-24"), end = as.
   return(collect_timesteps)
 }
 
-# collect <- res_model2(ID = 31440)
-# collect <- res_model2()
+# collect <- reservoir_model(ID = 31440)
+
+# collect <- reservoir_model(start = as.Date("2002-01-01"), end = as.Date("2002-02-28"))
 

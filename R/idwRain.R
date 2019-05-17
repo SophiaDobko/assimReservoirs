@@ -24,7 +24,6 @@ idwRain <- function(catch, gauges_catch, api, distGauges = 30, ID){
     apisub <- subset(api, returnedDate == dates[i])
     gauges_catch <- merge.data.frame(gauges_catch, apisub, by = "codigo")
 
-
 # IDW due to https://mgimond.github.io/Spatial/interpolation-in-r.html ####
 # = inverse distance weighted interpolation
 

@@ -31,17 +31,15 @@ plot_gauges_catch <- function(catch, gauges_catch, distGauges = 30){
 # plot_gauges_catch(catch, gauges_catch)
 
 
-
 #' Plot idw interpolation
 #'
 #' This function plots the interpolated precipitation in the contributing basins
-#' @param list_BG output of identBasinsGauges
 #' @param list_idw output of idwRain
 #' @import manipulate
 #' @import raster
 #' @export
 
-plotIDW <- function(list_BG, list_idw){
+plotIDW <- function(list_idw){
 
   dailyRain <- list_idw$dailyRain_table
   idwRaster <- list_idw$idwRaster
@@ -51,6 +49,7 @@ plotIDW <- function(list_BG, list_idw){
     plot(idwRaster[[day]], main = names(idwRaster)[[day]]),
     day = slider(1,5))
 }
+
 
 #' Plot trmm of subbasins
 #'
@@ -63,26 +62,5 @@ plotTRMM <- function(trmm_means){
 
   par(oma = c(0,0,1,1))
   plot(trmm_means["trmm_mean"], border = "black", main = "Mean TRMM precipitation")
-}
-
-#' Plot strategic reservoirs
-#'
-#' This function plots the strategic reservoirs identified by resRouting
-#' @param list_BG output of identBasinsGauges
-#' @export
-
-plotStratRes <- function(list_BG, list_routing){
-
-  catch <- list_BG$catch
-  res_main <- list_routing$res_main
-  riv_catch <- list_routing$riv_catch
-  reservoirs <- list_routing$reservoirs
-
-
-  plot(catch$geometry, col = "white")
-  plot(riv_catch$geometry, col = "cadetblue", add = T)
-  plot(reservoirs$geometry, col = "gray55", border = "gray55", add = T)
-  plot(reservoirs$geometry[reservoirs$id_jrc %in% res_main$id_jrc], col = "cadetblue4", border = "cadetblue4", add = T)
-  legend("bottomright", inset = 0.01, fill = c("cadetblue4", "gray55"), legend = c("strategic reservoirs", "non-strategic reservoirs"), cex = 0.6)
 }
 
