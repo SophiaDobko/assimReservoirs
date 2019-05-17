@@ -58,5 +58,5 @@ rain_gauges_catch <- function(catch, distGauges = 30){
   return(gauges_catch)
 }
 
-gauges_catch <- ident_rain_gauges(catch)
+# gauges_catch <- rain_gauges_catch(catch)
 

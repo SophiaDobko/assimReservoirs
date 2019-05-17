@@ -50,7 +50,6 @@
 #' @docType data
 #' @usage data(reservoir_graph)
 #'
-#' @references
 #' @source https://hydrosheds.org/downloads
 #' @source https://global-surface-water.appspot.com/download
 "reservoir_graph"

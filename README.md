@@ -33,7 +33,7 @@ list_idw <- idwRain(catch, gauges_catch, api, distGauges = 30, ID)
 plotIDW(list_idw)
 
 files_world <- get_trmm_world(YEAR = 2019, MONTH = 04, DAY = 12)
-trmm_means <- trmmRain(shape = st_transform(list_BG$catch, "+proj=latlong  +datum=WGS84 +no_defs"), files_world)
+trmm_means <- trmmRain(shape = st_transform(catch, "+proj=latlong  +datum=WGS84 +no_defs"), files_world)
 plotTRMM(trmm_means)
 
 #####################################################################################+
@@ -45,11 +45,11 @@ res_model <- res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date
 
 ### Data preprocessing
 
-- ```res_max <- Routing()``` identifies which strategic reservoir drains into which stategic downstream reservoir
+- ```Routing()``` identifies which strategic reservoir drains into which stategic downstream reservoir
 
-- ```res_max <- Routing_non_strat()``` identifies which non-strategic reservoir drains into which stategic downstream reservoir
+- ```Routing_non_strat()``` identifies which non-strategic reservoir drains into which stategic downstream reservoir
 
-- ```res_max <- runoff_contributing_area()``` estimates the area of directly contributing runoff for all reservoirs, based on the mean yearly runoff of 1960-1990. The columns ```runoff_contr_est``` and ```runoff_contr_adapt``` are added to the geospatial dataframe ```res_max```, ```runoff_contr_adapt``` adapts the estimated (theoretic) runoff contributing area to the actual subbasin area.
+- ```runoff_contributing_area()``` estimates the area of directly contributing runoff for all reservoirs, based on the mean yearly runoff of 1960-1990. The columns ```runoff_contr_est``` and ```runoff_contr_adapt``` are added to the geospatial dataframe ```res_max```, ```runoff_contr_adapt``` adapts the estimated runoff contributing area to the actual size of the subbasin.
 
 ### Download and interpolate rain data for a specific catchment
 
@@ -108,7 +108,7 @@ output of ```idwRain```, a list with 2 elements:
 ```reservoir_model``` a dataframe showing for each timestep reservoir volumes at the beginning (vol_0) and end (vol_1),  inflow (Qin_m3) and outflow (Qout_m3)
 
 
-## Future functions:
+## Future functions
 
 - water balance to calculate the reservoir extent and compare it to the extent estimated from remote sensing
 
