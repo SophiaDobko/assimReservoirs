@@ -21,8 +21,8 @@ res_max <- runoff_contributing_area()
 #####################################################################################+
 # Download and interpolate rain data for a specific catchment ####
 
-catch <- contributing_basins_res()
-catch <- contributing_basins_shape()
+catch <- contributing_basins_res(shape = res_max[res_max$id_jrc == 25283,])
+catch <- contributing_basins_shape(ID = 25283)
 plot_contributing_basins(catch, shape = res_max[res_max$id_jrc == 25283,])
 
 gauges_catch <- ident_rain_gauges(catch)
@@ -53,6 +53,7 @@ res_model <- res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date
 
 ### Download and interpolate rain data for a specific catchment
 
+- ```contributing_basins_res```
 - ```identBasinsGauges(ID, distGauges)``` identifies the contributing basins of a certain reservoir and the rain gauges within a certain buffer around this basin
 
 - ```identBasinsGauges_shape(shape, distGauges)``` allows to identify contributing basins and rain gauges for any shapefile
