@@ -3,8 +3,8 @@
 #' This function identifies contributing basins of an sf geospatial dataframe
 #' @param shape shapefile (WGS84, UTM zone=24 south) to identify its contributing basins, e.g. a reservoir from ```data(res_max)```
 #' @return a geospatial dataframe of all contributin subbasins
-#' @import sf
-#' @import igraph
+#' @importFrom sf st_intersection
+#' @importFrom igraph all_simple_paths
 #' @export
 
 contributing_basins_shape <- function(shape = res_max[res_max$id_jrc == 25283,]){
@@ -24,8 +24,8 @@ contributing_basins_shape <- function(shape = res_max[res_max$id_jrc == 25283,])
 #' This function identifies contributing basins of a reservoir from ```res_max```
 #' @param ID id of a reservoir from ```res_max```
 #' @return a geospatial dataframe of all contributing subbasins
-#' @import sf
-#' @import igraph
+#' @importFrom sf st_intersection
+#' @importFrom igraph all_simple_paths
 #' @export
 
 contributing_basins_res <- function(ID = 25283){
@@ -47,7 +47,7 @@ contributing_basins_res <- function(ID = 25283){
 #' @param catch output of ```contributing_basins_res``` or ```contributing_basins_shape```
 #' @param distGauges distance in km around the contributing basins to look for rain gauges
 #' @return a point shapefile with the rain gauges within the chosen distance (distGauges)
-#' @import sf
+#' @importFrom sf st_transform st_buffer st_union st_intersection
 #' @export
 
 rain_gauges_catch <- function(catch, distGauges = 30){

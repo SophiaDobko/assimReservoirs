@@ -4,19 +4,17 @@
 \alias{idwRain}
 \title{Interpolate rain data}
 \usage{
-idwRain(list_BG, api)
+idwRain(catch, gauges_catch, api, distGauges = 30, ID)
 }
 \arguments{
-\item{list_BG}{output of identBasinsGauges}
+\item{catch}{catch output of \code{contributing_basins_res} or \code{contributing_basins_shape}}
 
-\item{api}{output of requestGauges}
+\item{gauges_catch}{output of \code{rain_gauges_catch}}
+
+\item{api}{output of \code{request_api_gauges}}
 }
 \value{
-a list with 2 elements:
-\itemize{
-\item \code{idwRaster} contains a raster with the interpolated precipitation for each requested day,
-\item \code{dailyRain_table} is a dataframe with the mean precipitation of the catchment and the reservoir of each requested day.
-}
+a dataframe with the mean precipitation of the catchment and the reservoir of each requested day.
 }
 \description{
 This function interpolates rain data using idw (inverse distance weighted) interpolation

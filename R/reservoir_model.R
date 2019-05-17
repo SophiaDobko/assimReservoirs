@@ -7,8 +7,8 @@
 #' @return table with vol_0 (volume at the beginning of the timestep t), q_in_m3 (inflow in m3), q_out_m3 (outflow in m3) and vol_1 (volume at the end of the timestep) for each reservoir and for each subbasin
 #' @importFrom lubridate year month day
 #' @import sf
-#' @import igraph
-#' @import gstat
+#' @importFrom igraph all_simple_paths degree
+#' @importFrom gstat gstat
 #' @export
 
 reservoir_model <- function(ID = 33443, start = as.Date("2004-02-24"), end = as.Date("2004-02-28")){

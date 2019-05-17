@@ -54,6 +54,7 @@
 #' @source https://global-surface-water.appspot.com/download
 "reservoir_graph"
 
+
 #' Meta data of precipitation gauges in Ceará
 #'
 #' @docType data
