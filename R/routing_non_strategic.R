@@ -43,9 +43,9 @@ Routing_non_strat <- function(){
   return(res_max)
 }
 
+
 # res_max$res_down[is.na(res_max$res_down)] <- -1
 # res_max <- Routing_non_strat()
-# res_max_routing <- res_max
 # save(res_max_routing, file = "D:/assimReservoirs/data/res_max_routing.RData")
 # non_strat <- res_max_non_strat[res_max$`distance to river`>0,]
 

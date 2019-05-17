@@ -25,11 +25,11 @@ catch <- contributing_basins_shape(shape = res_max[res_max$id_jrc == 25283,])
 catch <- contributing_basins_res(ID = 25283)
 plot_contributing_basins(catch, shape = res_max[res_max$id_jrc == 25283,])
 
-gauges_catch <- ident_rain_gauges(catch)
+gauges_catch <- rain_gauges_catch(catch)
 plot_gauges_catch(catch, gauges_catch, distGauges = 30)
 
 api <- request_api_gauges(requestDate = as.Date("2018-03-15") , Ndays = 5, gauges_catch)
-list_idw <- idwRain(catch, gauges_catch, api, distGauges = 30, ID)
+list_idw <- idwRain(catch, gauges_catch, api, distGauges = 30, ID = 25283)
 plotIDW(list_idw)
 
 files_world <- get_trmm_world(YEAR = 2019, MONTH = 04, DAY = 12)

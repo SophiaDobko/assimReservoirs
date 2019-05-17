@@ -13,14 +13,13 @@ Routing <- function(){
   res_max$res_down <- NA
   strategic <- res_max[res_max$`distance to river`==0,]
 
-
 # for-loop through leaves ####
   g <- river_graph
   leaves = which(degree(g, v = V(g), mode = "in")==0)
 
   for(l in 1:length(leaves)){
 
-    if(l %in% c(500,1000,1500)){print(paste(Sys.time(),l, "leaves done"))}
+    if(l %in% c(500,1000,1500)){print(paste(Sys.time(),l, "of", length(leaves), "leaves done"))}
 
     riv_downstr <- all_simple_paths(g,from=leaves[l],mode='out') %>%
     unlist %>% unique
@@ -44,11 +43,11 @@ Routing <- function(){
 # for-loop through river reaches with multiple reservoirs ####
   print(paste(Sys.time(), "start correcting order where multiple reservoirs on one river reach"))
   dup <- strategic[which(duplicated(strategic$`nearest river`)),]
-  multiple_res <- strategic[strategic$`nearest river` %in% dup$`nearest river`,]
+  multiple_res <- res_max[res_max$`nearest river` %in% dup$`nearest river` & res_max$`distance to river`==0,]
 
   for(d in 1:length(unique(dup$`nearest river`))){
     riv_l <- riv[riv$ARCID==dup$`nearest river`[d],]
-    strat_downstr <- subset(strategic, `nearest river` == riv_l$ARCID)
+    strat_downstr <- subset(multiple_res, `nearest river` == riv_l$ARCID)
 
     points <- st_line_sample(riv_l, n = 200)
     points <- st_cast(points, "POINT")
@@ -72,15 +71,14 @@ Routing <- function(){
   }
 
   res_max$res_down[is.na(res_max$res_down)] <- -1
-  strategic <- res_max[res_max$`distance to river`==0,]
-  strategic <- strategic[!is.na(strategic$id_jrc),]
-  st_write(strategic, dsn = "D:/shapefiles/strategic_res.shp")
 
   return(res_max)
   print(paste(Sys.time(), "finished!"))
 }
 
 # res_max <- Routing()
+# strategic <- res_max[res_max$`distance to river`==0,]
+# st_write(strategic, dsn = "D:/shapefiles/strategic_res.shp")
 # save(res_max, file = "D:/assimReservoirs/data/res_max.RData")
 
 

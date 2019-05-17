@@ -11,7 +11,7 @@
 #' @import raster
 #' @export
 
-idwRain <- function(catch, gauges_catch, api, distGauges = 30, ID){
+idwRain <- function(catch, gauges_catch, api, distGauges = 30, ID = 25283){
 
   res <- res_max[res_max$id_jrc == ID,]
   buffer <- st_buffer(st_union(catch, by_feature = F), dist = distGauges *1000)

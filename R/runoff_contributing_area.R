@@ -24,33 +24,21 @@ runoff_contributing_area <- function(start = as.Date("1960-01-01"), end = as.Dat
       postos$runoff_mean[i] <- mean(data1$x)
     }
   }
-
-  # Create an empty grid, n is the total number of cells
   postos <- postos[!is.na(postos$runoff_mean),]
-  g <- as(postos, "Spatial")
-  b <- as(otto, "Spatial")
-  c <- as(otto$geometry, "Spatial")
-  g@bbox <- b@bbox
 
-  grd              <- as.data.frame(spsample(g, "regular", n=50000))
-  names(grd)       <- c("X", "Y")
-  coordinates(grd) <- c("X", "Y")
-  gridded(grd)     <- TRUE  # Create SpatialPixel object
-  fullgrid(grd)    <- TRUE  # Create SpatialGrid object
+  # Interpolate runoff with IDW, get mean for each subbasin
+  dat <- as(postos, "Spatial")
+  postos$x <- dat@coords[,1]
+  postos$y <- dat@coords[,2]
+  gs <- gstat(formula=runoff~1, locations=~x+y, data= data.frame(x = postos$x, y = postos$y, runoff = postos$runoff_mean))
+  centroids <- st_centroid(otto)
+  dat <- as(centroids, "Spatial")
+  centroids$x <- dat@coords[,1]
+  centroids$y <- dat@coords[,2]
+  st_geometry(centroids)=NULL
+  idw <- predict(gs,centroids,debug.level=0)
+  otto$runoff_mean <- idw$var1.pred
 
-  # Add projection information to the empty grid
-  proj4string(grd) <- proj4string(g)
-
-  # Interpolate the grid cells using a power value of 2 (idp=2.0)
-  idw <- gstat::idw(runoff_mean ~ 1, g, newdata=grd, idp=2.0)
-  r <- raster(idw)
-  r <- mask(r, c)
-  r <- crop(r,c)
-
-  # calculate mean runoff for each subcatchment
-  for(s in 1:nrow(otto)){
-    otto$runoff_mean[s] <- mean(unlist(extract(r,otto[s,])), na.rm = T)
-  }
 
   runoff <- otto[,c(1,7,15)]
   runoff$geometry <- NULL
