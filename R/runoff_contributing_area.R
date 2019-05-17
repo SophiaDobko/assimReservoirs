@@ -9,7 +9,7 @@
 #' @import raster
 #' @export
 
-runoff_contributing <- function(start = as.Date("1960-01-01"), end = as.Date("1989-12-31")){
+runoff_contributing_area <- function(start = as.Date("1960-01-01"), end = as.Date("1989-12-31")){
 
 # Interpolate runoff with IDW
   dates <- seq.Date(from = start, to = end, by = "day")
@@ -81,5 +81,6 @@ runoff_contributing <- function(start = as.Date("1960-01-01"), end = as.Date("19
       res_max$runoff_contr_adapt[res_max$id_jrc %in% big$id_jrc] <- (big$SUB_AREA[1]-sum(basin$runoff_contr_est[!(basin$id_jrc %in% big$id_jrc)]))/2
     }
   }
+  return(res_max)
 }
 

@@ -1,17 +1,17 @@
 #' Model reservoirs
 #'
-#' This function models runoff concentration for the contributing basins of a shapefile
+#' This function models runoff concentration through the reservoir network in the contributing basins of a reservoir from ```res_max```
 #' @param ID ID of the reservoir for which the contributing basins shall be modelled
 #' @param start date at which model run shall start, default: as.Date("2000-01-10")
 #' @param end date at which model run shall end, default: as.Date("2000-01-15")
 #' @return table with vol_0 (volume at the beginning of the timestep t), q_in_m3 (inflow in m3), q_out_m3 (outflow in m3) and vol_1 (volume at the end of the timestep) for each reservoir and for each subbasin
 #' @importFrom lubridate year month day
 #' @import sf
-#' @import raster
 #' @import igraph
+#' @import gstat
 #' @export
 
-res_model2 <- function(ID = 33443, start = as.Date("2004-01-24"), end = as.Date("2004-01-30")){
+reservoir_model <- function(ID = 33443, start = as.Date("2004-01-24"), end = as.Date("2004-01-30")){
 
 # identify contributing catchment
   res <- res_max[res_max$id_jrc == ID,]
@@ -53,32 +53,18 @@ res_model2 <- function(ID = 33443, start = as.Date("2004-01-24"), end = as.Date(
       }
     }
 
-# interpolate runoff  with IDW, get mean for each subbasin
-# Create an empty grid, n is the total number of cells
-    g <- as(postos, "Spatial")
-    b <- as(buffer, "Spatial")
-    c <- as(catch$geometry, "Spatial")
-    g@bbox <- b@bbox
-
-    grd              <- as.data.frame(spsample(g, "regular", n=5000))
-    names(grd)       <- c("X", "Y")
-    coordinates(grd) <- c("X", "Y")
-    gridded(grd)     <- TRUE  # Create SpatialPixel object
-    fullgrid(grd)    <- TRUE  # Create SpatialGrid object
-
-    # Add projection information to the empty grid
-    proj4string(grd) <- proj4string(g)
-
-    # Interpolate the grid cells using a power value of 2 (idp=2.0)
-    idw <- gstat::idw(runoff ~ 1, g, newdata=grd, idp=2.0)
-    r <- raster(idw)
-    r <- mask(r, c)
-    r <- crop(r,c)
-
-    # Output: mean runoff for each subcatchment
-        for(s in 1:nrow(catch)){
-      catch$runoff[s] <- mean(unlist(extract(r,catch[s,])))
-    }
+# Interpolate runoff with IDW, get mean for each subbasin
+    dat <- as(postos, "Spatial")
+    postos$x <- dat@coords[,1]
+    postos$y <- dat@coords[,2]
+    gs <- gstat(formula=runoff~1, locations=~x+y, data= data.frame(x = postos$x, y = postos$y, runoff = postos$runoff))
+    centroids <- st_centroid(catch)
+    dat <- as(centroids, "Spatial")
+    centroids$x <- dat@coords[,1]
+    centroids$y <- dat@coords[,2]
+    st_geometry(centroids)=NULL
+    idw <- predict(gs,centroids,debug.level=0)
+    catch$runoff <- idw$var1.pred
 
 # loop through all reservoirs to distribute runoff
     print(paste(Sys.time(), "starting to calculate runoff for each reservoir"))
@@ -129,4 +115,5 @@ res_model2 <- function(ID = 33443, start = as.Date("2004-01-24"), end = as.Date(
 }
 
 # collect <- res_model2(ID = 31440)
+# collect <- res_model2()
 

@@ -1,18 +1,17 @@
 #' Request rain data from FUNCEME api
 #'
 #' This function requests api rain data for selected rain gauges
-#' @param requestDate latest date of interest, e.g. as.Date("2018-03-15") or today()
-#' @param Ndays number of days to go back in time from requestDate
-#' @param list_BG output of identBasinsGauges
+#' @param requestDate latest date of interest, e.g. today(), default is as.Date("2018-03-15")
+#' @param Ndays number of days to go back in time from requestDate, default = 5
+#' @param gauges_catch output of ```rain_gauges_catch```
 #' @return a dataframe with the precipitation available for the requested dates and gauges
 #' @importFrom lubridate today
 #' @importFrom dplyr bind_rows
 #' @importFrom jsonlite fromJSON
 #' @export
 
-requestGauges <- function(requestDate, Ndays, list_BG) {
+request_api_gauges <- function(requestDate = as.Date("2018-03-15") , Ndays = 5, gauges_catch) {
 
-  gauges_catch <- list_BG[["gauges_catch"]]
   api <- data.frame()
   for(c in 1:nrow(gauges_catch)){
     codigo = gauges_catch$codigo[c]
@@ -27,14 +26,14 @@ requestGauges <- function(requestDate, Ndays, list_BG) {
       value=resp$list$valor
 
       if(is.null(value)) {
-        warning(paste0("No values for codigo ",codigo," recorded after requested date ",requestDate))
+        warning(paste0("No values for codigo ", codigo, " recorded after requested date ", requestDate))
         value=NA
       }
       dt=strptime(resp$list$data$date,format="%Y-%m-%d %H:%M:%S",tz="America/Fortaleza")
       if(length(dt)==0) {
         dt=NA
       }
-      rainOut=data.frame(returnedDate=as.Date(dt),requestDate=requestDate,value=value,codigo=codigo)
+      rainOut=data.frame(returnedDate=as.Date(dt), requestDate=requestDate, value=value, codigo=codigo)
 
       rain_list[[i+1]] <- rainOut
     }

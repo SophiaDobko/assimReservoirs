@@ -1,35 +1,27 @@
 #' Plot contributing basins
 #'
-#' This function plots the identified contributing basins of contributing_basins_shape and contributing_basins
-#' @param catch output from ```contributing_basins_shape``` or ```contributing_basins```
+#' This function plots the identified contributing basins of identBasinsGauges
+#' @param list_BG output of identBasinsGauges
 #' @export
 
-plot_contributing_basins <- function(catch, shape){
-  plot(catch$geometry, border = "red", main = "Contributing subbasins")
-  plot(shape$geometry, col = "cadetblue4", add = T)
+plotBasins <- function(list_BG){
+  plot(list_BG$catch$geometry, col = "white", main = "Reservoir with contributing basins")
+  plot(list_BG$res$geometry, col = "cadetblue4", border = "cadetblue4", add = T)
 }
-
-# plot_contributing_basins(catch, shape = res_max[res_max$id_jrc == 25283,])
 
 
 #' Plot rain gauges
 #'
 #' This function plots the identified rain gauges of identBasinsGauges
-#' @param catch output of ```contributing_basins_res``` or ```contributing_basins_shape```
-#' @param gauges_catch output of ```rain_gauges_catch```
+#' @param list_BG output of identBasinsGauges
 #' @param distGauges distance in km around the contributing basins to look for rain gauges as it was used in identBasinsGauges, defaults to 30
 #' @export
 
-plot_gauges_catch <- function(catch, gauges_catch, distGauges = 30){
-  buffer <- st_buffer(st_union(catch, by_feature = F), dist = distGauges *1000)
-  plot(buffer, border = "green", main = paste("Basins with rain gauges within", distGauges, "km"))
-  plot(catch$geometry, add = T, border = "red", col = "white")
-  plot(gauges_catch$geometry, add = T)
-
+plotGauges <- function(list_BG, distGauges = 30){
+  plot(list_BG$catch_buffer, border = "green", main = paste("Basins with rain gauges within", distGauges, "km"))
+  plot(list_BG$catch$geometry, add = T, border = "red", col = "white")
+  plot(list_BG$gauges_catch$geometry, add = T)
 }
-
-# plot_gauges_catch(catch, gauges_catch)
-
 
 
 #' Plot idw interpolation

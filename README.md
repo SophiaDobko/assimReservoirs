@@ -11,15 +11,12 @@ library(assimReservoirs)
 
 # Data preprocessing ####
 
-# Create river graph
-
-
 # Routing of strategic and non-strategic reservoirs
 res_max <- Routing()
 res_max <- Routing_non_strat()
 
 # Estimate runoff contributing areas for all reservoirs
-res_max <- runoff_contributing()
+res_max <- runoff_contributing_area()
 
 # Download and interpolate rain data for a specific catchment ####
 
@@ -72,7 +69,7 @@ res_model <- res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date
 - ```plotIDW(list_BG, list_idw)``` plots the result of ```idwRain```: the interpolated precipitation in the contributing basins
 
 ## Run a simple model of water volume of the reservoirs and flow through the reservoir network
-- ```res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date("2004-01-30"))```
+- ```reservoir_model(ID = 31440, start = as.Date("2004-01-24"), end = as.Date("2004-01-30"))```
 
 
 
@@ -111,7 +108,7 @@ output of ```get_trmm_world```, contains the names of the available trmm files
 ```trmm_means``` <br>
 output of ```trmmRain```, a geospatial dataframe with the mean TRMM precipitation for each subbasin
 
-```res_model```<br>
+```reservoir_model```<br>, a dataframe showing for each timestep reservoir volumes at the beginning (vol_0) and end (vol_1),  inflow (Qin_m3) and outflow (Qout_m3)
 
 
 ## Future functions:
