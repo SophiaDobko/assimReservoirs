@@ -4,7 +4,7 @@
 \alias{idwRain}
 \title{Interpolate rain data}
 \usage{
-idwRain(catch, gauges_catch, api, distGauges = 30, ID)
+idwRain(catch, gauges_catch, api, distGauges = 30, ID = 25283)
 }
 \arguments{
 \item{catch}{catch output of \code{contributing_basins_res} or \code{contributing_basins_shape}}

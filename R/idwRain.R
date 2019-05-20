@@ -14,6 +14,7 @@
 idwRain <- function(catch, gauges_catch, api, distGauges = 30, ID = 25283){
 
   res <- res_max[res_max$id_jrc == ID,]
+  res <- as(res$geometry, "Spatial")
   buffer <- st_buffer(st_union(catch, by_feature = F), dist = distGauges *1000)
   api <- subset(api, !is.na(value))
   dates <- sort(unique(api$returnedDate))
@@ -22,13 +23,13 @@ idwRain <- function(catch, gauges_catch, api, distGauges = 30, ID = 25283){
   idwRaster <- list()
   for(i in 1:length(dates)){
     apisub <- subset(api, returnedDate == dates[i])
-    gauges_catch <- merge.data.frame(gauges_catch, apisub, by = "codigo")
+    gauges_catch1 <- merge.data.frame(gauges_catch, apisub, by = "codigo")
 
 # IDW due to https://mgimond.github.io/Spatial/interpolation-in-r.html ####
 # = inverse distance weighted interpolation
 
 # Create an empty grid where n is the total number of cells
-g <- st_as_sf(gauges_catch[,c(1,18,21)])
+g <- st_as_sf(gauges_catch1[,c(1,18,21)])
 g <- as(g, "Spatial")
 b <- as(buffer, "Spatial")
 c <- as(catch$geometry, "Spatial")
@@ -51,7 +52,7 @@ r <- crop(r,c)
 idwRaster[[i]] <- r # Output: interpolation raster for each day
 
 # Output: daily mean rain for the whole catchment and the reservoir
-res <- as(res$geometry, "Spatial")
+
 daily <- data.frame("date" = dates[i], "catch_mean" = mean(unlist(extract(r, c))), "reservoir_mean" = mean(unlist(extract(r, res))))
 
 dailyRain <- rbind(dailyRain, daily)
@@ -59,6 +60,7 @@ dailyRain <- rbind(dailyRain, daily)
 names(idwRaster) <- c(dailyRain$date)
 return(list_idw <- list("idwRaster" = idwRaster, "dailyRain_table" = dailyRain))
 }
+
 
 
 
