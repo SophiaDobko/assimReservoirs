@@ -38,7 +38,7 @@ plotTRMM(trmm_means)
 
 #####################################################################################+
 # Run the model ####
-res_model <- res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date("2004-01-30"))
+reservoir_model <- reservoir_model(ID = 31440, start = as.Date("2004-01-24"), end = as.Date("2004-01-30"))
 ```
 
 ## Available funcions
