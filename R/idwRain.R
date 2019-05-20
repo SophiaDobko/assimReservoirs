@@ -4,7 +4,7 @@
 #' @param catch catch output of ```contributing_basins_res``` or ```contributing_basins_shape```
 #' @param gauges_catch output of ```rain_gauges_catch```
 #' @param api output of ```request_api_gauges```
-#' @return a dataframe with the mean precipitation of the catchment and the reservoir of each requested day.
+#' @return a list with ```idwRaster```: the interpolated rainfall raster files for each requested day and ```dailyRain_table```: a dataframe with the mean precipitation of the catchment and the reservoir of each requested day.
 #' @importFrom gstat idw
 #' @import sp
 #' @importFrom sf st_buffer st_union st_as_sf

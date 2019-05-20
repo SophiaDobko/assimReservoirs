@@ -89,9 +89,9 @@ res_model <- res_model2(ID = 31440, start = as.Date("2004-01-24"), end = as.Date
 
 ## Outputs
 
-- ```catch``` output of contributing_basins_shape or contributing_basins_res, the catchment contributing to a reservoir or sf object 
+```catch``` output of contributing_basins_shape or contributing_basins_res, the catchment contributing to a reservoir or sf object 
 
-- ```gauges_catch``` output of ```rain_gauges_catch```, a geospatial dataframe with the rain gauges within ```catch_buffer``` 
+```gauges_catch``` output of ```rain_gauges_catch```, a geospatial dataframe with the rain gauges within ```catch_buffer``` 
 
 ```api``` output of ```request_api_gauges```, a dataframe with the precipitation available for the requested dates and gauges
 
@@ -101,14 +101,9 @@ output of ```idwRain```, a list with 2 elements:
 - ```idwRaster``` contains a raster of the interpolated precipitation for each requested day, 
 - ```dailyRain_table``` is a dataframe with the mean precipitation on the catchment and the reservoir of each requested day.
 
-- ```files_world``` output of ```get_trmm_world```, contains the names of the available trmm files
+```files_world``` output of ```get_trmm_world```, contains the names of the available trmm files
 
 ```trmm_means``` output of ```trmmRain```, a geospatial dataframe with the mean TRMM precipitation for each subbasin
 
 ```reservoir_model``` a dataframe showing for each timestep reservoir volumes at the beginning (vol_0) and end (vol_1),  inflow (Qin_m3) and outflow (Qout_m3)
-
-
-## Future functions
-
-- water balance to calculate the reservoir extent and compare it to the extent estimated from remote sensing
 
