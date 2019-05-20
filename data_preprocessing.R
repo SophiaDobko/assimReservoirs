@@ -8,7 +8,6 @@ library(igraph)
 otto <- st_read("D:/shapefiles/hybas_sa_lev12")
 riv <- st_read("D:/shapefiles/hybas_sa_riv")
 res_max <- st_read("D:/shapefiles/res_max")
-res_geometry <- st_read("D:/shapefiles/res_max")
 
 res_max <- res_max[,c(1,3,8)]
 res_max$vol_max <- res_max$volume
@@ -28,7 +27,6 @@ ce <- st_transform(ce, "+proj=utm +zone=24 +south +datum=WGS84 +no_defs")
 otto <- st_transform(otto, "+proj=utm +zone=24 +south +datum=WGS84 +no_defs")
 riv <- st_transform(riv, "+proj=utm +zone=24 +south +datum=WGS84 +no_defs")
 res_max <- st_transform(res_max, "+proj=utm +zone=24 +south +datum=WGS84 +no_defs")
-res_geometry <- st_transform(res_geometry, "+proj=utm +zone=24 +south +datum=WGS84 +no_defs")
 
 otto <- st_intersection(otto, ce)
 riv <- st_intersection(riv, ce)
@@ -51,7 +49,11 @@ res_max <- res_max[c(2:5,1,6,8,7)]
 save(otto, file = "D:/assimReservoirs/data/otto.RData")
 save(riv, file = "D:/assimReservoirs/data/riv.RData")
 save(res_max, file = "D:/assimReservoirs/data/res_max.RData")
-save(res_geometry, file = "D:/assimReservoirs/data/res_geometry.RData")
+
+# reservoir geometry variables ####
+# res_geometry <- st_read("D:/shapefiles/res_max")
+# res_geometry <- st_transform(res_geometry, "+proj=utm +zone=24 +south +datum=WGS84 +no_defs")
+# save(res_geometry, file = "D:/assimReservoirs/data/res_geometry.RData")
 
 # create otto_graph ####
 create_graph <- otto

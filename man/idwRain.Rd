@@ -14,7 +14,7 @@ idwRain(catch, gauges_catch, api, distGauges = 30, ID = 25283)
 \item{api}{output of \code{request_api_gauges}}
 }
 \value{
-a dataframe with the mean precipitation of the catchment and the reservoir of each requested day.
+a list with \code{idwRaster}: the interpolated rainfall raster files for each requested day and \code{dailyRain_table}: a dataframe with the mean precipitation of the catchment and the reservoir of each requested day.
 }
 \description{
 This function interpolates rain data using idw (inverse distance weighted) interpolation
