@@ -75,7 +75,7 @@ reservoir_model <- reservoir_model(ID = 31440, start = as.Date("2004-01-24"), en
 - ```plotIDW(list_idw)``` plots the result of ```idwRain```: the interpolated precipitation in the contributing basins
 
 ### Model water volume of the reservoirs and flow through the reservoir network
-- ```reservoir_model(ID = 31440, start = as.Date("2004-01-24"), end = as.Date("2004-01-30"))```
+- ```reservoir_model(ID, start, end)```
 
 
 

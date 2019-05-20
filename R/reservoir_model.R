@@ -21,7 +21,7 @@ reservoir_model <- function(ID = 33443, start = as.Date("2004-02-24"), end = as.
     all_simple_paths(otto_graph, from = ., mode = "in") %>%
     unlist %>% unique
   catch <- otto[catch_v,]
-  buffer <- st_buffer(st_union(catch, by_feature = F), dist = 20 *1000)
+  buffer <- st_buffer(st_union(catch, by_feature = F), dist = 50 *1000)
 
 # identify leaves of otto_graph
   otto_leaves = which(degree(otto_graph, v = catch_v, mode = "in") == 0)
@@ -35,15 +35,14 @@ reservoir_model <- function(ID = 33443, start = as.Date("2004-02-24"), end = as.
 
 # start loop over days
   dates <- seq.Date(from = start, to = end, by = "day")
-
+  postos <- st_intersection(postos, buffer)
+  files <- dir("D:/reservoir_model/Time_series")
   collect_timesteps <- NULL
 # get runoff for stations in the buffer, certain day
   for(d in 1:length(dates)){
 
     print(paste(Sys.time(), "starting to interpolate rainfall for", dates[d]))
 
-    postos <- st_intersection(postos, buffer)
-    files <- dir("D:/reservoir_model/Time_series")
     postos$runoff <- NA
 
     for(i in 1:nrow(postos)){
@@ -83,7 +82,7 @@ reservoir_model <- function(ID = 33443, start = as.Date("2004-02-24"), end = as.
     res_mod$Qout_m3[(res_mod$Qin_m3 + res_mod$vol_0) <= res_mod$vol_max] <- 0
     res_mod$vol_1 <- res_mod$vol_0 + res_mod$Qin_m3 - res_mod$Qout_m3
 
-# loop through all reservoirs (/subbasins) to distribute qout? ####
+# loop through all reservoirs to distribute qout ####
 
     if(sum(res_mod$Qout_m3)>0){
     print(paste(Sys.time(), "start routing of qout through reservoir network"))
@@ -109,6 +108,13 @@ reservoir_model <- function(ID = 33443, start = as.Date("2004-02-24"), end = as.
     }else{
       print(paste(Sys.time(), "no outflow for", dates[d]))
     }
+
+    # run evaporation ####
+    res_mod <- reservoir_evaporation()
+    res_mod$vol_1 <- res_mod$vol_1-res_mod$ETact
+
+    # run water withdrawl ####
+    res_mod1 <- reservoir_withdrawl()
 
 # Collect all timesteps
     collect_timesteps <- rbind(collect_timesteps, res_mod)
