@@ -44,12 +44,9 @@ reservoir_model <- function(ID = 33443, start = as.Date("2004-02-24"), end = as.
     print(paste(Sys.time(), "starting to interpolate rainfall for", dates[d]))
 
     postos$runoff <- NA
-
     for(i in 1:nrow(postos)){
-      if(length(grep(postos$Codigo[i], files))>0){
-        data <- read.table(paste0("D:/reservoir_model/Time_series/", grep(postos$Codigo[i], files, value = T)), header = T)
-        postos$runoff[i] <- subset(data, Ano == year(dates[d]) & Mes == month(dates[d]) & Dia == day(dates[d]))$Esc..mm.
-      }
+      data <- time_series[[paste0(postos$Codigo[i])]]
+      postos$runoff[i] <- subset(data, Ano == year(dates[d]) & Mes == month(dates[d]) & Dia == day(dates[d]))$Esc..mm.
     }
 
 # Interpolate runoff with IDW, get mean for each subbasin

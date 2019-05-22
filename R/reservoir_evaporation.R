@@ -15,13 +15,10 @@ res_mod$area_1 <- (res_mod$vol_1/1500)^1/(2.7/(2.7-1))*2.7*1500
 print(paste(Sys.time(), "starting to interpolate evaporation for", dates[d]))
 
 postos$evaporation <- NA
-
 for(i in 1:nrow(postos)){
-  if(length(grep(postos$Codigo[i], files))>0){
-    data <- read.table(paste0("D:/reservoir_model/Time_series/", grep(postos$Codigo[i], files, value = T)), header = T)
-    postos$evaporation[i] <- subset(data, Ano == year(dates[d]) & Mes == month(dates[d]) & Dia == day(dates[d]))$Evap..mm.
+  data <- time_series[[paste0(postos$Codigo[i])]]
+  postos$evaporation[i] <- subset(data, Ano == year(dates[d]) & Mes == month(dates[d]) & Dia == day(dates[d]))$Evap..mm.
   }
-}
 
 # Interpolate potential evaporation with IDW, get mean for each subbasin
 gs <- gstat(formula=evaporation~1, locations=~x+y, data= data.frame(x = postos$x, y = postos$y, evaporation = postos$evaporation))

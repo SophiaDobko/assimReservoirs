@@ -79,6 +79,17 @@ coordinates(postos) <- ~lon+lat
 proj4string(postos) <- "+proj=longlat +datum=WGS84 +no_defs"
 postos <- st_as_sf(postos)
 postos <- st_transform(postos, crs = "+proj=utm +zone=24 +south +datum=WGS84 +units=m +no_defs")
+postos <- postos[c(1:11,13:19),]
 save(postos, file = "D:/assimReservoirs/data/postos.RData")
 
+# time series precipitation, evaporation, runoff ####
+files <- dir("D:/reservoir_model/Time_series")
+time_series <- list()
+
+for(i in 1:nrow(postos)){
+  data <- read.table(paste0("D:/reservoir_model/Time_series/", grep(postos$Codigo[i], files, value = T)), header = T)
+  time_series[[i]] <- data
+  names(time_series)[i] <- postos$Codigo[i]
+  }
+save(time_series, file = "D:/assimReservoirs/data/time_series.RData")
 
