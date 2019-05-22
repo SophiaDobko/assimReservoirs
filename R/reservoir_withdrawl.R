@@ -4,6 +4,8 @@
 #' @export
 
 reservoir_withdrawl <- function(){
+  print(paste(Sys.time(), "Estimat withdrawl for", dates[d]))
+
   res_mod$withdrawl <- NA
   for(w in 1:nrow(res_mod)){
     if(res_mod$vol_1[w] > (0.01*res_mod$vol_max[w])){

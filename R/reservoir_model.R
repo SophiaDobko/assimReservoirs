@@ -110,11 +110,15 @@ reservoir_model <- function(ID = 33443, start = as.Date("2004-02-24"), end = as.
     }
 
     # run evaporation ####
+    environment(reservoir_evaporation) <- environment()
     res_mod <- reservoir_evaporation()
     res_mod$vol_1 <- res_mod$vol_1-res_mod$ETact
+    res_mod$vol_1[res_mod$vol_1 < 0] <- 0
 
     # run water withdrawl ####
-    res_mod1 <- reservoir_withdrawl()
+    environment(reservoir_withdrawl) <- environment()
+    res_mod <- reservoir_withdrawl()
+    res_mod$vol_1 <- res_mod$vol_1-res_mod$withdrawl
 
 # Collect all timesteps
     collect_timesteps <- rbind(collect_timesteps, res_mod)

@@ -1,3 +1,13 @@
+#' Maximum extent of reservoirs in Ceará
+#'
+#' @docType data
+#' @usage data(res_max)
+#'
+#' @references  Jean-Francois Pekel, Andrew Cottam, Noel Gorelick, Alan S. Belward, High-resolution mapping of global surface water and its long-term changes. Nature 540, 418-422 (2016). (doi:10.1038/nature20584)
+#' @source https://global-surface-water.appspot.com/download
+"res_max"
+
+
 #' Otto-basins level 12 for Ceará
 #'
 #' @docType data
@@ -64,11 +74,10 @@
 "p_gauges_saved"
 
 
-#' Maximum extent of reservoirs in Ceará
+#' Meta data of stations for precipitation, evaporation and runoff in Jaguaribe basin, Ceará
 #'
 #' @docType data
-#' @usage data(res_max)
+#' @usage data(postos)
 #'
-#' @references  Jean-Francois Pekel, Andrew Cottam, Noel Gorelick, Alan S. Belward, High-resolution mapping of global surface water and its long-term changes. Nature 540, 418-422 (2016). (doi:10.1038/nature20584)
-#' @source https://global-surface-water.appspot.com/download
-"res_max"
+"postos"
+

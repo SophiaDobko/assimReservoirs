@@ -9,7 +9,7 @@
 reservoir_evaporation <- function(){
 
 # Calculate reservoir surface area with old approach (Molle 1994) ####
-res_mod$area1 <- (res_mod$vol_1/1500)^1/(2.7/(2.7-1))*2.7*1500
+res_mod$area_1 <- (res_mod$vol_1/1500)^1/(2.7/(2.7-1))*2.7*1500
 
 # Get potential evaporation from postos
 print(paste(Sys.time(), "starting to interpolate evaporation for", dates[d]))
@@ -35,6 +35,7 @@ for(s in 1:nrow(res_mod)){
   }
 }
 
-res_mod$ETact <- res_mod$area1*res_mod$ETP
+res_mod$ETact <- res_mod$area_1*res_mod$ETP*0.001
+
 return(res_mod)
 }

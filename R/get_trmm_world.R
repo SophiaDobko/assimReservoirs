@@ -34,7 +34,7 @@ get_trmm_world <- function(YEAR, MONTH, DAY){
 
 #' Get rain from trmm data
 #'
-#' obtain precipitation on the reservoir and the mean of its catchment and each subbasin
+#' obtain mean trmm precipitation for each row of a sf geometric object
 #' @param shape sf geometric object in WGS 84, longlat
 #' @param files_world output of get_trmm_world
 #' @return ```trmm_means``` is a geospatial dataframe with the mean TRMM precipitation for each field of the input shape
