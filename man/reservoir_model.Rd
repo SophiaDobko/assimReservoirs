@@ -5,7 +5,7 @@
 \title{Model reservoirs}
 \usage{
 reservoir_model(ID = 31440, start = as.Date("2004-02-24"),
-  end = as.Date("2004-02-28"), distGauges = 50)
+  end = as.Date("2004-02-28"), distGauges = 30)
 }
 \arguments{
 \item{ID}{ID of the reservoir for which the contributing basins shall be modelled}
@@ -13,6 +13,8 @@ reservoir_model(ID = 31440, start = as.Date("2004-02-24"),
 \item{start}{date at which model run shall start, default: as.Date("2000-01-10")}
 
 \item{end}{date at which model run shall end, default: as.Date("2000-01-15")}
+
+\item{distGauges}{distance in km around the contributing basins to look for meteorological stations, defaults to 30}
 }
 \value{
 table with vol_0 (volume at the beginning of the timestep t), q_in_m3 (inflow in m3), q_out_m3 (outflow in m3) and vol_1 (volume at the end of the timestep) for each reservoir and for each subbasin

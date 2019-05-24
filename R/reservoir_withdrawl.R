@@ -17,7 +17,5 @@ reservoir_withdrawl <- function(){
     }
   }
 
-  # res_mod$withdrawl[res_mod$vol_1 > (0.01*res_mod$vol_max)] <- 0.01*res_mod$vol_max[res_mod$vol_1>(0.01*res_mod$vol_max)]
-  # res_mod$withdrawl[res_mod$vol_1 <= (0.01*res_mod$vol_max)] <- res_mod$vol_1[res_mod$vol_1<=(0.01*res_mod$vol_max)]
   return(res_mod)
 }

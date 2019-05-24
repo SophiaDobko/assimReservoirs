@@ -12,7 +12,7 @@ library(assimReservoirs)
 # Data preprocessing ####
 
 # Routing of strategic and non-strategic reservoirs
-res_max <- Routing()
+res_max <- Routing_strat()
 res_max <- Routing_non_strat()
 
 # Estimate runoff contributing areas for all reservoirs
@@ -29,8 +29,10 @@ gauges_catch <- rain_gauges_catch(catch)
 plot_gauges_catch(catch, gauges_catch, distGauges = 30)
 
 api <- request_api_gauges(requestDate = as.Date("2018-03-15") , Ndays = 5, gauges_catch)
-list_idw <- idwRain(catch, gauges_catch, api, distGauges = 30, ID = 25283)
-plotIDW(list_idw)
+list_api_rain <- api_rain_raster(catch, gauges_catch, api, distGauges = 30, ID = 25283)
+plot_api_rain(list_api_rain)
+api_rain <- apiRain(catch, api, date = as.Date("2018-03-15"))
+
 
 files_world <- get_trmm_world(YEAR = 2019, MONTH = 04, DAY = 12)
 trmm_means <- trmmRain(shape = st_transform(catch, "+proj=latlong  +datum=WGS84 +no_defs"), files_world)
@@ -38,6 +40,8 @@ plotTRMM(trmm_means)
 
 #####################################################################################+
 # Run the model ####
+reservoir_model <- reservoir_model(ID = 25283, start = as.Date("2004-01-25"), end = as.Date("2004-02-05"), distGauges = 50)
+
 reservoir_model <- reservoir_model(ID = 31440, start = as.Date("2004-01-24"), end = as.Date("2004-01-30"), distGauges = 30)
 ```
 
@@ -45,7 +49,7 @@ reservoir_model <- reservoir_model(ID = 31440, start = as.Date("2004-01-24"), en
 
 ### Data preprocessing
 
-- ```Routing()``` identifies which strategic reservoir drains into which stategic downstream reservoir
+- ```Routing_strat()``` identifies which strategic reservoir drains into which stategic downstream reservoir
 
 - ```Routing_non_strat()``` identifies which non-strategic reservoir drains into which stategic downstream reservoir
 
@@ -64,18 +68,21 @@ reservoir_model <- reservoir_model(ID = 31440, start = as.Date("2004-01-24"), en
 
 - ```request_api_gauges(requestDate, Ndays, gauges_catch)``` requests api rain data for the above selected rain gauges
 
-- ```idwRain(catch, gauges_catch, api, distGauges, ID)``` interpolates rain data using idw (inverse distance weighted) interpolation
+- ```api_rain_raster(catch, gauges_catch, api, distGauges, ID)``` interpolates rain data using idw (inverse distance weighted) interpolation
+
+- ```plot_api_rain(list_api_rain)``` plots the result of ```api_rain_raster```: the interpolated precipitation in the contributing basins
+
+- ```apiRain(catch, api, date)``` interpolates api rain data, giving the mean rain for each sabbasin of the catchment
 
 - ```get_trmm_world``` lists and downloads TRMM data in ftp from the Tropical Rainfall Measuring Mission (https://trmm.gsfc.nasa.gov/)
 
-- ```trmmRain``` extracts rain from TRMM data
+- ```trmmRain``` extracts rain from TRMM data, giving the mean rain for each subbasin of the catchment
 
 - ```plotTRMM``` plots the mean TRMM precipitation of the contributing subbasins
 
-- ```plotIDW(list_idw)``` plots the result of ```idwRain```: the interpolated precipitation in the contributing basins
 
 ### Model water volume of the reservoirs and flow through the reservoir network
-- ```reservoir_model(ID, start, end, distGauges)``` runs a model for the catchment of a chosen reservoir, considering the runoff distribution through the reservoir network, evaporation from the reservoirs (```reservoir_evaporation```) and the water withdrawl (```reservoir_withrawl```), assuming that everyday if possible, 1% of the maximum reservoir volume is withdrawn
+- ```reservoir_model(ID, start, end, distGauges)``` runs a model for the catchment of a chosen reservoir, considering the runoff distribution through the reservoir network and 2 further modules: evaporation from the reservoirs (```reservoir_evaporation```) and the water withdrawl (```reservoir_withrawl```), assuming that everyday if possible, 1% of the maximum reservoir volume is withdrawn
 
 
 ## Included data
@@ -103,8 +110,8 @@ reservoir_model <- reservoir_model(ID = 31440, start = as.Date("2004-01-24"), en
 
 ```api``` output of ```request_api_gauges```, a dataframe with the precipitation available for the requested dates and gauges
 
-```list_idw``` <br>
-output of ```idwRain```, a list with 2 elements:
+```list_api_rain``` <br>
+output of ```api_rain_raster```, a list with 2 elements:
 
 - ```idwRaster``` contains a raster of the interpolated precipitation for each requested day, 
 - ```dailyRain_table``` is a dataframe with the mean precipitation on the catchment and the reservoir of each requested day.

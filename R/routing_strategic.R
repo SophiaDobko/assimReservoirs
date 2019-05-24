@@ -9,7 +9,7 @@
 
 # library(assimReservoirs)
 
-Routing <- function(){
+Routing_strat <- function(){
   res_max$res_down <- NA
   strategic <- res_max[res_max$`distance to river`==0,]
 

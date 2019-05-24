@@ -4,6 +4,7 @@
 #' @param ID ID of the reservoir for which the contributing basins shall be modelled
 #' @param start date at which model run shall start, default: as.Date("2000-01-10")
 #' @param end date at which model run shall end, default: as.Date("2000-01-15")
+#' @param distGauges distance in km around the contributing basins to look for meteorological stations, defaults to 30
 #' @return table with vol_0 (volume at the beginning of the timestep t), q_in_m3 (inflow in m3), q_out_m3 (outflow in m3) and vol_1 (volume at the end of the timestep) for each reservoir and for each subbasin
 #' @importFrom lubridate year month day
 #' @import sf

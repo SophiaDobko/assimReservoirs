@@ -11,7 +11,7 @@
 #' @import raster
 #' @export
 
-idwRain <- function(catch, gauges_catch, api, distGauges = 30, ID = 25283){
+api_rain_raster <- function(catch, gauges_catch, api, distGauges = 30, ID = 25283){
 
   res <- res_max[res_max$id_jrc == ID,]
   res <- as(res$geometry, "Spatial")

@@ -34,15 +34,15 @@ plot_gauges_catch <- function(catch, gauges_catch, distGauges = 30){
 #' Plot idw interpolation
 #'
 #' This function plots the interpolated precipitation in the contributing basins
-#' @param list_idw output of idwRain
+#' @param list_api_rain output of api_rain_raster
 #' @import manipulate
 #' @import raster
 #' @export
 
-plotIDW <- function(list_idw){
+plot_api_rain <- function(list_api_rain){
 
-  dailyRain <- list_idw$dailyRain_table
-  idwRaster <- list_idw$idwRaster
+  dailyRain <- list_api_rain$dailyRain_table
+  idwRaster <- list_api_rain$idwRaster
 
   par(mar = c(2,2,2,2), oma = c(1,1,1,1))
   manipulate(
