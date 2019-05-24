@@ -81,3 +81,11 @@
 #'
 "postos"
 
+
+#' Time series of the stations described in ```postos```, each station is a list object with its code a name
+#'
+#' @docType data
+#' @usage data(time_series)
+#'
+"time_series"
+
