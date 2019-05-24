@@ -91,9 +91,9 @@ reservoir_model <- reservoir_model(ID = 31440, start = as.Date("2004-01-24"), en
 
 - ```p_gauges_saved``` a geospatial dataframe, containing metadata of 230 rain gauges in Ceará from http://api.funceme.br/help/doc/servicos-publicos-v1.
 
-- ```postos``` a geospatial dataframe, containing metadata of 18 stations for precipitation, evaporation and runoff in the Jaguaribe basin, Ceará.
+- ```postos``` a geospatial dataframe, containing metadata of 18 meteorological stations in the Jaguaribe basin, Ceará.
 
-- ```time-series``` the time series of the station described in ```postos```, including daily values of precipitation, evaporation and runoff for the years 1912-2015
+- ```time-series``` is a list of the time series of the stations described in ```postos```, containing daily values of precipitation, evaporation and runoff for the years 1912-2015.
 
 ## Outputs
 
