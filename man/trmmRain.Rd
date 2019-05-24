@@ -15,5 +15,5 @@ trmmRain(shape, files_world)
 \code{trmm_means} is a geospatial dataframe with the mean TRMM precipitation for each field of the input shape
 }
 \description{
-obtain precipitation on the reservoir and the mean of its catchment and each subbasin
+obtain mean trmm precipitation for each row of a sf geometric object
 }

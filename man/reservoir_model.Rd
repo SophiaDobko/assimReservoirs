@@ -5,7 +5,7 @@
 \title{Model reservoirs}
 \usage{
 reservoir_model(ID = 33443, start = as.Date("2004-02-24"),
-  end = as.Date("2004-02-28"))
+  end = as.Date("2004-02-28"), distGauges = 50)
 }
 \arguments{
 \item{ID}{ID of the reservoir for which the contributing basins shall be modelled}

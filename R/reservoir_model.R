@@ -11,7 +11,7 @@
 #' @importFrom gstat gstat
 #' @export
 
-reservoir_model <- function(ID = 33443, start = as.Date("2004-02-24"), end = as.Date("2004-02-28")){
+reservoir_model <- function(ID = 31440, start = as.Date("2004-02-24"), end = as.Date("2004-02-28"), distGauges = 50){
 
 # identify contributing catchment
   res <- res_max[res_max$id_jrc == ID,]
@@ -21,7 +21,7 @@ reservoir_model <- function(ID = 33443, start = as.Date("2004-02-24"), end = as.
     all_simple_paths(otto_graph, from = ., mode = "in") %>%
     unlist %>% unique
   catch <- otto[catch_v,]
-  buffer <- st_buffer(st_union(catch, by_feature = F), dist = 50 *1000)
+  buffer <- st_buffer(st_union(catch, by_feature = F), dist = distGauges *1000)
 
 # identify leaves of otto_graph
   otto_leaves = which(degree(otto_graph, v = catch_v, mode = "in") == 0)
@@ -36,6 +36,10 @@ reservoir_model <- function(ID = 33443, start = as.Date("2004-02-24"), end = as.
 # start loop over days
   dates <- seq.Date(from = start, to = end, by = "day")
   postos <- st_intersection(postos, buffer)
+  if(nrow(postos)==0){
+    stop(paste("No stations within the buffer of", distGauges, "km around the catchment."))
+
+  }
   files <- dir("D:/reservoir_model/Time_series")
   collect_timesteps <- NULL
 # get runoff for stations in the buffer, certain day
