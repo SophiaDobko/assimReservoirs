@@ -4,7 +4,7 @@
 \alias{reservoir_model}
 \title{Model reservoirs}
 \usage{
-reservoir_model(ID = 33443, start = as.Date("2004-02-24"),
+reservoir_model(ID = 31440, start = as.Date("2004-02-24"),
   end = as.Date("2004-02-28"), distGauges = 50)
 }
 \arguments{

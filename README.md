@@ -75,7 +75,7 @@ reservoir_model <- reservoir_model(ID = 31440, start = as.Date("2004-01-24"), en
 - ```plotIDW(list_idw)``` plots the result of ```idwRain```: the interpolated precipitation in the contributing basins
 
 ### Model water volume of the reservoirs and flow through the reservoir network
-- ```reservoir_model(ID, start, end)```
+- ```reservoir_model(ID, start, end, distGauges)``` runs a model for the catchment of a chosen reservoir, considering the runoff distribution through the reservoir network, evaporation from the reservoirs (```reservoir_evaporation```) and the water withdrawl (```reservoir_withrawl```), assuming that everyday if possible, 1% of the maximum reservoir volume is withdrawn
 
 
 ## Included data

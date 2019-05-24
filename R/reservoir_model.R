@@ -11,7 +11,7 @@
 #' @importFrom gstat gstat
 #' @export
 
-reservoir_model <- function(ID = 31440, start = as.Date("2004-02-24"), end = as.Date("2004-02-28"), distGauges = 50){
+reservoir_model <- function(ID = 31440, start = as.Date("2004-02-24"), end = as.Date("2004-02-28"), distGauges = 30){
 
 # identify contributing catchment
   res <- res_max[res_max$id_jrc == ID,]
@@ -113,6 +113,9 @@ reservoir_model <- function(ID = 31440, start = as.Date("2004-02-24"), end = as.
     # run evaporation ####
     environment(reservoir_evaporation) <- environment()
     res_mod <- reservoir_evaporation()
+    if(length(which(is.na(res_mod$ETP)))>0){
+      stop("ETP contains NAs")
+    }
     res_mod$vol_1 <- res_mod$vol_1-res_mod$ETact
     res_mod$vol_1[res_mod$vol_1 < 0] <- 0
 
