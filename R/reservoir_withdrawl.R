@@ -4,7 +4,7 @@
 #' @export
 
 reservoir_withdrawl <- function(){
-  print(paste(Sys.time(), "Estimat withdrawl for", dates[d]))
+  print(paste(Sys.time(), "Estimate withdrawl for", dates[d]))
 
   res_mod$withdrawl <- NA
   for(w in 1:nrow(res_mod)){
