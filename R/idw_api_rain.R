@@ -3,9 +3,9 @@
 #' This function interpolates rain data using idw (inverse distance weighted) interpolation
 #' @param catch catch output of ```contributing_basins_res``` or ```contributing_basins_shape```
 #' @param api output of ```request_api_gauges```
+#' @param date one of the dates requested in```request_api_gauges```, defaults to as.Date("2018-03-15")
 #' @return ```api_means``` is a geospatial dataframe with the mean api precipitation for each subbasin of the input ```catch```
 #' @importFrom gstat gstat
-# @import sp
 #' @importFrom sf st_transform st_as_sf st_centroid st_geometry
 #' @importFrom raster predict
 #' @export
