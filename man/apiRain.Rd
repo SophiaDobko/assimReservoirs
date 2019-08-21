@@ -10,6 +10,8 @@ apiRain(catch, api, date = as.Date("2018-03-15"))
 \item{catch}{catch output of \code{contributing_basins_res} or \code{contributing_basins_shape}}
 
 \item{api}{output of \code{request_api_gauges}}
+
+\item{date}{one of the dates requested in\code{request_api_gauges}, defaults to as.Date("2018-03-15")}
 }
 \value{
 \code{api_means} is a geospatial dataframe with the mean api precipitation for each subbasin of the input \code{catch}

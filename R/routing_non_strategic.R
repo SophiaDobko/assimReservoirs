@@ -14,7 +14,7 @@ Routing_non_strat <- function(){
   non_strat <- res_max[res_max$`distance to river`>0,]
   g <- river_graph
 
-  for(n in 15088:nrow(non_strat)){
+  for(n in 1:nrow(non_strat)){
 
     if(n %in% c(2500,5000,7500,10000,12500,15000,16000,17500,20000)){
       print(paste(Sys.time(),n, "reservoirs done"))}
@@ -48,7 +48,3 @@ Routing_non_strat <- function(){
 # res_max <- Routing_non_strat()
 # save(res_max_routing, file = "D:/assimReservoirs/data/res_max_routing.RData")
 # non_strat <- res_max_non_strat[res_max$`distance to river`>0,]
-
-
-
-

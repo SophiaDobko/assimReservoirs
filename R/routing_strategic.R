@@ -3,12 +3,9 @@
 #' This function identifies which strategic reservoir drains into which stategic downstream reservoir
 #' @return the column ```res_down``` in the geospatial dataframe ```res_max```
 #' @importFrom sf st_line_sample st_cast st_sf st_buffer st_intersection st_write
-#' @importFrom igraph all_simple_paths degree
+#' @importFrom igraph all_simple_paths degree V
 #' @importFrom dplyr %>%
 #' @export
-
-# library(assimReservoirs)
-
 Routing_strat <- function(){
   res_max$res_down <- NA
   strategic <- res_max[res_max$`distance to river`==0,]
@@ -80,5 +77,3 @@ Routing_strat <- function(){
 # strategic <- res_max[res_max$`distance to river`==0,]
 # st_write(strategic, dsn = "D:/shapefiles/strategic_res.shp")
 # save(res_max, file = "D:/assimReservoirs/data/res_max.RData")
-
-
