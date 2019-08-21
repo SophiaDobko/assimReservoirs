@@ -41,7 +41,7 @@ reservoir_model <- function(ID = 31440, start = as.Date("2004-02-24"), end = as.
     stop(paste("No stations within the buffer of", distGauges, "km around the catchment."))
 
   }
-  files <- dir("D:/reservoir_model/Time_series")
+  # files <- dir("D:/reservoir_model/Time_series")
   collect_timesteps <- NULL
 # get runoff for stations in the buffer, certain day
   for(d in 1:length(dates)){
@@ -135,4 +135,3 @@ reservoir_model <- function(ID = 31440, start = as.Date("2004-02-24"), end = as.
 # collect <- reservoir_model(ID = 31440)
 
 # collect <- reservoir_model(start = as.Date("2002-01-01"), end = as.Date("2002-02-28"))
-

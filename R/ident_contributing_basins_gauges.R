@@ -1,14 +1,14 @@
 #' Identify contributing basins - sf
 #'
 #' This function identifies contributing basins of an sf geospatial dataframe
-#' @param shape shapefile (WGS84, UTM zone=24 south) to identify its contributing basins, e.g. a reservoir from ```data(res_max)```
+#' @param geom a geometry from an sf object (WGS84, UTM zone=24 south) to identify its contributing basins, e.g. a reservoir from ```data(res_max)```
 #' @return a geospatial dataframe of all contributin subbasins
 #' @importFrom sf st_intersection
 #' @importFrom igraph all_simple_paths
 #' @export
 
-contributing_basins_shape <- function(shape = res_max[res_max$id_jrc == 25283,]){
-  otto_res <- st_intersection(shape, otto)
+contributing_basins_at_geom <- function(geom = res_max[res_max$id_jrc == 25283,]){
+  otto_res <- st_intersection(geom, otto)
   catch_v <- which(otto$HYBAS_ID %in% otto_res$HYBAS_ID) %>%
     all_simple_paths(otto_graph, from = ., mode = "in") %>%
     unlist %>% unique
@@ -28,7 +28,7 @@ contributing_basins_shape <- function(shape = res_max[res_max$id_jrc == 25283,])
 #' @importFrom igraph all_simple_paths
 #' @export
 
-contributing_basins_res <- function(ID = 25283){
+contributing_basins_at_res <- function(ID = 25283){
   res <- res_max[res_max$id_jrc == ID,]
   otto_res <- otto[otto$HYBAS_ID == res$HYBAS_ID,]
   catch_v <- which(otto$HYBAS_ID==otto_res$HYBAS_ID) %>%
@@ -59,4 +59,3 @@ rain_gauges_catch <- function(catch, distGauges = 30){
 }
 
 # gauges_catch <- rain_gauges_catch(catch)
-

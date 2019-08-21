@@ -1,18 +1,20 @@
 # assimReservoirs
 
-The aim of this package is the assimilation of reservoir extents in Ceará, northeast Brazil. 
-With the use of meteorological observations, the reservoir extent shall be modeled in order to complement the reservoir extent estimations based on remote sensing [jmigueldelgado/buhayra](https://github.com/jmigueldelgado/buhayra). 
+The aim of this package is the assimilation of reservoir extents in Ceará, northeast Brazil.
+With the use of meteorological observations, the reservoir extent shall be modeled in order to complement the reservoir extent estimations based on remote sensing [jmigueldelgado/buhayra](https://github.com/jmigueldelgado/buhayra).
 
 
 ## Examples
 
-```
+```{r}
 library(assimReservoirs)
+
 #####################################################################################+
 # Data preprocessing ####
 
 # Routing of strategic and non-strategic reservoirs
 res_max <- Routing_strat()
+
 res_max <- Routing_non_strat()
 
 # Estimate runoff contributing areas for all reservoirs
@@ -64,7 +66,7 @@ reservoir_model <- reservoir_model(ID = 31440, start = as.Date("2004-01-24"), en
 
 - ```gauges_catch``` identifies rain gauges within a certain distance around the catchment
 
-- ```plot_gauges_catch(catch, gauges_catch, distGauges)``` plots the identified rain gauges within the given distance, which allows to check if an adequate number of rain gauges is included for the interpolation 
+- ```plot_gauges_catch(catch, gauges_catch, distGauges)``` plots the identified rain gauges within the given distance, which allows to check if an adequate number of rain gauges is included for the interpolation
 
 - ```request_api_gauges(requestDate, Ndays, gauges_catch)``` requests api rain data for the above selected rain gauges
 
@@ -90,7 +92,7 @@ reservoir_model <- reservoir_model(ID = 31440, start = as.Date("2004-01-24"), en
 
 - ```otto``` a geospatial dataframe of the level 12 subbasins in  Ceará, classified following the method of Otto Pfafstetter as published by Lehner, B., Verdin, K., Jarvis, A. (2008): New global hydrography derived from spaceborne elevation data. Eos, Transactions, AGU, 89(10): 93-94. Among other variables, HYBAS_ID gives the ID of a subbasin, NEXT_DOWN the ID of the next downstream subbasin, SUB_AREA the area of the specific subbasin and UP_AREA the contributing area in km².
 
-- ```riv``` a geospatial dataframe of the river reaches in Ceará from Lehner, B., Verdin, K., Jarvis, A. (2008): New global hydrography derived from spaceborne elevation data. Eos, Transactions, AGU, 89(10): 93-94. ARCID gives for each river reach an ID and UP_CELLS the number of upstrem catchment cells, with a cell size of 15 arcseconds x 15 arcseconds. 
+- ```riv``` a geospatial dataframe of the river reaches in Ceará from Lehner, B., Verdin, K., Jarvis, A. (2008): New global hydrography derived from spaceborne elevation data. Eos, Transactions, AGU, 89(10): 93-94. ARCID gives for each river reach an ID and UP_CELLS the number of upstrem catchment cells, with a cell size of 15 arcseconds x 15 arcseconds.
 
 - ```nodes``` are the nodes of the river network ```riv```.
 
@@ -104,16 +106,16 @@ reservoir_model <- reservoir_model(ID = 31440, start = as.Date("2004-01-24"), en
 
 ## Outputs
 
-```catch``` output of contributing_basins_shape or contributing_basins_res, the catchment contributing to a reservoir or sf object 
+```catch``` output of contributing_basins_shape or contributing_basins_res, the catchment contributing to a reservoir or sf object
 
-```gauges_catch``` output of ```rain_gauges_catch```, a geospatial dataframe with the rain gauges within ```catch_buffer``` 
+```gauges_catch``` output of ```rain_gauges_catch```, a geospatial dataframe with the rain gauges within ```catch_buffer```
 
 ```api``` output of ```request_api_gauges```, a dataframe with the precipitation available for the requested dates and gauges
 
 ```list_api_rain``` <br>
 output of ```api_rain_raster```, a list with 2 elements:
 
-- ```idwRaster``` contains a raster of the interpolated precipitation for each requested day, 
+- ```idwRaster``` contains a raster of the interpolated precipitation for each requested day,
 - ```dailyRain_table``` is a dataframe with the mean precipitation on the catchment and the reservoir of each requested day.
 
 ```files_world``` output of ```get_trmm_world```, contains the names of the available trmm files
@@ -121,4 +123,3 @@ output of ```api_rain_raster```, a list with 2 elements:
 ```trmm_means``` output of ```trmmRain```, a geospatial dataframe with the mean TRMM precipitation for each subbasin
 
 ```reservoir_model``` a dataframe showing for each timestep reservoir volumes at the beginning (vol_0) and end (vol_1),  inflow (Qin_m3) and outflow (Qout_m3)
-
