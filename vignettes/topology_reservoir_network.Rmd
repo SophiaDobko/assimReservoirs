@@ -61,7 +61,7 @@ split_river_network
 
 ```
 
-Selecting a reach somewhere within the Jaguaribe river basin:
+Selecting a river system by a reach id, eg in the Jaguaribe river basin:
 
 ```{r}
 reach_id=140877
@@ -80,7 +80,7 @@ We use the JRC global surface water dataset.
 Resolution is 30 m. We run
 
 - `allocate_reservoir_to_river(riv)`,
-- `Routing()` and
+- `Routing_strat()` and
 - `Routing_non_strat()`
 
 in advance in order to create a graph. Then we can obtain any subgraph of choice.
