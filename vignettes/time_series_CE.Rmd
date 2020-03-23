@@ -1,0 +1,60 @@
+---
+title: "Inspect time series in Ceará"
+author: "JM Delgado"
+date: "`r Sys.Date()`"
+output:
+  slidy_presentation:
+    duration: 5    
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(sf,warn.conflicts=FALSE)
+library(assimReservoirs,warn.conflicts=FALSE)
+library(dplyr,warn.conflicts=FALSE)
+library(igraph,warn.conflicts=FALSE)
+library(knitr,warn.conflicts=FALSE)
+library(ggplot2,warn.conflicts=FALSE)
+library(lubridate,warn.conflicts=FALSE)
+
+
+
+
+
+x=list()
+for(i in names(time_series))
+  {
+    x[[i]] = time_series[[i]] %>% mutate(id=i)
+  }
+
+head(xdf)
+
+xdf=do.call('rbind',x)
+
+ names(postos)
+
+p=postos %>%
+  rename(id=Codigo,name=Posto,altitude=`Altitude..m.`) %>%
+  select(id,name,altitude,geometry)
+
+xdf=xdf %>%
+  rename(Y=Ano,M=Mes,D=Dia,precipitation=`Prec..mm.`,runoff=`Esc..mm.`,evaporation=`Evap..mm.`)
+
+xdf=xdf %>% mutate(id=as.factor(id))
+p=p %>% mutate(id=as.factor(id))
+
+x=full_join(xdf,p)
+
+hymet=x
+save(hymet,file='data/hymet.RData')
+
+hymet = hymet %>% mutate(date=ymd(sprintf('%04d-%02d-%02d',Y,M,D))) %>% select(date,precipitation,evaporation,runoff,id,name,geometry)
+```

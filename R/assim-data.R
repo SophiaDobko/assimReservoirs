@@ -74,18 +74,9 @@
 "p_gauges_saved"
 
 
-#' Meta data of stations for precipitation, evaporation and runoff in Jaguaribe basin, Ceará
+#' Time series of the stations described in columns _name_, _id_ and _geometry_. Values are given for _evaporation_, _precipitation_ and _runoff_ time series in mm
 #'
 #' @docType data
-#' @usage data(postos)
+#' @usage data(hymet)
 #'
-"postos"
-
-
-#' Time series of the stations described in ```postos```, each station is a list object with its code a name
-#'
-#' @docType data
-#' @usage data(time_series)
-#'
-"time_series"
-
+"hymet"

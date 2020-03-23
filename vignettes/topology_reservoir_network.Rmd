@@ -85,6 +85,11 @@ Resolution is 30 m. We run
 
 in advance in order to create a graph. Then we can obtain any subgraph of choice.
 
+```{r}
+head(reservoir_graph)
+
+```
+
 ---
 
 ### Small example with reservoir 34560
