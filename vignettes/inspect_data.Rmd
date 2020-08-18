@@ -1,0 +1,26 @@
+---
+title: "Inspect data"
+author: "JM Delgado"
+date: "`r Sys.Date()`"
+output:
+  slidy_presentation:
+    duration: 5    
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, results='asis'}
+
+library(assimReservoirs)
+head(res_max)
+
+head(hymet)
+require(dplyr)
+require(sf)
+require(lubridate)
+hymet %>% st_set_geometry(.,NULL) %>% group_by(id) %>% summarise(start=min(date),end=max(date))
+
+
+```

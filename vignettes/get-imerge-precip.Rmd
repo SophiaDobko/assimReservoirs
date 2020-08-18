@@ -1,0 +1,48 @@
+---
+title: "Read IMERG ncdf files from OpenDAP"
+author: "JM Delgado"
+date: "`r Sys.Date()`"
+output:
+  slidy_presentation:
+    duration: 5    
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, results='asis'}
+library(ncdf4)
+library(sf)
+library(stars)
+library(tibble)
+
+extent=st_read('../buhayra/buhayra/parameters/extent_demo.geojson')%>% st_buffer(0.1)
+
+bb=st_bbox(extent)
+
+y=2020
+m=8
+d=14
+
+imerg_url=paste0('https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDE.06/',y,'/',sprintf('%02d',m),'/3B-DAY-E.MS.MRG.3IMERG.',y,sprintf('%02d',m),sprintf('%02d',d),'-S000000-E235959.V06.nc4')
+
+fname=paste0('3B-DAY-E.MS.MRG.3IMERG.',y,sprintf('%02d',m),sprintf('%02d',d),'-S000000-E235959.V06.nc4')
+
+
+system(paste0('wget --directory-prefix=~/scratch_demo/imerg',imerg_url))
+
+nc <- nc_open(fname)
+y=nc$dim$lat$vals
+x=nc$dim$lon$vals
+demo_lat=which(y>bb$ymin & y<bb$ymax)
+demo_lon=which(x>bb$xmin & x<bb$xmax)
+nc_close(nc)
+
+prec_star=read_ncdf(location,var='HQprecipitation',ncsub=cbind(start=c(demo_lon[1],demo_lat[1],1),count=c(length(demo_lon),length(demo_lat),1)))
+circle = st_buffer(st_centroid(extent), 1) %>% dplyr::select(geometry) %>% .[[1]]
+
+tbl=as_tibble(prec_star[circle])
+tbl$HQprecipitation %>% mean
+
+```
